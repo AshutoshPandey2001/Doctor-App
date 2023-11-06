@@ -24,10 +24,14 @@ import AuthNavigator from './src/navigator/AuthNavigator';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
 import Tabs from './src/navigator/MenuNavigator';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Home from './src/pages/Home';
+import TodayPatients from './src/pages/TodayPatients';
+import AllPatients from './src/pages/AllPatients';
 
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLogged] = useState(true);
@@ -37,7 +41,12 @@ function App(): JSX.Element {
     <View style={{ height: '100%' }}>
       <NavigationContainer theme={DefaultTheme}>
         {isLoggedIn ?
-          <Tabs /> :
+          <Tab.Navigator tabBar={(props) => <Tabs />}>
+            <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
+            <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
+            <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
+          </Tab.Navigator>
+          :
           (<Stack.Navigator initialRouteName="Login">
             <Stack.Screen name="Auth" options={{ headerShown: false }}
               component={AuthNavigator} />

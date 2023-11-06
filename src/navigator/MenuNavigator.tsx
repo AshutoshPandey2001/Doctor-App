@@ -1,45 +1,40 @@
 import React from 'react';
 import Tabbar from "@mindinventory/react-native-tab-bar-interaction";
-import Icon from 'react-native-easy-icon';
 import { Image } from 'react-native';
+// import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-easy-icon';
+import { useNavigation } from '@react-navigation/native';
 
 const Tabs = () => {
+  const navigation = useNavigation();
+
   const tabs = [
     {
       name: 'Home',
-      activeIcon: <Image source={require('../assets/icons8-home-green.png')} />,
-      inactiveIcon: <Image source={require('../assets/icons8-home-384.png')} />
+      activeIcon: <Icon type="feather" name="home" color="green" size={30} />,
+      inactiveIcon: <Icon type="feather" name="home" color="#CCCCCC" size={30} />,
     },
     {
-      name: 'List',
-      activeIcon: <Image source={require('../assets/icons8-list-100.png')} />,
-      inactiveIcon: <Image source={require('../assets/icons8-list-100 (1).png')} />
+      name: 'Today Patients',
+      activeIcon: <Icon type="fontisto" name="person" color="green" size={30} />,
+      inactiveIcon: <Icon type="fontisto" name="person" color="#CCCCCC" size={30} />,
     },
-    // {
-    //   name: 'Camera',
-    //   activeIcon: <Icon type="feather" name="camera" color="#fff" size={25} />,
-    //   inactiveIcon: <Icon type="feather" name="camera" color="#4d4d4d" size={25} />
-    // },
-    // {
-    //   name: 'Notification',
-    //   activeIcon: <Icon type="feather" name="bell" color="#fff" size={25} />,
-    //   inactiveIcon: <Icon type="feather" name="bell" color="#4d4d4d" size={25} />
-    // },
-    // {
-    //   name: 'Profile',
-    //   activeIcon: <Icon type="feather" name="user" color="#fff" size={25} />,
-    //   inactiveIcon: <Icon type="feather" name="user" color="#4d4d4d" size={25} />
-    // },
+    {
+      name: 'All Patients',
+      activeIcon: <Icon type="fontisto" name="persons" color="green" size={30} />,
+      inactiveIcon: <Icon type="fontisto" name="persons" color="#CCCCCC" size={30} />,
+    },
+
   ];
 
   return (
     <Tabbar
       tabs={tabs}
-      tabBarContainerBackground='#6699ff'
+      tabBarContainerBackground='gray'
       tabBarBackground='#fff'
-      activeTabBackground='#6699ff'
+      activeTabBackground='gray'
       labelStyle={{ color: '#4d4d4d', fontWeight: '600', fontSize: 11 }}
-      onTabChange={() => console.log('Tab changed')}
+      onTabChange={(tab) => console.log('Tab changed', tab)}
     />
   );
 };

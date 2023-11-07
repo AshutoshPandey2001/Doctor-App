@@ -41,7 +41,7 @@ function App(): JSX.Element {
     <View style={{ height: '100%' }}>
       <NavigationContainer theme={DefaultTheme}>
         {isLoggedIn ?
-          <Tab.Navigator tabBar={(props) => <Tabs />}>
+          <Tab.Navigator tabBar={(props) => <Tabs {...props} />}>
             <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
             <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
             <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />

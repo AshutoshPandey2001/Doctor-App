@@ -31,18 +31,18 @@ import AllPatients from './src/pages/AllPatients';
 import DoctorPriscription from './src/pages/DoctorPriscription';
 
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLogged] = useState(true);
 
-
+  const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
   return (
     <View style={{ height: '100%' }}>
       <NavigationContainer theme={DefaultTheme}>
         {isLoggedIn ?
-          <Tab.Navigator tabBar={(props) => <Tabs {...props} />}>
+          <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />}>
             <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
             <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
             <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />

@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { Button, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
+import { SafeAreaView } from 'react-native-safe-area-context';
 interface Patient {
     id: number;
     name: string;
@@ -224,6 +225,8 @@ const TodayPatients = ({ navigation }: any) => {
     ]
     const itemsPerPage = 10;
     const [data, setData] = useState<any>([]);
+    const [showActions, setShowActions] = useState(false);
+
     // const navigation = useNavigation()
     // const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
     const [page, setPage] = useState(1);
@@ -251,20 +254,38 @@ const TodayPatients = ({ navigation }: any) => {
                 <Text style={styles.label}>Patient Name:</Text>
                 <Text style={styles.label}>Address:</Text>
                 <Text style={styles.label}>Mobile No:</Text>
-                <Text style={styles.label}>Action:</Text>
+                {/* <Text style={styles.label}>Action:</Text> */}
             </View>
-            <View style={styles.rightSide}>
+            <View style={styles.middleSide}>
                 <Text>{item.name}</Text>
                 <Text>{item.age}</Text>
                 <Text>{item.email}</Text>
                 <Text>{item.city}</Text>
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                {/* <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                     <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
                         <Icon type="feather" name="edit" color="blue" size={30} />
                     </Pressable>
                     <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
                         <Icon type="feather" name="printer" color="green" size={30} />
                     </Pressable>
+                </View> */}
+            </View>
+            <View style={styles.rightSide}>
+                <View style={{ display: 'flex', flexDirection: 'column' }}>
+                    {showActions ? (
+                        <>
+                            <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
+                                <Icon type="feather" name="edit" color="blue" size={30} />
+                            </Pressable>
+                            <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
+                                <Icon type="feather" name="printer" color="green" size={30} />
+                            </Pressable>
+                        </>
+                    ) : (
+                        <Pressable onPress={() => setShowActions(true)}>
+                            <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                        </Pressable>
+                    )}
                 </View>
             </View>
         </View>
@@ -276,20 +297,23 @@ const TodayPatients = ({ navigation }: any) => {
         setPage(page + 1);
     };
     return (
-        <View style={{ marginBottom: 200, marginTop: 20 }}>
-            <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-            />
-            <View style={styles.pagination}>
-                <Button title="Previous" onPress={handlePreviousPage} disabled={page === 1} />
-                <Text style={{ margin: 8 }}>{`Page ${page}`}</Text>
-                <Button title="Next" onPress={handleNextPage} disabled={data.length < itemsPerPage} />
-            </View>
+        <SafeAreaView>
+            <View style={{ marginBottom: 320, padding: 10 }}>
+                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
+                <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id.toString()}
+                />
+                <View style={styles.pagination}>
+                    <Button title="Previous" onPress={handlePreviousPage} disabled={page === 1} />
+                    <Text style={{ margin: 8 }}>{`Page ${page}`}</Text>
+                    <Button title="Next" onPress={handleNextPage} disabled={data.length < itemsPerPage} />
+                </View>
 
-        </View>)
+            </View>
+        </SafeAreaView>
+    )
 }
 const styles = StyleSheet.create({
     pagination: {
@@ -302,10 +326,17 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
         borderWidth: 1,
-        borderColor: '#000', // Border around the entire card
+        backgroundColor: '#f5f5f5',
+        // borderColor: '#000', // Border around the entire card
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
+        shadowColor: '#555',
+        shadowOffset: { width: -5, height: 5 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 5
+
     },
     leftSide: {
         flex: 3,
@@ -314,8 +345,12 @@ const styles = StyleSheet.create({
         borderColor: 'black', // Border color for the left side
         paddingRight: 10, // Optional padding to separate the text from the border
     },
+
+    middleSide: {
+        flex: 6,
+    },
     rightSide: {
-        flex: 7,
+        flex: 1,
     },
     label: {
         color: '#000',

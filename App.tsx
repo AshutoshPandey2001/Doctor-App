@@ -28,6 +28,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/pages/Home';
 import TodayPatients from './src/pages/TodayPatients';
 import AllPatients from './src/pages/AllPatients';
+import DoctorPriscription from './src/pages/DoctorPriscription';
 
 
 const Stack = createNativeStackNavigator();
@@ -45,6 +46,7 @@ function App(): JSX.Element {
             <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
             <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
             <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
+            <Tab.Screen name="DoctorPriscription" component={DoctorPriscription} options={{ headerShown: false }} />
           </Tab.Navigator>
           :
           (<Stack.Navigator initialRouteName="Login">

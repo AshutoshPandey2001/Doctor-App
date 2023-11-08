@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native'
+import { Button, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 interface Patient {
     id: number;
@@ -8,7 +9,7 @@ interface Patient {
     email: string;
     city: string;
 }
-const TodayPatients = () => {
+const TodayPatients = ({ navigation }: any) => {
     const dummyData: Patient[] = [
         {
             "id": 1,
@@ -223,7 +224,7 @@ const TodayPatients = () => {
     ]
     const itemsPerPage = 10;
     const [data, setData] = useState<any>([]);
-
+    // const navigation = useNavigation()
     // const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     useEffect(() => {
@@ -258,8 +259,12 @@ const TodayPatients = () => {
                 <Text>{item.email}</Text>
                 <Text>{item.city}</Text>
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                    <Icon type="feather" name="edit" color="blue" size={30} />
-                    <Icon type="feather" name="printer" color="green" size={30} />
+                    <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
+                        <Icon type="feather" name="edit" color="blue" size={30} />
+                    </Pressable>
+                    <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
+                        <Icon type="feather" name="printer" color="green" size={30} />
+                    </Pressable>
                 </View>
             </View>
         </View>

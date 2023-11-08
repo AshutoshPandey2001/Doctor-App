@@ -9,18 +9,18 @@ const Tabs = ({ navigation }: any) => {
   const tabs = [
     {
       name: 'Home',
-      activeIcon: <Icon type="feather" name="home" color="blue" size={30} />,
-      inactiveIcon: <Icon type="feather" name="home" color="#4d4d4d" size={30} />,
+      activeIcon: <Icon type="fontisto" name="home" color="#3366ff" size={30} />,
+      inactiveIcon: <Icon type="fontisto" name="home" color="#4d4d4d" size={30} />,
     },
     {
       name: 'TodayPatients',
-      activeIcon: <Icon type="fontisto" name="person" color="blue" size={30} />,
+      activeIcon: <Icon type="fontisto" name="person" color="#3366ff" size={30} />,
       inactiveIcon: <Icon type="fontisto" name="person" color="#4d4d4d" size={30} />,
 
     },
     {
       name: 'AllPatients',
-      activeIcon: <Icon type="fontisto" name="persons" color="blue" size={30} />,
+      activeIcon: <Icon type="fontisto" name="persons" color="#3366ff" size={30} />,
       inactiveIcon: <Icon type="fontisto" name="persons" color="#4d4d4d" size={30} />,
 
     },

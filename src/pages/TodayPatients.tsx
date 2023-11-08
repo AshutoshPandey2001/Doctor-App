@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { Button, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 interface Patient {
@@ -224,20 +224,22 @@ const TodayPatients = ({ navigation }: any) => {
         }
     ]
     const itemsPerPage = 10;
-    const [data, setData] = useState<any>([]);
-    const [showActions, setShowActions] = useState(false);
+    // const [data, setData] = useState<any>([]);
+    const [showActions, setShowActions] = useState<number | null>(null); // Track the selected card's ID
+    const [showSmallPopup, setShowSmallPopup] = useState(false);
 
     // const navigation = useNavigation()
-    // const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
+    const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
     const [page, setPage] = useState(1);
-    useEffect(() => {
-        // Calculate the range of data to display for the current page
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        // Extract the data for the current page
-        const pageData = dummyData.slice(startIndex, endIndex);
-        setData(pageData);
-    }, [page]);
+    const [isLoading, setisLoading] = useState(false);
+    // useEffect(() => {
+    //     // Calculate the range of data to display for the current page
+    //     const startIndex = (page - 1) * itemsPerPage;
+    //     const endIndex = startIndex + itemsPerPage;
+    //     // Extract the data for the current page
+    //     const pageData = dummyData.slice(startIndex, endIndex);
+    //     setData(pageData);
+    // }, [page]);
     const handleNextPage = () => {
         setPage(page + 1);
     };
@@ -247,6 +249,15 @@ const TodayPatients = ({ navigation }: any) => {
             setPage(page - 1);
         }
     };
+    const selectCard = (id: number) => {
+        if (showActions === id) {
+            // If actions are already shown for the clicked card, hide them
+            setShowActions(null);
+        } else {
+            // Otherwise, show actions for the clicked card
+            setShowActions(id);
+        }
+    };
     const renderItem = ({ item }: { item: Patient }) => (
         <View style={styles.card}>
             <View style={styles.leftSide}>
@@ -254,68 +265,95 @@ const TodayPatients = ({ navigation }: any) => {
                 <Text style={styles.label}>Patient Name:</Text>
                 <Text style={styles.label}>Address:</Text>
                 <Text style={styles.label}>Mobile No:</Text>
-                {/* <Text style={styles.label}>Action:</Text> */}
             </View>
             <View style={styles.middleSide}>
-                <Text>{item.name}</Text>
-                <Text>{item.age}</Text>
-                <Text>{item.email}</Text>
-                <Text>{item.city}</Text>
-                {/* <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                    <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
-                        <Icon type="feather" name="edit" color="blue" size={30} />
-                    </Pressable>
-                    <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
-                        <Icon type="feather" name="printer" color="green" size={30} />
-                    </Pressable>
-                </View> */}
+                <Text style={styles.textcolor}>{item.name}</Text>
+                <Text style={styles.textcolor}>{item.age}</Text>
+                <Text style={styles.textcolor}>{item.email}</Text>
+                <Text style={styles.textcolor}>{item.city}</Text>
+
             </View>
             <View style={styles.rightSide}>
-                <View style={{ display: 'flex', flexDirection: 'column' }}>
-                    {showActions ? (
-                        <>
+                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <Pressable onPress={() => selectCard(item.id)}>
+                        <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                    </Pressable>
+                    {showActions === item.id && (
+                        <View style={styles.actionsPopup}>
                             <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
                                 <Icon type="feather" name="edit" color="blue" size={30} />
                             </Pressable>
                             <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
                                 <Icon type="feather" name="printer" color="green" size={30} />
                             </Pressable>
-                        </>
-                    ) : (
-                        <Pressable onPress={() => setShowActions(true)}>
-                            <Icon type="feather" name="more-vertical" color="gray" size={30} />
-                        </Pressable>
+                        </View>
                     )}
                 </View>
             </View>
         </View>
     );
     const loadMoreData = () => {
+        setisLoading(true)
+
         const start = page * 10;
         const end = start + 10;
         setData([...data, ...dummyData.slice(start, end)]);
         setPage(page + 1);
+        setTimeout(() => {
+
+            setisLoading(false)
+        }, 2000);
+
     };
     return (
-        <SafeAreaView>
-            <View style={{ marginBottom: 320, padding: 10 }}>
-                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
-                />
-                <View style={styles.pagination}>
-                    <Button title="Previous" onPress={handlePreviousPage} disabled={page === 1} />
-                    <Text style={{ margin: 8 }}>{`Page ${page}`}</Text>
-                    <Button title="Next" onPress={handleNextPage} disabled={data.length < itemsPerPage} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
+            {isLoading &&
+                <View style={[styles.container, styles.horizontal]}>
+                    <ActivityIndicator size={'large'} />
                 </View>
-
+            }
+            <View style={{ flex: 1, padding: 10 }}>
+                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
+                {data.length === 0 ? (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text>No content to display.</Text>
+                    </View>
+                ) : (
+                    <FlatList
+                        data={data}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id.toString()}
+                        onEndReached={loadMoreData}
+                        onEndReachedThreshold={0.1}
+                    />
+                )}
             </View>
+            {data.length < dummyData.length && (
+                <View style={{ padding: 10 }}>
+                    <Button title="Load More" onPress={() => loadMoreData()} />
+                </View>
+            )}
         </SafeAreaView>
+
+
     )
 }
 const styles = StyleSheet.create({
+    container: {
+        position: 'absolute',
+        zIndex: 999,
+        height: '100%',
+        width: '100%',
+        margin: 'auto',
+        backgroundColor: "rgba(255,255,255,0.7)",
+        elevation: Platform.OS === "android" ? 50 : 0,
+        shadowColor: "rgba(255,255,255,0.7)"
+    },
+    horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
+    },
     pagination: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -325,29 +363,30 @@ const styles = StyleSheet.create({
     },
     card: {
         flexDirection: 'row',
-        borderWidth: 1,
-        backgroundColor: '#f5f5f5',
-        // borderColor: '#000', // Border around the entire card
-        borderRadius: 5,
+        backgroundColor: 'white', // Background color of the card
+        borderRadius: 10, // Increase the border radius for a smoother look
         padding: 10,
-        marginBottom: 10,
-        shadowColor: '#555',
-        shadowOffset: { width: -5, height: 5 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        elevation: 5
+        marginBottom: 15,
+        shadowColor: '#000', // Shadow color
+        shadowOffset: { width: 0, height: 3 }, // Offset of the shadow
+        shadowOpacity: 0.3, // Opacity of the shadow
+        shadowRadius: 5, // Spread of the shadow
+        elevation: 5, // Elevation for Android (keep this line for Android)
 
     },
+
     leftSide: {
         flex: 3,
         marginRight: 10,
-        borderRightWidth: 1, // Add a right border to the left side
-        borderColor: 'black', // Border color for the left side
-        paddingRight: 10, // Optional padding to separate the text from the border
+        borderRightWidth: 1,
+        borderColor: 'black',
+        paddingRight: 10,
     },
-
     middleSide: {
         flex: 6,
+    },
+    textcolor: {
+        color: 'gray'
     },
     rightSide: {
         flex: 1,
@@ -355,6 +394,24 @@ const styles = StyleSheet.create({
     label: {
         color: '#000',
         fontWeight: 'bold',
+    },
+    actionsPopup: {
+        position: 'absolute',
+        top: 80,
+        left: '50%',
+        transform: [{ translateX: -50 }, { translateY: -50 }],
+        backgroundColor: 'white',
+        padding: 10,
+        borderRadius: 10,
+        elevation: 10,
+        display: 'flex',
+        flexDirection: 'row',
+        width: 100,
+        overflow: 'visible',
+        shadowColor: '#000', // Shadow color
+        shadowOffset: { width: 0, height: 3 }, // Offset of the shadow
+        shadowOpacity: 0.3, // Opacity of the shadow
+        shadowRadius: 5, // Spread of the shadow
     },
 });
 export default TodayPatients

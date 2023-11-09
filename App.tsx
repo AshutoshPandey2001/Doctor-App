@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -29,33 +30,47 @@ import Home from './src/pages/Home';
 import TodayPatients from './src/pages/TodayPatients';
 import AllPatients from './src/pages/AllPatients';
 import DoctorPriscription from './src/pages/DoctorPriscription';
+import { useSelector } from 'react-redux';
+import { RootState } from './src/redux/store';
+import { GlobalStyle } from './src/globalStyle';
 
 
 
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLogged] = useState(true);
+  const navTheme = DefaultTheme;
+  navTheme.colors.background = '#fff';
+  const { isLoading } = useSelector((state: RootState) => state.isLoading)
 
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   return (
-    <View style={{ height: '100%' }}>
-      <NavigationContainer theme={DefaultTheme}>
-        {isLoggedIn ?
-          <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />}>
-            <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
-            <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
-            <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
-            <Tab.Screen name="DoctorPriscription" component={DoctorPriscription} options={{ headerShown: false }} />
-          </Tab.Navigator>
-          :
-          (<Stack.Navigator initialRouteName="Login">
-            <Stack.Screen name="Auth" options={{ headerShown: false }}
-              component={AuthNavigator} />
-          </Stack.Navigator>)
-        }
-      </NavigationContainer>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      {isLoading &&
+        <View style={[GlobalStyle.container, GlobalStyle.horizontal]}>
+          <ActivityIndicator size={'large'} />
+        </View>
+      }
+      <View style={{ height: '100%', backgroundColor: '#fff' }}>
+        <NavigationContainer theme={navTheme}>
+          {isLoggedIn ?
+            <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />}
+            >
+              <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
+              <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
+              <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
+              <Tab.Screen name="DoctorPriscription" component={DoctorPriscription} options={{ headerShown: false }} />
+            </Tab.Navigator>
+            :
+            (<Stack.Navigator initialRouteName="Login">
+              <Stack.Screen name="Auth" options={{ headerShown: false }}
+                component={AuthNavigator} />
+            </Stack.Navigator>)
+          }
+        </NavigationContainer>
+      </View>
+    </SafeAreaView>
   );
 }
 

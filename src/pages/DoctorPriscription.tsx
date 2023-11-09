@@ -1,8 +1,12 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable } from 'react-native';
+import { GlobalStyle } from '../globalStyle';
+import Icon from 'react-native-easy-icon';
+import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 // import { Barcode } from 'react-native-barcode-builder';
 // import { Table, Row } from 'react-native-table-component';
+
 interface State {
     paymentStatus: string;
     diagnosis: string;
@@ -95,7 +99,73 @@ const DummyData: State = {
 const DoctorPriscription = () => {
     const [state, setState] = useState<State>({ ...DummyData });
     const [showModal, setShowModal] = useState(false);
-
+    const medicineData: any = [
+        {
+            id: 1,
+            medicineName: "Medicine1",
+            frequency: {
+                M: 0,
+                A: 1,
+                E: 0,
+                N: 1
+            },
+            days: 7,
+            total: 14,
+            advice: "Take with food"
+        },
+        {
+            id: 2,
+            medicineName: "Medicine2",
+            frequency: {
+                M: 0,
+                A: 1,
+                E: 0,
+                N: 1
+            },
+            days: 5,
+            total: 10,
+            advice: "Avoid alcohol"
+        },
+        {
+            id: 3,
+            medicineName: "Medicine3",
+            frequency: {
+                M: 0,
+                A: 1,
+                E: 0,
+                N: 1
+            },
+            days: 10,
+            total: 20,
+            advice: "Store in a cool place"
+        },
+        {
+            id: 4,
+            medicineName: "Medicine4",
+            frequency: {
+                M: 0,
+                A: 1,
+                E: 0,
+                N: 1
+            },
+            days: 3,
+            total: 6,
+            advice: "Take in the morning"
+        },
+        {
+            id: 5,
+            medicineName: "Medicine5",
+            frequency: {
+                M: 0,
+                A: 1,
+                E: 0,
+                N: 1
+            },
+            days: 14,
+            total: 28,
+            advice: "Follow doctor's instructions"
+        }
+    ];
     const openHistory = () => {
         setShowModal(true);
     };
@@ -137,10 +207,35 @@ const DoctorPriscription = () => {
     const cancelAdvice = () => {
         // Implement your cancelAdvice function logic here
     };
+    const renderItem = ({ item }: { item: any }) => (
+        <View style={GlobalStyle.card}>
+            <View style={GlobalStyle.leftSide}>
+                <Text style={GlobalStyle.label}>Medicine:</Text>
+                <Text style={GlobalStyle.label}>Freuency:</Text>
+                <Text style={GlobalStyle.label}>Days:</Text>
+                <Text style={GlobalStyle.label}>Total:</Text>
+                <Text style={GlobalStyle.label}>Advice:</Text>
+            </View>
+            <View style={GlobalStyle.middleSide}>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.medicineName}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.days}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.total}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.advice}</Text>
 
+            </View>
+            <View style={GlobalStyle.rightSide}>
+                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <Pressable >
+                        <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                    </Pressable>
+
+                </View>
+            </View>
+        </View>
+    );
     return (
-        <SafeAreaView>
-
+        <SafeAreaView style={{ flex: 1, marginBottom: 100 }}>
             <ScrollView>
                 <View style={{ margin: 20 }}>
                     <View style={{ display: 'none' }}>
@@ -148,144 +243,188 @@ const DoctorPriscription = () => {
                     </View>
                     {state.paymentStatus === 'Pending' ? (
                         <>
-                            <View style={{ alignItems: 'center' }}>
-                                <Text style={[styles.textcolor, { textAlign: 'center' }]}>Patient Information</Text>
-                                <Text>Name: {state.pName}</Text>
-                                <Text>Age/Sex: {state.page}/{state.pGender}</Text>
-                                <Text>Address: {state.pAddress}</Text>
-                                <Text>Mobile No: {state.pMobileNo}</Text>
-                                <Text>Consulting Dr.: {state.drName}</Text>
-                            </View>
-                            <View style={{ margin: 10 }}>
-                                <Text style={styles.textcolor}>Diagnosis:</Text>
-                                <TextInput
-                                    placeholder="Enter diagnosis"
-                                    value={state.diagnosis}
-                                    onChangeText={(text) => setState({ ...state, diagnosis: text })}
-                                />
-                            </View>
-                            <View style={{ margin: 10 }}>
-                                <Text style={styles.textcolor}>Follow-up:</Text>
-                                <TextInput
-                                    placeholder="Enter follow-up Details"
-                                    value={state.followup}
-                                    onChangeText={(text) => setState({ ...state, followup: text })}
-                                />
-                            </View>
-                            <View style={{ margin: 10 }}>
-
-
-                                <View style={{ padding: 20 }}>
-                                    <View>
-                                        <Text style={styles.textcolor}>Medicine:</Text>
-                                        <TextInput
-                                            placeholder="Enter Medicine"
-                                            value={advice.medicine}
-                                            onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
-                                        />
+                            <View >
+                                <Text style={styles.heading}>Patient Information</Text>
+                                <View style={GlobalStyle.card}>
+                                    <View style={GlobalStyle.leftSide}>
+                                        <Text style={GlobalStyle.label}>Name: </Text>
+                                        <Text style={GlobalStyle.label}>Age/Sex: </Text>
+                                        <Text style={GlobalStyle.label}>Address: </Text>
+                                        <Text style={GlobalStyle.label}>Mobile No: </Text>
+                                        <Text style={GlobalStyle.label}>Consulting Dr.: </Text>
                                     </View>
-
-                                    <View>
-                                        <Text style={styles.textcolor}>Frequency:</Text>
-                                        <View style={{ marginTop: 20, display: 'flex', flexDirection: 'row' }}>
-                                            <CheckBox
-                                                value={advice.frequency.M}
-                                                onValueChange={() => handleCheckboxChange('M')}
-                                            />
-                                            <CheckBox
-                                                value={advice.frequency.A}
-                                                onValueChange={() => handleCheckboxChange('A')}
-                                            />
-                                            <CheckBox
-                                                value={advice.frequency.E}
-                                                onValueChange={() => handleCheckboxChange('E')}
-                                            />
-                                            <CheckBox
-                                                value={advice.frequency.N}
-                                                onValueChange={() => handleCheckboxChange('N')}
-                                            />
-                                        </View>
-                                    </View>
-
-                                    <View>
-                                        <Text style={styles.textcolor}>Days:</Text>
-                                        <TextInput
-                                            keyboardType="numeric"
-                                            value={advice.days}
-                                            onChangeText={(text) => setAdvice({ ...advice, days: text })}
-                                        />
-                                    </View>
-
-                                    <View>
-                                        <Text style={styles.textcolor}>Total:</Text>
-                                        <TextInput
-                                            keyboardType="numeric"
-                                            value={advice.total}
-                                            onChangeText={(text) => setAdvice({ ...advice, total: text })}
-                                        />
-                                    </View>
-
-                                    <View>
-                                        <Text style={styles.textcolor}>Advice:</Text>
-                                        <TextInput
-                                            placeholder="Enter Advice"
-                                            value={advice.advice}
-                                            onChangeText={(text) => setAdvice({ ...advice, advice: text })}
-                                        />
-                                    </View>
-
-                                    <Button title="Add Advice" onPress={pushAdvice} />
-
-                                    <View style={{ marginTop: 20 }}>
-                                        <Text style={styles.textcolor}>RX(Advice on OPD):</Text>
-                                        <ScrollView>
-                                            {prescription.map((item: any, i) => (
-                                                <View key={i}>
-                                                    <Text>Medicine Name: {item.medicine}</Text>
-                                                    <Text>
-                                                        Frequency: {item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}
-                                                    </Text>
-                                                    <Text>Days: {item.days}</Text>
-                                                    <Text>Total: {item.total}</Text>
-                                                    <Text>Advice: {item.advice}</Text>
-                                                    <Button
-                                                        title="Cancel"
-                                                        onPress={() => cancelAdvice()}
-                                                    />
-                                                </View>
-                                            ))}
-                                        </ScrollView>
+                                    <View style={GlobalStyle.middleSide}>
+                                        <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.page}/{state.pGender}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
+                                        <Text style={GlobalStyle.textcolor}> {state.pMobileNo}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.drName}</Text>
                                     </View>
                                 </View>
 
+                                <View style={styles.section}>
 
-                                {/* Prescription input fields */}
+                                    <Text style={styles.subHeading}>Diagnosis:</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Enter diagnosis"
+                                        value={state.diagnosis}
+                                        onChangeText={(text) => setState({ ...state, diagnosis: text })}
+                                        placeholderTextColor={'gray'}
+                                    />
+                                </View>
+
+                                <View style={[styles.section, { top: 5 }]}>
+                                    <Text style={styles.subHeading}>Follow-up:</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Enter follow-up Details"
+                                        value={state.followup}
+                                        onChangeText={(text) => setState({ ...state, followup: text })}
+                                        placeholderTextColor={'gray'}
+                                    />
+                                </View>
+
+                                <View style={styles.section}>
+                                    <Text style={styles.heading}>Prescription</Text>
+                                    <Text style={styles.subHeading}>Medicine:</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Enter Medicine"
+                                        value={advice.medicine}
+                                        onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                        placeholderTextColor={'gray'}
+                                    />
+
+                                    <Text style={styles.subHeading}>Frequency:</Text>
+                                    <View style={styles.checkboxContainer}>
+                                        <CheckBox
+                                            value={advice.frequency.M}
+                                            onValueChange={() => handleCheckboxChange('M')}
+                                        />
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>M</Text>
+
+                                        <CheckBox
+                                            value={advice.frequency.A}
+                                            onValueChange={() => handleCheckboxChange('A')}
+                                        />
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>A</Text>
+
+                                        <CheckBox
+                                            value={advice.frequency.E}
+                                            onValueChange={() => handleCheckboxChange('E')}
+                                        />
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>E</Text>
+
+                                        <CheckBox
+                                            value={advice.frequency.N}
+                                            onValueChange={() => handleCheckboxChange('N')}
+                                        />
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>N</Text>
+
+                                    </View>
+
+
+                                    <Text style={styles.subHeading}>Advice:</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Enter advice"
+                                        value={advice.medicine}
+                                        onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                        placeholderTextColor={'gray'}
+                                    />
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <View>
+                                            <Text style={styles.subHeading}>Days:</Text>
+                                            <TextInput
+                                                style={[styles.input, { width: 150 }]}
+                                                placeholder="Enter days"
+                                                value={advice.medicine}
+                                                keyboardType='numeric'
+                                                onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                                placeholderTextColor={'gray'}
+                                            />
+                                        </View>
+                                        <View>
+                                            <Text style={styles.subHeading}>Total:</Text>
+                                            <TextInput
+                                                style={[styles.input, { width: 150 }]}
+                                                placeholder="Enter total"
+                                                value={advice.medicine}
+                                                keyboardType='numeric'
+                                                onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                                placeholderTextColor={'gray'}
+                                            />
+                                        </View>
+                                    </View>
+                                    {/* Continue with the rest of the UI elements... */}
+                                    <View style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Pressable style={{ justifyContent: 'center', width: 150, borderRadius: 20, height: 40, backgroundColor: '#2a7fba' }}>
+                                            <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Add Medicine</Text>
+                                        </Pressable>
+                                    </View>
+                                </View>
+                                <View style={styles.section}>
+                                    <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
+                                    <GestureHandlerRootView>
+                                        <FlatList
+                                            data={medicineData}
+                                            renderItem={renderItem}
+                                            keyExtractor={(item: any, i: number) => item.id}
+                                            onEndReachedThreshold={0.1}
+                                        />
+                                    </GestureHandlerRootView>
+
+
+                                    {/* <ScrollView>
+                                        {prescription.map((item: any, i) => (
+                                            <View key={i} style={styles.prescriptionItem}>
+                                                <Text>Medicine Name: {item.medicine}</Text>
+                                                <Text>
+                                                    Frequency: {item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}
+                                                </Text>
+                                                <Text>Days: {item.days}</Text>
+                                                <Text>Total: {item.total}</Text>
+                                                <Text>Advice: {item.advice}</Text>
+                                                <Button title="Cancel" onPress={() => cancelAdvice(i)} />
+                                            </View>
+                                        ))}
+                                    </ScrollView> */}
+                                </View>
+                                <View style={styles.section}>
+                                    <Text style={styles.subHeading}>General instructions:</Text>
+                                    <TextInput
+                                        style={[styles.input, { height: 100 }]}
+                                        placeholder="Enter general instructions"
+                                        value={state.generalInstruction}
+                                        multiline={true}
+                                        numberOfLines={3}
+                                        onChangeText={(text) => setState({ ...state, generalInstruction: text })}
+                                        placeholderTextColor={'gray'}
+                                    />
+                                </View>
+
+                                <View style={styles.buttonContainer}>
+                                    <Button title="Print" onPress={printPrescription} />
+                                    <Button title="Save" onPress={savePrescription} />
+                                </View>
+
+
                             </View>
-                            <View style={{ margin: 10 }}>
-                                <Text style={styles.textcolor}>General instructions:</Text>
-                                <TextInput
-                                    placeholder="Enter general instructions"
-                                    value={state.generalInstruction}
-                                    multiline={true}
-                                    numberOfLines={3}
-                                    onChangeText={(text) => setState({ ...state, generalInstruction: text })}
-                                />
-                            </View>
-                            <Button title="Print" onPress={() => printPrescription(state)} />
-                            <Button title="Save" onPress={() => savePrescription()} />
                         </>
                     ) : (
-                        <View>
-                            <View style={{ alignItems: 'center' }}>
-                                <Text style={styles.textcolor}>Patient Information</Text>
-                                <Text>Name: {state.pName}</Text>
-                                <Text>Age/Sex: {state.page}/{state.pGender}</Text>
-                                <Text>Address: {state.pAddress}</Text>
-                                <Text>Mobile No: {state.pMobileNo}</Text>
-                                <Text>Consulting Dr.: {state.drName}</Text>
-                            </View>
-                            <Button title="History" onPress={() => openHistory()} />
-                        </View>
+                        <View><Text>hello</Text></View>
+                        // <View>
+                        //     <View style={{ alignItems: 'center' }}>
+                        //         <Text style={styles.textcolor}>Patient Information</Text>
+                        //         <Text>Name: {state.pName}</Text>
+                        //         <Text>Age/Sex: {state.page}/{state.pGender}</Text>
+                        //         <Text>Address: {state.pAddress}</Text>
+                        //         <Text>Mobile No: {state.pMobileNo}</Text>
+                        //         <Text>Consulting Dr.: {state.drName}</Text>
+                        //     </View>
+                        //     <Button title="History" onPress={() => openHistory()} />
+                        // </View>
                     )}
                     <Modal visible={showModal} transparent={false} animationType="slide">
                         <View style={{ margin: 20 }}>
@@ -298,14 +437,62 @@ const DoctorPriscription = () => {
         </SafeAreaView>
     );
 };
+// const styles = StyleSheet.create({
+
+//     textcolor: {
+//         color: '#000',
+//         fontSize: 18,
+//         fontWeight: 'bold'
+//     },
+
+// });
+
 const styles = StyleSheet.create({
-
-    textcolor: {
-        color: '#000',
-        fontSize: 18,
-        fontWeight: 'bold'
+    container: {
+        padding: 20,
     },
+    heading: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    section: {
+        marginVertical: 10,
+    },
+    subHeading: {
+        color: 'gray',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    input: {
+        borderWidth: 0.5,
+        borderColor: 'gray',
+        padding: 10,
+        marginBottom: 10,
+        borderRadius: 5,
 
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginVertical: 10,
+    },
+    prescriptionItem: {
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+    },
 });
+
+
+
+
+
+
 
 export default DoctorPriscription;

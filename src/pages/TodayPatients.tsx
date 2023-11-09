@@ -1,237 +1,230 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, FlatList, Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { GlobalStyle } from '../globalStyle';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../redux/action/UiSlice';
+
 interface Patient {
     id: number;
     name: string;
-    age: number;
-    email: string;
-    city: string;
+    address: string;
+    date: string;
+    mobileNumber: string;
 }
 const TodayPatients = ({ navigation }: any) => {
     const dummyData: Patient[] = [
+
         {
             "id": 1,
             "name": "John Doe",
-            "age": 28,
-            "email": "john.doe@example.com",
-            "city": "New York"
+            "address": "123 Main Street",
+            "date": "2023-10-04",
+            "mobileNumber": "+1234567890"
         },
         {
             "id": 2,
             "name": "Jane Smith",
-            "age": 24,
-            "email": "jane.smith@example.com",
-            "city": "Los Angeles"
+            "address": "456 Elm Street",
+            "date": "2023-10-05",
+            "mobileNumber": "+9876543210"
         },
         {
             "id": 3,
-            "name": "Mike Johnson",
-            "age": 35,
-            "email": "mike.johnson@example.com",
-            "city": "Chicago"
+            "name": "Peter Jones",
+            "address": "789 Oak Street",
+            "date": "2023-10-06",
+            "mobileNumber": "+5678901234"
         },
         {
             "id": 4,
-            "name": "Emily Wilson",
-            "age": 30,
-            "email": "emily.wilson@example.com",
-            "city": "Houston"
+            "name": "Mary Brown",
+            "address": "1011 Maple Street",
+            "date": "2023-10-07",
+            "mobileNumber": "+1011213141"
         },
         {
             "id": 5,
-            "name": "David Brown",
-            "age": 42,
-            "email": "david.brown@example.com",
-            "city": "San Francisco"
+            "name": "David Williams",
+            "address": "1213 Pine Street",
+            "date": "2023-10-08",
+            "mobileNumber": "+1112131415"
         },
         {
             "id": 6,
-            "name": "Sarah Davis",
-            "age": 27,
-            "email": "sarah.davis@example.com",
-            "city": "Miami"
+            "name": "Sarah Miller",
+            "address": "1415 Walnut Street",
+            "date": "2023-10-09",
+            "mobileNumber": "+1617181920"
         },
         {
             "id": 7,
-            "name": "Michael Lee",
-            "age": 29,
-            "email": "michael.lee@example.com",
-            "city": "Seattle"
+            "name": "William Davis",
+            "address": "1617 Elm Street",
+            "date": "2023-10-10",
+            "mobileNumber": "+2122232425"
         },
         {
             "id": 8,
-            "name": "Laura White",
-            "age": 33,
-            "email": "laura.white@example.com",
-            "city": "Boston"
+            "name": "Elizabeth Taylor",
+            "address": "1819 Oak Street",
+            "date": "2023-10-11",
+            "mobileNumber": "+2627282930"
         },
         {
             "id": 9,
-            "name": "Chris Robinson",
-            "age": 40,
-            "email": "chris.robinson@example.com",
-            "city": "Dallas"
+            "name": "Michael Johnson",
+            "address": "2021 Maple Street",
+            "date": "2023-10-12",
+            "mobileNumber": "+3132333435"
         },
         {
             "id": 10,
-            "name": "Amanda Hall",
-            "age": 26,
-            "email": "amanda.hall@example.com",
-            "city": "Atlanta"
+            "name": "Jennifer Wilson",
+            "address": "2223 Pine Street",
+            "date": "2023-10-13",
+            "mobileNumber": "+3637383940"
         },
         {
             "id": 11,
-            "name": "Robert Garcia",
-            "age": 31,
-            "email": "robert.garcia@example.com",
-            "city": "Phoenix"
+            "name": "Mark Anderson",
+            "address": "2425 Walnut Street",
+            "date": "2023-10-14",
+            "mobileNumber": "+4142434445"
         },
         {
             "id": 12,
-            "name": "Jessica Martinez",
-            "age": 22,
-            "email": "jessica.martinez@example.com",
-            "city": "Denver"
+            "name": "Susan Thomas",
+            "address": "2627 Elm Street",
+            "date": "2023-10-15",
+            "mobileNumber": "+4647484950"
         },
         {
             "id": 13,
-            "name": "Daniel Smith",
-            "age": 37,
-            "email": "daniel.smith@example.com",
-            "city": "Philadelphia"
+            "name": "Paul Jackson",
+            "address": "2829 Oak Street",
+            "date": "2023-10-16",
+            "mobileNumber": "+5152535455"
         },
         {
             "id": 14,
-            "name": "Mary Taylor",
-            "age": 25,
-            "email": "mary.taylor@example.com",
-            "city": "Detroit"
+            "name": "Linda Cooper",
+            "address": "3031 Maple Street",
+            "date": "2023-10-17",
+            "mobileNumber": "+5657585960"
         },
+
         {
             "id": 15,
-            "name": "James Wilson",
-            "age": 34,
-            "email": "james.wilson@example.com",
-            "city": "San Diego"
+            "name": "John Doe",
+            "address": "123 Main Street",
+            "date": "2023-10-04",
+            "mobileNumber": "+1234567890"
         },
         {
             "id": 16,
-            "name": "Olivia Johnson",
-            "age": 29,
-            "email": "olivia.johnson@example.com",
-            "city": "Minneapolis"
+            "name": "Jane Smith",
+            "address": "456 Elm Street",
+            "date": "2023-10-05",
+            "mobileNumber": "+9876543210"
         },
         {
             "id": 17,
-            "name": "William Anderson",
-            "age": 38,
-            "email": "william.anderson@example.com",
-            "city": "Portland"
+            "name": "Peter Jones",
+            "address": "789 Oak Street",
+            "date": "2023-10-06",
+            "mobileNumber": "+5678901234"
         },
         {
             "id": 18,
-            "name": "Sophia Moore",
-            "age": 23,
-            "email": "sophia.moore@example.com",
-            "city": "San Antonio"
+            "name": "Mary Brown",
+            "address": "1011 Maple Street",
+            "date": "2023-10-07",
+            "mobileNumber": "+1011213141"
         },
         {
             "id": 19,
-            "name": "Andrew Harris",
-            "age": 36,
-            "email": "andrew.harris@example.com",
-            "city": "Charlotte"
+            "name": "David Williams",
+            "address": "1213 Pine Street",
+            "date": "2023-10-08",
+            "mobileNumber": "+1112131415"
         },
         {
             "id": 20,
-            "name": "Ella Davis",
-            "age": 32,
-            "email": "ella.davis@example.com",
-            "city": "Las Vegas"
+            "name": "Sarah Miller",
+            "address": "1415 Walnut Street",
+            "date": "2023-10-09",
+            "mobileNumber": "+1617181920"
         },
         {
             "id": 21,
-            "name": "Joseph Wilson",
-            "age": 27,
-            "email": "joseph.wilson@example.com",
-            "city": "Raleigh"
+            "name": "William Davis",
+            "address": "1617 Elm Street",
+            "date": "2023-10-10",
+            "mobileNumber": "+2122232425"
         },
         {
             "id": 22,
-            "name": "Lily Johnson",
-            "age": 35,
-            "email": "lily.johnson@example.com",
-            "city": "Nashville"
+            "name": "Elizabeth Taylor",
+            "address": "1819 Oak Street",
+            "date": "2023-10-11",
+            "mobileNumber": "+2627282930"
         },
         {
             "id": 23,
-            "name": "Christopher Brown",
-            "age": 33,
-            "email": "christopher.brown@example.com",
-            "city": "New Orleans"
+            "name": "Michael Johnson",
+            "address": "2021 Maple Street",
+            "date": "2023-10-12",
+            "mobileNumber": "+3132333435"
         },
         {
             "id": 24,
-            "name": "Grace Lee",
-            "age": 26,
-            "email": "grace.lee@example.com",
-            "city": "Orlando"
+            "name": "Jennifer Wilson",
+            "address": "2223 Pine Street",
+            "date": "2023-10-13",
+            "mobileNumber": "+3637383940"
         },
         {
             "id": 25,
-            "name": "Samuel Clark",
-            "age": 30,
-            "email": "samuel.clark@example.com",
-            "city": "Tampa"
+            "name": "Mark Anderson",
+            "address": "2425 Walnut Street",
+            "date": "2023-10-14",
+            "mobileNumber": "+4142434445"
         },
         {
             "id": 26,
-            "name": "Natalie Lewis",
-            "age": 29,
-            "email": "natalie.lewis@example.com",
-            "city": "St. Louis"
+            "name": "Susan Thomas",
+            "address": "2627 Elm Street",
+            "date": "2023-10-15",
+            "mobileNumber": "+4647484950"
         },
         {
             "id": 27,
-            "name": "Benjamin Hall",
-            "age": 34,
-            "email": "benjamin.hall@example.com",
-            "city": "Cleveland"
+            "name": "Paul Jackson",
+            "address": "2829 Oak Street",
+            "date": "2023-10-16",
+            "mobileNumber": "+5152535455"
         },
         {
             "id": 28,
-            "name": "Samantha Wilson",
-            "age": 28,
-            "email": "samantha.wilson@example.com",
-            "city": "Kansas City"
+            "name": "Linda Cooper",
+            "address": "3031 Maple Street",
+            "date": "2023-10-17",
+            "mobileNumber": "+5657585960"
         },
-        {
-            "id": 29,
-            "name": "David Mitchell",
-            "age": 31,
-            "email": "david.mitchell@example.com",
-            "city": "Salt Lake City"
-        },
-        {
-            "id": 30,
-            "name": "Emma Davis",
-            "age": 25,
-            "email": "emma.davis@example.com",
-            "city": "Oklahoma City"
-        }
+
+
     ]
     const itemsPerPage = 10;
     // const [data, setData] = useState<any>([]);
     const [showActions, setShowActions] = useState<number | null>(null); // Track the selected card's ID
     const [showSmallPopup, setShowSmallPopup] = useState(false);
-
-    // const navigation = useNavigation()
+    const dispatch = useDispatch()
     const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
     const [page, setPage] = useState(1);
-    const [isLoading, setisLoading] = useState(false);
+    const [isVisible, setisVisible] = useState(false);
     // useEffect(() => {
     //     // Calculate the range of data to display for the current page
     //     const startIndex = (page - 1) * itemsPerPage;
@@ -249,37 +242,38 @@ const TodayPatients = ({ navigation }: any) => {
             setPage(page - 1);
         }
     };
-    const selectCard = (id: number) => {
-        if (showActions === id) {
-            // If actions are already shown for the clicked card, hide them
-            setShowActions(null);
-        } else {
-            // Otherwise, show actions for the clicked card
-            setShowActions(id);
-        }
+    const selectCard = (item: number) => {
+        setisVisible(true)
+        setShowActions(item);
+
     };
-    const renderItem = ({ item }: { item: Patient }) => (
-        <View style={styles.card}>
-            <View style={styles.leftSide}>
-                <Text style={styles.label}>Date:</Text>
-                <Text style={styles.label}>Patient Name:</Text>
-                <Text style={styles.label}>Address:</Text>
-                <Text style={styles.label}>Mobile No:</Text>
+    const onClose = () => {
+        setisVisible(false)
+        setShowActions(null);
+
+    }
+    const renderItem = ({ item }: { item: any }) => (
+        <View style={GlobalStyle.card}>
+            <View style={GlobalStyle.leftSide}>
+                <Text style={GlobalStyle.label}>Date:</Text>
+                <Text style={GlobalStyle.label}>Patient Name:</Text>
+                <Text style={GlobalStyle.label}>Address:</Text>
+                <Text style={GlobalStyle.label}>Mobile No:</Text>
             </View>
-            <View style={styles.middleSide}>
-                <Text style={styles.textcolor}>{item.name}</Text>
-                <Text style={styles.textcolor}>{item.age}</Text>
-                <Text style={styles.textcolor}>{item.email}</Text>
-                <Text style={styles.textcolor}>{item.city}</Text>
+            <View style={GlobalStyle.middleSide}>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.date}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.address}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.mobileNumber}</Text>
 
             </View>
-            <View style={styles.rightSide}>
+            <View style={GlobalStyle.rightSide}>
                 <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <Pressable onPress={() => selectCard(item.id)}>
+                    <Pressable onPress={() => selectCard(item)}>
                         <Icon type="feather" name="more-vertical" color="gray" size={30} />
                     </Pressable>
-                    {showActions === item.id && (
-                        <View style={styles.actionsPopup}>
+                    {/* {showActions === item.id && (
+                        <View style={GlobalStyle.actionsPopup}>
                             <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
                                 <Icon type="feather" name="edit" color="blue" size={30} />
                             </Pressable>
@@ -287,13 +281,13 @@ const TodayPatients = ({ navigation }: any) => {
                                 <Icon type="feather" name="printer" color="green" size={30} />
                             </Pressable>
                         </View>
-                    )}
+                    )} */}
                 </View>
             </View>
         </View>
     );
     const loadMoreData = () => {
-        setisLoading(true)
+        dispatch(setLoading(true))
 
         const start = page * 10;
         const end = start + 10;
@@ -301,17 +295,13 @@ const TodayPatients = ({ navigation }: any) => {
         setPage(page + 1);
         setTimeout(() => {
 
-            setisLoading(false)
+            dispatch(setLoading(false))
         }, 2000);
 
     };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
-            {isLoading &&
-                <View style={[styles.container, styles.horizontal]}>
-                    <ActivityIndicator size={'large'} />
-                </View>
-            }
+
             <View style={{ flex: 1, padding: 10 }}>
                 <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
                 {data.length === 0 ? (
@@ -328,90 +318,41 @@ const TodayPatients = ({ navigation }: any) => {
                     />
                 )}
             </View>
-            {data.length < dummyData.length && (
+            {/* {data.length < dummyData.length && (
                 <View style={{ padding: 10 }}>
                     <Button title="Load More" onPress={() => loadMoreData()} />
                 </View>
-            )}
+            )} */}
+            <Modal visible={isVisible} animationType="slide"
+                transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
+                    <View style={{
+                        height: "20%",
+                        width: "100%",
+                        marginTop: 'auto',
+                        backgroundColor: 'white',
+                        elevation: 5,
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15
+                    }}>
+
+                        <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription')} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
+                            <Icon type="feather" name="edit" color="gray" size={25} />
+                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription')} style={GlobalStyle.btn}>
+                            <Icon type="feather" name="printer" color="gray" size={25} />
+                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onClose} style={GlobalStyle.btn}>
+                            <Icon type="entypo" name="cross" color="gray" size={25} />
+                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
-
-
     )
 }
-const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        zIndex: 999,
-        height: '100%',
-        width: '100%',
-        margin: 'auto',
-        backgroundColor: "rgba(255,255,255,0.7)",
-        elevation: Platform.OS === "android" ? 50 : 0,
-        shadowColor: "rgba(255,255,255,0.7)"
-    },
-    horizontal: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 10,
-    },
-    pagination: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-        padding: 5
-    },
-    card: {
-        flexDirection: 'row',
-        backgroundColor: 'white', // Background color of the card
-        borderRadius: 10, // Increase the border radius for a smoother look
-        padding: 10,
-        marginBottom: 15,
-        shadowColor: '#000', // Shadow color
-        shadowOffset: { width: 0, height: 3 }, // Offset of the shadow
-        shadowOpacity: 0.3, // Opacity of the shadow
-        shadowRadius: 5, // Spread of the shadow
-        elevation: 5, // Elevation for Android (keep this line for Android)
 
-    },
-
-    leftSide: {
-        flex: 3,
-        marginRight: 10,
-        borderRightWidth: 1,
-        borderColor: 'black',
-        paddingRight: 10,
-    },
-    middleSide: {
-        flex: 6,
-    },
-    textcolor: {
-        color: 'gray'
-    },
-    rightSide: {
-        flex: 1,
-    },
-    label: {
-        color: '#000',
-        fontWeight: 'bold',
-    },
-    actionsPopup: {
-        position: 'absolute',
-        top: 80,
-        left: '50%',
-        transform: [{ translateX: -50 }, { translateY: -50 }],
-        backgroundColor: 'white',
-        padding: 10,
-        borderRadius: 10,
-        elevation: 10,
-        display: 'flex',
-        flexDirection: 'row',
-        width: 100,
-        overflow: 'visible',
-        shadowColor: '#000', // Shadow color
-        shadowOffset: { width: 0, height: 3 }, // Offset of the shadow
-        shadowOpacity: 0.3, // Opacity of the shadow
-        shadowRadius: 5, // Spread of the shadow
-    },
-});
 export default TodayPatients

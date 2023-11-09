@@ -274,7 +274,7 @@ const DoctorPriscription = () => {
                                     />
                                 </View>
 
-                                <View style={[styles.section, { top: 5 }]}>
+                                <View style={styles.section}>
                                     <Text style={styles.subHeading}>Follow-up:</Text>
                                     <TextInput
                                         style={styles.input}

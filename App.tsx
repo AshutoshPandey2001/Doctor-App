@@ -60,7 +60,9 @@ function App(): JSX.Element {
               <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
               <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
               <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
-              <Tab.Screen name="DoctorPriscription" component={DoctorPriscription} options={{ headerShown: false }} />
+              <Tab.Screen name="DoctorPriscription" component={DoctorPriscription}
+                options={{ headerShown: false }}
+              />
             </Tab.Navigator>
             :
             (<Stack.Navigator initialRouteName="Login">

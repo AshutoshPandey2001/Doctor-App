@@ -4,6 +4,8 @@ import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSh
 import { GlobalStyle } from '../globalStyle';
 import Icon from 'react-native-easy-icon';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
+import Accordion from 'react-native-collapsible/Accordion';
+
 // import { Barcode } from 'react-native-barcode-builder';
 // import { Table, Row } from 'react-native-table-component';
 
@@ -99,73 +101,58 @@ const DummyData: State = {
 const DoctorPriscription = () => {
     const [state, setState] = useState<State>({ ...DummyData });
     const [showModal, setShowModal] = useState(false);
-    const medicineData: any = [
+    const [advice, setAdvice] = useState({
+        id: Math.floor(1000 + Math.random() * 9000),
+        medicine: '',
+        frequency: { M: 0, A: 0, E: 0, N: 0 },
+        days: '',
+        total: '',
+        advice: '',
+    });
+    const [checkboxValues, setCheckboxValues] = useState({
+        M: false,
+        A: false,
+        E: false,
+        N: false,
+    });
+    const [prescription, setPrescription] = useState<any>([]);
+    const historydummyDataArray = [
         {
-            id: 1,
-            medicineName: "Medicine1",
-            frequency: {
-                M: 0,
-                A: 1,
-                E: 0,
-                N: 1
-            },
-            days: 7,
-            total: 14,
-            advice: "Take with food"
+            consultingDate: "2023-01-15", // Replace with your desired default consultingDate
+            diagnosis: "Lorem Ipsum Diagnosis 1",
+            followup: "2023-01-20", // Replace with your desired default followup date
+            prescription: [
+                {
+                    id: 1,
+                    medicine: "Dummy Medicine 1",
+                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
+                    days: 7,
+                    total: 14,
+                    advice: "Lorem Ipsum Advice 1",
+                },
+                // Add more prescription items as needed
+            ],
         },
         {
-            id: 2,
-            medicineName: "Medicine2",
-            frequency: {
-                M: 0,
-                A: 1,
-                E: 0,
-                N: 1
-            },
-            days: 5,
-            total: 10,
-            advice: "Avoid alcohol"
+            consultingDate: "2023-02-05", // Replace with your desired default consultingDate
+            diagnosis: "Lorem Ipsum Diagnosis 2",
+            followup: "2023-02-10", // Replace with your desired default followup date
+            prescription: [
+                {
+                    id: 1,
+                    medicine: "Dummy Medicine 2",
+                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
+                    days: 10,
+                    total: 20,
+                    advice: "Lorem Ipsum Advice 2",
+                },
+                // Add more prescription items as needed
+            ],
         },
-        {
-            id: 3,
-            medicineName: "Medicine3",
-            frequency: {
-                M: 0,
-                A: 1,
-                E: 0,
-                N: 1
-            },
-            days: 10,
-            total: 20,
-            advice: "Store in a cool place"
-        },
-        {
-            id: 4,
-            medicineName: "Medicine4",
-            frequency: {
-                M: 0,
-                A: 1,
-                E: 0,
-                N: 1
-            },
-            days: 3,
-            total: 6,
-            advice: "Take in the morning"
-        },
-        {
-            id: 5,
-            medicineName: "Medicine5",
-            frequency: {
-                M: 0,
-                A: 1,
-                E: 0,
-                N: 1
-            },
-            days: 14,
-            total: 28,
-            advice: "Follow doctor's instructions"
-        }
     ];
+
+    // Now you can use these two dummy data entries in your component
+
     const openHistory = () => {
         setShowModal(true);
     };
@@ -181,30 +168,51 @@ const DoctorPriscription = () => {
     const savePrescription = () => {
         // Implement your save functionality
     };
-    const [advice, setAdvice] = useState({
-        medicine: '',
-        frequency: { M: false, A: false, E: false, N: false },
-        days: '',
-        total: '',
-        advice: '',
-    });
-    const [prescription, setPrescription] = useState([]);
 
-    const handleCheckboxChange = (name: any) => {
-        setAdvice({
-            ...advice,
-            //   frequency: {
-            //     ...advice.frequency,
-            //     [name]: !advice.frequency[name],
-            //   },
-        });
+
+    const handleCheckboxChange = (e: keyof typeof checkboxValues) => {
+        setCheckboxValues({ ...checkboxValues, [e]: !checkboxValues[e] });
+
+        setAdvice((prevAdvice) => ({
+            ...prevAdvice,
+            frequency: {
+                ...prevAdvice.frequency,
+                [e]: 1,
+            },
+        }));
     };
-
     const pushAdvice = () => {
+        if (!advice) {
+            return;
+        }
+        console.log('advice', advice);
+        setPrescription([...prescription, advice]);
+        setAdvice({
+            id: Math.floor(1000 + Math.random() * 9000),
+            medicine: '',
+            frequency: {
+                M: 0,
+                A: 0,
+                E: 0,
+                N: 0,
+            },
+            total: '',
+            days: '',
+            advice: ''
+        });
+        setCheckboxValues({
+            M: false,
+            A: false,
+            E: false,
+            N: false,
+        })
         // Implement your pushAdvice function logic here
     };
+    console.log(prescription, 'prescription');
 
-    const cancelAdvice = () => {
+    const cancelAdvice = (item: any) => {
+        setPrescription(prescription.filter((medicine: any) => medicine.id !== item.id))
+
         // Implement your cancelAdvice function logic here
     };
     const renderItem = ({ item }: { item: any }) => (
@@ -217,23 +225,57 @@ const DoctorPriscription = () => {
                 <Text style={GlobalStyle.label}>Advice:</Text>
             </View>
             <View style={GlobalStyle.middleSide}>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.medicineName}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.medicine}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.days}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.total}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.advice}</Text>
 
             </View>
-            <View style={GlobalStyle.rightSide}>
+            <View style={[GlobalStyle.rightSide, { alignItems: 'center', justifyContent: 'center' }]}>
                 <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <Pressable >
-                        <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                    <Pressable onPress={() => cancelAdvice(item)}>
+                        <Icon type="entypo" name="cross" color="gray" size={25} />
                     </Pressable>
-
                 </View>
             </View>
         </View>
     );
+
+    const [activeSections, setActiveSections] = useState([]);
+
+    const renderSectionTitle = (section: any) => (
+        <View>
+            <Text>{section.consultingDate}</Text>
+        </View>
+    );
+
+    const renderHeader = (section: any) => (
+        <View>
+            <Text>{section.consultingDate}</Text>
+        </View>
+    );
+
+    const renderContent = (section: any) => (
+        <View>
+            <Text>Diagnosis:-{section.diagnosis}</Text>
+            <Text>Followup{section.followup}</Text>
+            <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
+            <GestureHandlerRootView>
+                <FlatList
+                    data={section.prescription}
+                    renderItem={renderItem}
+                    keyExtractor={(item: any, i: number) => item.id}
+                    onEndReachedThreshold={0.1}
+                />
+            </GestureHandlerRootView>
+        </View>
+    );
+
+    const updateSections = (updatedSections: any) => {
+        setActiveSections(updatedSections);
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, marginBottom: 100 }}>
             <ScrollView>
@@ -244,6 +286,7 @@ const DoctorPriscription = () => {
                     {state.paymentStatus === 'Pending' ? (
                         <>
                             <View >
+                                {/* <Pressable onPress={() => openHistory()}><Text>Open History</Text></Pressable> */}
                                 <Text style={styles.heading}>Patient Information</Text>
                                 <View style={GlobalStyle.card}>
                                     <View style={GlobalStyle.leftSide}>
@@ -299,25 +342,25 @@ const DoctorPriscription = () => {
                                     <Text style={styles.subHeading}>Frequency:</Text>
                                     <View style={styles.checkboxContainer}>
                                         <CheckBox
-                                            value={advice.frequency.M}
+                                            value={checkboxValues.M}
                                             onValueChange={() => handleCheckboxChange('M')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>M</Text>
 
                                         <CheckBox
-                                            value={advice.frequency.A}
+                                            value={checkboxValues.A}
                                             onValueChange={() => handleCheckboxChange('A')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>A</Text>
 
                                         <CheckBox
-                                            value={advice.frequency.E}
+                                            value={checkboxValues.E}
                                             onValueChange={() => handleCheckboxChange('E')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>E</Text>
 
                                         <CheckBox
-                                            value={advice.frequency.N}
+                                            value={checkboxValues.N}
                                             onValueChange={() => handleCheckboxChange('N')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>N</Text>
@@ -329,8 +372,8 @@ const DoctorPriscription = () => {
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Enter advice"
-                                        value={advice.medicine}
-                                        onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                        value={advice.advice}
+                                        onChangeText={(text) => setAdvice({ ...advice, advice: text })}
                                         placeholderTextColor={'gray'}
                                     />
                                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -339,9 +382,9 @@ const DoctorPriscription = () => {
                                             <TextInput
                                                 style={[styles.input, { width: 150 }]}
                                                 placeholder="Enter days"
-                                                value={advice.medicine}
+                                                value={advice.days}
                                                 keyboardType='numeric'
-                                                onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                                onChangeText={(text) => setAdvice({ ...advice, days: text })}
                                                 placeholderTextColor={'gray'}
                                             />
                                         </View>
@@ -350,16 +393,16 @@ const DoctorPriscription = () => {
                                             <TextInput
                                                 style={[styles.input, { width: 150 }]}
                                                 placeholder="Enter total"
-                                                value={advice.medicine}
+                                                value={advice.total}
                                                 keyboardType='numeric'
-                                                onChangeText={(text) => setAdvice({ ...advice, medicine: text })}
+                                                onChangeText={(text) => setAdvice({ ...advice, total: text })}
                                                 placeholderTextColor={'gray'}
                                             />
                                         </View>
                                     </View>
                                     {/* Continue with the rest of the UI elements... */}
                                     <View style={{ display: 'flex', alignItems: 'center' }}>
-                                        <Pressable style={{ justifyContent: 'center', width: 150, borderRadius: 20, height: 40, backgroundColor: '#2a7fba' }}>
+                                        <Pressable onPress={() => pushAdvice()} style={{ justifyContent: 'center', width: 150, borderRadius: 20, height: 40, backgroundColor: '#2a7fba' }}>
                                             <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>Add Medicine</Text>
                                         </Pressable>
                                     </View>
@@ -368,7 +411,7 @@ const DoctorPriscription = () => {
                                     <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
                                     <GestureHandlerRootView>
                                         <FlatList
-                                            data={medicineData}
+                                            data={prescription}
                                             renderItem={renderItem}
                                             keyExtractor={(item: any, i: number) => item.id}
                                             onEndReachedThreshold={0.1}
@@ -405,8 +448,8 @@ const DoctorPriscription = () => {
                                 </View>
 
                                 <View style={styles.buttonContainer}>
-                                    <Button title="Print" onPress={printPrescription} />
-                                    <Button title="Save" onPress={savePrescription} />
+                                    <Button title="Print" onPress={() => printPrescription} />
+                                    <Button title="Save" onPress={() => savePrescription} />
                                 </View>
 
 
@@ -428,6 +471,14 @@ const DoctorPriscription = () => {
                     )}
                     <Modal visible={showModal} transparent={false} animationType="slide">
                         <View style={{ margin: 20 }}>
+                            <Accordion
+                                sections={historydummyDataArray}
+                                activeSections={activeSections}
+                                renderSectionTitle={renderSectionTitle}
+                                renderHeader={renderHeader}
+                                renderContent={renderContent}
+                                onChange={updateSections}
+                            />
                             {/* Render Patient History */}
                             <Button title="Close" onPress={() => handleClose()} />
                         </View>

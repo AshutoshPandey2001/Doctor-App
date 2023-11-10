@@ -10,6 +10,7 @@ function Home({ navigation }: any) {
         <SafeAreaView>
             <View>
                 <Text>Home</Text>
+
             </View>
 
         </SafeAreaView>

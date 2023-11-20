@@ -1,13 +1,10 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { GlobalStyle } from '../globalStyle';
 import Icon from 'react-native-easy-icon';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Accordion from 'react-native-collapsible/Accordion';
-
-// import { Barcode } from 'react-native-barcode-builder';
-// import { Table, Row } from 'react-native-table-component';
 
 interface State {
     paymentStatus: string;
@@ -146,6 +143,38 @@ const DoctorPriscription = () => {
                     total: 20,
                     advice: "Lorem Ipsum Advice 2",
                 },
+                {
+                    id: 2,
+                    medicine: "Dummy Medicine 2",
+                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
+                    days: 10,
+                    total: 20,
+                    advice: "Lorem Ipsum Advice 2",
+                },
+                // Add more prescription items as needed
+            ],
+        },
+        {
+            consultingDate: "2023-07-05", // Replace with your desired default consultingDate
+            diagnosis: "Lorem Ipsum Diagnosis 2",
+            followup: "2023-02-10", // Replace with your desired default followup date
+            prescription: [
+                {
+                    id: 1,
+                    medicine: "Dummy Medicine 2",
+                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
+                    days: 10,
+                    total: 20,
+                    advice: "Lorem Ipsum Advice 2",
+                },
+                {
+                    id: 2,
+                    medicine: "Dummy Medicine 2",
+                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
+                    days: 10,
+                    total: 20,
+                    advice: "Lorem Ipsum Advice 2",
+                },
                 // Add more prescription items as needed
             ],
         },
@@ -232,17 +261,19 @@ const DoctorPriscription = () => {
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.advice}</Text>
 
             </View>
-            <View style={[GlobalStyle.rightSide, { alignItems: 'center', justifyContent: 'center' }]}>
-                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <Pressable onPress={() => cancelAdvice(item)}>
-                        <Icon type="entypo" name="cross" color="gray" size={25} />
-                    </Pressable>
-                </View>
-            </View>
+            {!showModal ?
+                <View style={[GlobalStyle.rightSide, { alignItems: 'center', justifyContent: 'center' }]}>
+                    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <Pressable onPress={() => cancelAdvice(item)}>
+                            <Icon type="entypo" name="cross" color="gray" size={25} />
+                        </Pressable>
+                    </View>
+                </View> : null
+            }
         </View>
     );
 
-    const [activeSections, setActiveSections] = useState([]);
+    const [activeSections, setActiveSections] = useState([0]);
 
     const renderSectionTitle = (section: any) => (
         <View>
@@ -250,22 +281,35 @@ const DoctorPriscription = () => {
         </View>
     );
 
-    const renderHeader = (section: any) => (
-        <View>
-            <Text>{section.consultingDate}</Text>
+    const renderHeader = (section: any, isActive: number) => (
+
+        <View style={[GlobalStyle.card, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+            <Text style={{ color: '#000', fontSize: 16 }}>Consulting Date :-{section.consultingDate}</Text>
+            <View>
+                {isActive === activeSections[0] ?
+                    <Icon type="feather" name="chevron-down" color="gray" size={25} />
+                    :
+                    <Icon type="feather" name="chevron-right" color="gray" size={25} />}
+            </View>
         </View>
     );
 
     const renderContent = (section: any) => (
-        <View>
-            <Text>Diagnosis:-{section.diagnosis}</Text>
-            <Text>Followup{section.followup}</Text>
+        <View style={{ padding: 10 }}>
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>Diagnosis:</Text>
+                <Text style={{ color: 'black', fontSize: 14 }}>{section.diagnosis}</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>Followup:-</Text>
+                <Text style={{ color: 'black', fontSize: 14 }}>{section.followup}</Text>
+            </View>
             <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
             <GestureHandlerRootView>
                 <FlatList
                     data={section.prescription}
                     renderItem={renderItem}
-                    keyExtractor={(item: any, i: number) => item.id}
+                    keyExtractor={(item: any) => item.id}
                     onEndReachedThreshold={0.1}
                 />
             </GestureHandlerRootView>
@@ -286,8 +330,10 @@ const DoctorPriscription = () => {
                     {state.paymentStatus === 'Pending' ? (
                         <>
                             <View >
-                                {/* <Pressable onPress={() => openHistory()}><Text>Open History</Text></Pressable> */}
-                                <Text style={styles.heading}>Patient Information</Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.heading}>Patient Information</Text>
+                                    <Pressable style={{ backgroundColor: '#2a7fba', height: 30, padding: 6, borderRadius: 15, paddingHorizontal: 10 }} onPress={() => openHistory()}><Text style={{ color: '#fff', fontWeight: 'bold' }}>Open History</Text></Pressable>
+                                </View>
                                 <View style={GlobalStyle.card}>
                                     <View style={GlobalStyle.leftSide}>
                                         <Text style={GlobalStyle.label}>Name: </Text>
@@ -437,7 +483,7 @@ const DoctorPriscription = () => {
                                 <View style={styles.section}>
                                     <Text style={styles.subHeading}>General instructions:</Text>
                                     <TextInput
-                                        style={[styles.input, { height: 100 }]}
+                                        style={[{ ...styles.input }, { height: 100 }]}
                                         placeholder="Enter general instructions"
                                         value={state.generalInstruction}
                                         multiline={true}
@@ -448,8 +494,8 @@ const DoctorPriscription = () => {
                                 </View>
 
                                 <View style={styles.buttonContainer}>
-                                    <Button title="Print" onPress={() => printPrescription} />
-                                    <Button title="Save" onPress={() => savePrescription} />
+                                    <Icon type="feather" name="printer" color="red" size={35} />
+                                    <Icon type="feather" name="save" color="green" size={35} />
                                 </View>
 
 
@@ -457,30 +503,29 @@ const DoctorPriscription = () => {
                         </>
                     ) : (
                         <View><Text>hello</Text></View>
-                        // <View>
-                        //     <View style={{ alignItems: 'center' }}>
-                        //         <Text style={styles.textcolor}>Patient Information</Text>
-                        //         <Text>Name: {state.pName}</Text>
-                        //         <Text>Age/Sex: {state.page}/{state.pGender}</Text>
-                        //         <Text>Address: {state.pAddress}</Text>
-                        //         <Text>Mobile No: {state.pMobileNo}</Text>
-                        //         <Text>Consulting Dr.: {state.drName}</Text>
-                        //     </View>
-                        //     <Button title="History" onPress={() => openHistory()} />
-                        // </View>
                     )}
                     <Modal visible={showModal} transparent={false} animationType="slide">
-                        <View style={{ margin: 20 }}>
-                            <Accordion
-                                sections={historydummyDataArray}
-                                activeSections={activeSections}
-                                renderSectionTitle={renderSectionTitle}
-                                renderHeader={renderHeader}
-                                renderContent={renderContent}
-                                onChange={updateSections}
-                            />
-                            {/* Render Patient History */}
-                            <Button title="Close" onPress={() => handleClose()} />
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10 }}>
+                            <View style={{ margin: 20, flex: 1, width: '100%' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>
+                                    <TouchableOpacity onPress={() => handleClose()} >
+                                        <Icon type="entypo" name="cross" color="black" size={35} />
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ marginTop: 10 }}>
+                                    <Accordion
+                                        align={'center'}
+                                        sections={historydummyDataArray}
+                                        activeSections={activeSections}
+                                        renderHeader={(section, isActive) => renderHeader(section, isActive)}
+                                        renderContent={renderContent}
+                                        keyExtractor={(item, index) => index}
+                                        onChange={updateSections}
+                                        underlayColor={'transparenet'}
+                                    />
+                                </View>
+                            </View>
                         </View>
                     </Modal>
                 </View>
@@ -488,15 +533,6 @@ const DoctorPriscription = () => {
         </SafeAreaView>
     );
 };
-// const styles = StyleSheet.create({
-
-//     textcolor: {
-//         color: '#000',
-//         fontSize: 18,
-//         fontWeight: 'bold'
-//     },
-
-// });
 
 const styles = StyleSheet.create({
     container: {
@@ -539,11 +575,4 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 });
-
-
-
-
-
-
-
 export default DoctorPriscription;

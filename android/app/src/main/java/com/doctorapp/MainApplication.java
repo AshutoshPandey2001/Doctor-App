@@ -9,6 +9,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
+import com.christopherdro.RNPrint.RNPrintPackage;
+import com.reactnativecommunity.art.ARTPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -19,13 +21,17 @@ public class MainApplication extends Application implements ReactApplication {
           return BuildConfig.DEBUG;
         }
 
-        @Override
-        protected List<ReactPackage> getPackages() {
-          List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Add any additional ReactPackages that cannot be autolinked here:
-         
-          return packages;
-        }
+      @Override
+     protected List<ReactPackage> getPackages() {
+    List<ReactPackage> packages = new PackageList(this).getPackages();
+    // packages.add(new MainReactPackage());
+    // packages.add(new RNPrintPackage());
+    // Add any additional ReactPackages that cannot be autolinked here:
+    // Example: packages.add(new CustomReactPackage());
+
+    return packages;
+}
+
   
         @Override
         protected String getJSMainModuleName() {

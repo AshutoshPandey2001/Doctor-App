@@ -1,10 +1,12 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 import { GlobalStyle } from '../globalStyle';
 import Icon from 'react-native-easy-icon';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Accordion from 'react-native-collapsible/Accordion';
+import RNPrint from 'react-native-print';
+import { printDescription } from '../component/Print';
 
 interface State {
     paymentStatus: string;
@@ -95,7 +97,7 @@ const DummyData: State = {
     ],
 };
 
-const DoctorPriscription = () => {
+const DoctorPriscription = ({ navigation }: any) => {
     const [state, setState] = useState<State>({ ...DummyData });
     const [showModal, setShowModal] = useState(false);
     const [advice, setAdvice] = useState({
@@ -179,8 +181,42 @@ const DoctorPriscription = () => {
             ],
         },
     ];
-
+    const patientData = {
+        pid: '123456789', // Patient ID
+        pName: 'John Doe', // Patient Name
+        page: 30, // Patient Age
+        pGender: 'Male', // Patient Gender
+        pAddress: '123 Main St, City', // Patient Address
+        pMobileNo: '123-456-7890', // Patient Mobile Number
+        opdCaseNo: 'OPD123', // OPD Case Number
+        opduid: 'UID456', // OPD ID
+        consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
+        drName: 'Dr. Smith', // Consulting Doctor's Name
+        diagnosis: 'Fever', // Diagnosis
+        followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
+        prescription: [
+            {
+                medicine: 'Medicine A', // Medicine Name
+                frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
+                days: 5, // Number of Days
+                total: 20, // Total
+                advice: 'After meal', // Advice
+            },
+            {
+                medicine: 'Medicine B', // Medicine Name
+                frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
+                days: 5, // Number of Days
+                total: 20, // Total
+                advice: 'After meal', // Advice
+            },
+            // Add more prescription items as needed in the same format
+        ],
+        generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
+    };
     // Now you can use these two dummy data entries in your component
+    const printHTML = async () => {
+        printDescription(patientData)
+    };
 
     const openHistory = () => {
         setShowModal(true);
@@ -237,7 +273,6 @@ const DoctorPriscription = () => {
         })
         // Implement your pushAdvice function logic here
     };
-    console.log(prescription, 'prescription');
 
     const cancelAdvice = (item: any) => {
         setPrescription(prescription.filter((medicine: any) => medicine.id !== item.id))
@@ -275,11 +310,7 @@ const DoctorPriscription = () => {
 
     const [activeSections, setActiveSections] = useState([0]);
 
-    const renderSectionTitle = (section: any) => (
-        <View>
-            <Text>{section.consultingDate}</Text>
-        </View>
-    );
+
 
     const renderHeader = (section: any, isActive: number) => (
 
@@ -322,6 +353,11 @@ const DoctorPriscription = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, marginBottom: 100 }}>
+            <View style={{ marginLeft: 20, marginTop: 15 }}>
+                <Pressable onPress={() => navigation.goBack()}>
+                    <Icon type="feather" name="arrow-left" color='#000' size={35} />
+                </Pressable>
+            </View>
             <ScrollView>
                 <View style={{ margin: 20 }}>
                     <View style={{ display: 'none' }}>
@@ -494,8 +530,12 @@ const DoctorPriscription = () => {
                                 </View>
 
                                 <View style={styles.buttonContainer}>
-                                    <Icon type="feather" name="printer" color="red" size={35} />
-                                    <Icon type="feather" name="save" color="green" size={35} />
+                                    <Pressable onPress={() => printHTML()}>
+                                        <Icon type="feather" name="printer" color="red" size={35} />
+                                    </Pressable>
+                                    <Pressable>
+                                        <Icon type="feather" name="save" color="green" size={35} />
+                                    </Pressable>
                                 </View>
 
 

@@ -55,13 +55,20 @@ function App(): JSX.Element {
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
-            <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />}
+            <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />} backBehavior='history'
+
             >
               <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
               <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
               <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
               <Tab.Screen name="DoctorPriscription" component={DoctorPriscription}
-                options={{ headerShown: false }}
+                options={{
+                  headerShown: false,
+                  tabBarStyle: {
+                    display: "none",
+                  },
+                  tabBarButton: () => null,
+                }}
               />
             </Tab.Navigator>
             :

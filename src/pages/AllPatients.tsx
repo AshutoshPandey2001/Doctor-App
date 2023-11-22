@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/action/UiSlice';
+import { printDescription } from '../component/Print';
 
 interface Patient {
     id: number;
@@ -295,6 +296,42 @@ const AllOatients = ({ navigation }: any) => {
         }, 2000);
 
     };
+    const patientData = {
+        pid: '123456789', // Patient ID
+        pName: 'John Doe', // Patient Name
+        page: 30, // Patient Age
+        pGender: 'Male', // Patient Gender
+        pAddress: '123 Main St, City', // Patient Address
+        pMobileNo: '123-456-7890', // Patient Mobile Number
+        opdCaseNo: 'OPD123', // OPD Case Number
+        opduid: 'UID456', // OPD ID
+        consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
+        drName: 'Dr. Smith', // Consulting Doctor's Name
+        diagnosis: 'Fever', // Diagnosis
+        followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
+        prescription: [
+            {
+                medicine: 'Medicine A', // Medicine Name
+                frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
+                days: 5, // Number of Days
+                total: 20, // Total
+                advice: 'After meal', // Advice
+            },
+            {
+                medicine: 'Medicine B', // Medicine Name
+                frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
+                days: 5, // Number of Days
+                total: 20, // Total
+                advice: 'After meal', // Advice
+            },
+            // Add more prescription items as needed in the same format
+        ],
+        generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
+    };
+    // Now you can use these two dummy data entries in your component
+    const printHTML = async () => {
+        printDescription(patientData)
+    };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
 
@@ -336,7 +373,7 @@ const AllOatients = ({ navigation }: any) => {
                             <Icon type="feather" name="edit" color="gray" size={25} />
                             <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription')} style={GlobalStyle.btn}>
+                        <TouchableOpacity onPress={() => printHTML()} style={GlobalStyle.btn}>
                             <Icon type="feather" name="printer" color="gray" size={25} />
                             <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
                         </TouchableOpacity>

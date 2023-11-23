@@ -57,7 +57,7 @@ function App(): JSX.Element {
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
-            <Tab.Navigator tabBar={(props: any) => tabBar ? <Tabs {...props} /> : null} backBehavior='history'
+            <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'
               screenOptions={() => ({
                 tabBarShowLabel: false,
                 tabBarStyle: GlobalStyle.tabBar

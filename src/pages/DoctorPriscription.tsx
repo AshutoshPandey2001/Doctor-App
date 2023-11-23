@@ -1,12 +1,13 @@
 import CheckBox from '@react-native-community/checkbox';
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable, TouchableOpacity, Platform } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import { GlobalStyle } from '../globalStyle';
 import Icon from 'react-native-easy-icon';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Accordion from 'react-native-collapsible/Accordion';
 import RNPrint from 'react-native-print';
 import { printDescription } from '../component/Print';
+import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 
 interface State {
     paymentStatus: string;
@@ -100,6 +101,7 @@ const DummyData: State = {
 const DoctorPriscription = ({ navigation }: any) => {
     const [state, setState] = useState<State>({ ...DummyData });
     const [showModal, setShowModal] = useState(false);
+    const [routeName, setRouteName] = useState<any>();
     const [advice, setAdvice] = useState({
         id: Math.floor(1000 + Math.random() * 9000),
         medicine: '',
@@ -108,6 +110,7 @@ const DoctorPriscription = ({ navigation }: any) => {
         total: '',
         advice: '',
     });
+    const route = useRoute()
     const [checkboxValues, setCheckboxValues] = useState({
         M: false,
         A: false,
@@ -217,7 +220,13 @@ const DoctorPriscription = ({ navigation }: any) => {
     const printHTML = async () => {
         printDescription(patientData)
     };
-
+    useLayoutEffect(() => {
+        if (route.name === "History") {
+            setRouteName(false)
+        } else {
+            setRouteName(true)
+        }
+    }, [route])
     const openHistory = () => {
         setShowModal(true);
     };
@@ -279,7 +288,7 @@ const DoctorPriscription = ({ navigation }: any) => {
         // Implement your cancelAdvice function logic here
     };
     const renderItem = ({ item }: { item: any }) => (
-        <View style={GlobalStyle.card}>
+        <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 50, }]}>
             <View style={GlobalStyle.leftSide}>
                 <Text style={GlobalStyle.label}>Medicine:</Text>
                 <Text style={GlobalStyle.label}>Freuency:</Text>
@@ -349,20 +358,35 @@ const DoctorPriscription = ({ navigation }: any) => {
     const updateSections = (updatedSections: any) => {
         setActiveSections(updatedSections);
     };
-
+    const Prescription = () => {
+        return (
+            <GestureHandlerRootView>
+                <FlatList
+                    data={prescription}
+                    renderItem={renderItem}
+                    keyExtractor={(item: any, i: number) => item.id}
+                    onEndReachedThreshold={0.1}
+                />
+            </GestureHandlerRootView>
+        )
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ marginLeft: 20, marginTop: 15 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20, marginTop: 15 }}>
                 <Pressable onPress={() => navigation.goBack()}>
                     <Icon type="feather" name="arrow-left" color='#000' size={35} />
                 </Pressable>
+
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: -35 }}>
+                    <Text style={{ textAlign: 'center', fontSize: 20, color: '#000', fontWeight: 'bold' }}>{routeName ? 'Prescription' : 'History'}</Text>
+                </View>
             </View>
-            <ScrollView>
+            <ScrollView nestedScrollEnabled={true}>
                 <View style={{ margin: 20 }}>
                     <View style={{ display: 'none' }}>
                         {/* Render PrintButton here */}
                     </View>
-                    {state.paymentStatus === 'Pending' ? (
+                    {routeName ? (
                         <>
                             <View >
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -490,30 +514,10 @@ const DoctorPriscription = ({ navigation }: any) => {
                                 </View>
                                 <View style={styles.section}>
                                     <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
-                                    <GestureHandlerRootView>
-                                        <FlatList
-                                            data={prescription}
-                                            renderItem={renderItem}
-                                            keyExtractor={(item: any, i: number) => item.id}
-                                            onEndReachedThreshold={0.1}
-                                        />
-                                    </GestureHandlerRootView>
+                                    <ScrollView horizontal={true} style={{ width: '100%' }}>
 
-
-                                    {/* <ScrollView>
-                                        {prescription.map((item: any, i) => (
-                                            <View key={i} style={styles.prescriptionItem}>
-                                                <Text>Medicine Name: {item.medicine}</Text>
-                                                <Text>
-                                                    Frequency: {item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}
-                                                </Text>
-                                                <Text>Days: {item.days}</Text>
-                                                <Text>Total: {item.total}</Text>
-                                                <Text>Advice: {item.advice}</Text>
-                                                <Button title="Cancel" onPress={() => cancelAdvice(i)} />
-                                            </View>
-                                        ))}
-                                    </ScrollView> */}
+                                        <Prescription />
+                                    </ScrollView>
                                 </View>
                                 <View style={styles.section}>
                                     <Text style={styles.subHeading}>General instructions:</Text>
@@ -541,7 +545,21 @@ const DoctorPriscription = ({ navigation }: any) => {
                             </View>
                         </>
                     ) : (
-                        <View><Text>hello</Text></View>
+                        <View>
+                            <ScrollView horizontal={true}>
+
+                                <Accordion
+                                    align={'center'}
+                                    sections={historydummyDataArray}
+                                    activeSections={activeSections}
+                                    renderHeader={(section, isActive) => renderHeader(section, isActive)}
+                                    renderContent={renderContent}
+                                    keyExtractor={(item, index) => index}
+                                    onChange={updateSections}
+                                    underlayColor={'transparenet'}
+                                />
+                            </ScrollView>
+                        </View>
                     )}
                     <Modal visible={showModal} transparent={false} animationType="slide">
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>

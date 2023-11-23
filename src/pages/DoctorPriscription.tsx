@@ -351,7 +351,7 @@ const DoctorPriscription = ({ navigation }: any) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, marginBottom: 100 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={{ marginLeft: 20, marginTop: 15 }}>
                 <Pressable onPress={() => navigation.goBack()}>
                     <Icon type="feather" name="arrow-left" color='#000' size={35} />

@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 
 import LoginPage from './src/pages/Login/Login';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './src/navigator/AuthNavigator';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -43,10 +43,10 @@ function App(): JSX.Element {
   const [isLoggedIn, setIsLogged] = useState(true);
   const navTheme = DefaultTheme;
   navTheme.colors.background = '#fff';
-  const { isLoading } = useSelector((state: RootState) => state.isLoading)
-
+  const { isLoading, tabBar } = useSelector((state: RootState) => state.ui)
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading &&
@@ -57,9 +57,10 @@ function App(): JSX.Element {
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
-            <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />} backBehavior='history'
+            <Tab.Navigator tabBar={(props: any) => tabBar ? <Tabs {...props} /> : null} backBehavior='history'
               screenOptions={() => ({
                 tabBarShowLabel: false,
+                tabBarStyle: GlobalStyle.tabBar
               })}
             >
               <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />

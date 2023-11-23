@@ -5,7 +5,7 @@ import uiReducer from './action/UiSlice';
 
 
 const rootReducer = combineReducers({
-    isLoading: uiReducer,
+    ui: uiReducer,
 });
 
 // const persistConfig = {

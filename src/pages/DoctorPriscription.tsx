@@ -1,6 +1,6 @@
 import CheckBox from '@react-native-community/checkbox';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, Modal, ScrollView, SafeAreaView, StyleSheet, Pressable, TouchableOpacity, Platform } from 'react-native';
 import { GlobalStyle } from '../globalStyle';
 import Icon from 'react-native-easy-icon';
 import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -545,7 +545,7 @@ const DoctorPriscription = ({ navigation }: any) => {
                         <View><Text>hello</Text></View>
                     )}
                     <Modal visible={showModal} transparent={false} animationType="slide">
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10 }}>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
                             <View style={{ margin: 20, flex: 1, width: '100%' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>

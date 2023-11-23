@@ -237,7 +237,6 @@ const DoctorPriscription = ({ navigation }: any) => {
 
     const handleCheckboxChange = (e: keyof typeof checkboxValues) => {
         setCheckboxValues({ ...checkboxValues, [e]: !checkboxValues[e] });
-
         setAdvice((prevAdvice) => ({
             ...prevAdvice,
             frequency: {

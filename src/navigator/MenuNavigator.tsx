@@ -13,13 +13,13 @@ const Tabs = ({ navigation }: any) => {
       inactiveIcon: <Icon type="fontisto" name="home" color="#4d4d4d" size={30} />,
     },
     {
-      name: 'TodayPatients',
+      name: 'Today',
       activeIcon: <Icon type="fontisto" name="person" color="#2a7fba" size={35} />,
       inactiveIcon: <Icon type="fontisto" name="person" color="#4d4d4d" size={30} />,
 
     },
     {
-      name: 'AllPatients',
+      name: 'All',
       activeIcon: <Icon type="fontisto" name="persons" color="#2a7fba" size={35} />,
       inactiveIcon: <Icon type="fontisto" name="persons" color="#4d4d4d" size={30} />,
 

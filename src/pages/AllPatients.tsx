@@ -15,7 +15,7 @@ interface Patient {
     date: string;
     mobileNumber: string;
 }
-const AllOatients = ({ navigation }: any) => {
+const AllPatients = ({ navigation }: any) => {
     const dummyData: Patient[] = [
 
         {
@@ -369,7 +369,7 @@ const AllOatients = ({ navigation }: any) => {
                         borderTopRightRadius: 15
                     }}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription')} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('History')} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
                             <Icon type="feather" name="edit" color="gray" size={25} />
                             <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
                         </TouchableOpacity>
@@ -388,4 +388,4 @@ const AllOatients = ({ navigation }: any) => {
     )
 }
 
-export default AllOatients
+export default AllPatients

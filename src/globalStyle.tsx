@@ -87,4 +87,9 @@ export const GlobalStyle = StyleSheet.create({
         shadowOpacity: 0.3, // Opacity of the shadow
         shadowRadius: 5, // Spread of the shadow
     },
+    noTabBar: { height: 0, display: 'none' },
+
+    tabBar: {
+        display: 'flex'
+    }
 })

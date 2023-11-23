@@ -33,6 +33,8 @@ import DoctorPriscription from './src/pages/DoctorPriscription';
 import { useSelector } from 'react-redux';
 import { RootState } from './src/redux/store';
 import { GlobalStyle } from './src/globalStyle';
+import TodayPatientsStack from './src/navigator/TodayPatientsStack';
+import AllPatientsStack from './src/navigator/AllPatientsStack';
 
 
 
@@ -56,12 +58,14 @@ function App(): JSX.Element {
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
             <Tab.Navigator tabBar={(props: any) => <Tabs {...props} />} backBehavior='history'
-
+              screenOptions={() => ({
+                tabBarShowLabel: false,
+              })}
             >
               <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
-              <Tab.Screen name="TodayPatients" component={TodayPatients} options={{ headerShown: false }} />
-              <Tab.Screen name="AllPatients" component={AllPatients} options={{ headerShown: false }} />
-              <Tab.Screen name="DoctorPriscription" component={DoctorPriscription}
+              <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: false }} />
+              <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: false }} />
+              {/* <Tab.Screen name="DoctorPriscription" component={DoctorPriscription}
                 options={{
                   headerShown: false,
                   tabBarStyle: {
@@ -69,7 +73,7 @@ function App(): JSX.Element {
                   },
                   tabBarButton: () => null,
                 }}
-              />
+              /> */}
             </Tab.Navigator>
             :
             (<Stack.Navigator initialRouteName="Login">

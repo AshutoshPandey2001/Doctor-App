@@ -1,5 +1,7 @@
 import RNPrint from 'react-native-print';
-export const printDescription = async (patientData: any) => {
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+export const printDescription = async (patientData: any, user: any) => {
 
     await RNPrint.print({
         html: `
@@ -39,12 +41,12 @@ export const printDescription = async (patientData: any) => {
           <header>
           <div style="width: 100%;">
     <div style="display: flex; justify-content: center; align-items: center;">
-        <img src=${`../assets/hospitalerp.png`} style="width: 100px; height: 100px;" alt="Hospital Logo" />
-        <h4 style="margin-top: 35px; margin-left: 15px;">Your Hospital Name</h4>
+        <img src=${user?.user.hospitalLogo} style="width: 100px; height: 100px;" alt="Hospital Logo" />
+        <h4 style="margin-top: 35px; margin-left: 15px;">${user?.user.hospitalName}</h4>
     </div>
     <div style="margin-top: 10px;">
-        <div style="margin-bottom:-20px"> Hospital Address Here </div>
-        <span>Contact: Your Contact Number</span>
+        <div style="margin-bottom:-20px">${user?.user.hospitalAddress}</div>
+        <span>Contact: ${user?.user.hospitalContact}</span>
     </div>
 </div>
 

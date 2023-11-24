@@ -1,15 +1,69 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, Pressable, Alert } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import { setUser } from '../../redux/action/UserSlice';
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch()
+    const handleLogin = async () => {
+        try {
+            const userCredential = await auth().signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
 
-    const handleLogin = () => {
-        // Handle login logic here
-        console.log('Email:', email);
-        console.log('Password:', password);
+            let userData = {
+                usertype: '',
+                userName: '',
+                hospitaluid: '',
+                druid: undefined,
+                hospitalName: undefined,
+                hospitalAddress: undefined,
+                hospitalLogo: undefined,
+                hospitalContact: undefined,
+            };
+
+            const userDoc = await firestore().collection('UserList').doc(user.uid).get();
+            if (userDoc.exists) {
+                const userDocData: any = userDoc.data();
+                userData = {
+                    ...userData,
+                    usertype: userDocData.userType || '',
+                    userName: userDocData.userName || '',
+                    hospitaluid: userDocData.hospitaluid || '',
+                    druid: userDocData.druid || undefined,
+                };
+
+                const hospitalQuerySnapshot = await firestore()
+                    .collection('HospitalMaster')
+                    .doc('S4fRJIO5ZxE5isoBIbEU')
+                    .collection('hospitalMaster')
+                    .where('hospitaluid', '==', userData.hospitaluid)
+                    .get();
+
+                if (!hospitalQuerySnapshot.empty) {
+                    const hospitalData = hospitalQuerySnapshot.docs[0].data();
+                    userData = {
+                        ...userData,
+                        hospitalName: hospitalData.hospitslName || undefined,
+                        hospitalAddress: hospitalData.hospitalAddress || undefined,
+                        hospitalLogo: hospitalData.hospitslLogo || undefined,
+                        hospitalContact: hospitalData.contactNumber || undefined,
+                    };
+                }
+            }
+            dispatch(setUser(userData))
+
+            console.log('User data:', userData);
+            console.log('User logged in:', userCredential.user);
+        } catch (error: any) {
+            // Handle login errors
+            Alert.alert('Login Error', error.message);
+        }
     };
+
 
     return (
         <View style={styles.container}>
@@ -37,11 +91,6 @@ const LoginPage = () => {
                 <Pressable style={styles.btn} onPress={() => handleLogin()}>
                     <Text style={styles.btntext}>Login</Text>
                 </Pressable>
-                {/* <Button
-                    style={styles.input}
-                    title="Login"
-                    onPress={handleLogin}
-                /> */}
             </View>
         </View>
     );

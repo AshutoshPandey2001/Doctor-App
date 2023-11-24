@@ -8,6 +8,8 @@ import Accordion from 'react-native-collapsible/Accordion';
 import RNPrint from 'react-native-print';
 import { printDescription } from '../component/Print';
 import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 interface State {
     paymentStatus: string;
@@ -102,6 +104,8 @@ const DoctorPriscription = ({ navigation }: any) => {
     const [state, setState] = useState<State>({ ...DummyData });
     const [showModal, setShowModal] = useState(false);
     const [routeName, setRouteName] = useState<any>();
+    const user: any = useSelector((state: RootState) => state.user)
+
     const [advice, setAdvice] = useState({
         id: Math.floor(1000 + Math.random() * 9000),
         medicine: '',
@@ -218,7 +222,7 @@ const DoctorPriscription = ({ navigation }: any) => {
     };
     // Now you can use these two dummy data entries in your component
     const printHTML = async () => {
-        printDescription(patientData)
+        printDescription(patientData, user)
     };
     useLayoutEffect(() => {
         if (route.name === "History") {

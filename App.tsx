@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import {
   ActivityIndicator,
@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 
 import LoginPage from './src/pages/Login/Login';
-import { DefaultTheme, NavigationContainer, useRoute } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer, useFocusEffect, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './src/navigator/AuthNavigator';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -35,18 +35,47 @@ import { RootState } from './src/redux/store';
 import { GlobalStyle } from './src/globalStyle';
 import TodayPatientsStack from './src/navigator/TodayPatientsStack';
 import AllPatientsStack from './src/navigator/AllPatientsStack';
+import auth from '@react-native-firebase/auth';
+import Header from './src/component/Header';
 
 
 
 
 function App(): JSX.Element {
-  const [isLoggedIn, setIsLogged] = useState(true);
+  const [isLoggedIn, setIsLogged] = useState(false);
   const navTheme = DefaultTheme;
   navTheme.colors.background = '#fff';
   const { isLoading, tabBar } = useSelector((state: RootState) => state.ui)
+  const user = useSelector((state: RootState) => state.user)
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  useEffect(() => {
+    if (user?.user) {
+      console.log('user?.user', user?.user);
+      setIsLogged(true)
+    } else {
+      setIsLogged(false)
 
+    }
+  }, [user])
+  // useEffect(() => {
+  //   const unsubscribe = auth().onAuthStateChanged((currentUser) => {
+  //     if (currentUser) {
+  //       console.log(currentUser, 'currentUser');
+
+  //       // User is signed in
+  //       // setUser(currentUser);
+  //       setIsLogged(true)
+  //     } else {
+  //       setIsLogged(false)
+  //       // No user is signed in
+  //       // setUser(null);
+  //     }
+  //   });
+
+  //   // Clean up the listener when the component unmounts
+  //   return () => unsubscribe();
+  // }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {isLoading &&
@@ -60,12 +89,17 @@ function App(): JSX.Element {
             <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'
               screenOptions={() => ({
                 tabBarShowLabel: false,
-                tabBarStyle: GlobalStyle.tabBar
+                tabBarStyle: GlobalStyle.tabBar,
+                headerShown: tabBar, // Show header for all screens
+                header: () => (
+                  // Customize your header here
+                  <Header />
+                ),
               })}
             >
-              <Tab.Screen name="Home" component={Home} options={{ headerShown: false }} />
-              <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: false }} />
-              <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: false }} />
+              <Tab.Screen name="Home" component={Home} options={{ headerShown: tabBar }} />
+              <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: tabBar }} />
+              <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: tabBar }} />
               {/* <Tab.Screen name="DoctorPriscription" component={DoctorPriscription}
                 options={{
                   headerShown: false,

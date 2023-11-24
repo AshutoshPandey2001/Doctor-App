@@ -15,9 +15,9 @@ const persistedStore = persistStore(store);
 
 const ReduxApp = () => (
     <Provider store={store}>
-        {/* <PersistGate loading={null} persistor={persistedStore}> */}
-        <App />
-        {/* </PersistGate> */}
+        <PersistGate loading={null} persistor={persistedStore}>
+            <App />
+        </PersistGate>
     </Provider>
 )
 AppRegistry.registerComponent(appName, () => ReduxApp);

@@ -4,9 +4,10 @@ import { ActivityIndicator, Button, FlatList, Modal, Platform, Pressable, StyleS
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
+import { RootState } from '../redux/store';
 
 interface Patient {
     id: number;
@@ -222,6 +223,7 @@ const AllPatients = ({ navigation }: any) => {
     // const [data, setData] = useState<any>([]);
     const [showActions, setShowActions] = useState<number | null>(null); // Track the selected card's ID
     const [showSmallPopup, setShowSmallPopup] = useState(false);
+    const user: any = useSelector((state: RootState) => state.user)
 
     // const navigation = useNavigation()
     const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
@@ -330,7 +332,7 @@ const AllPatients = ({ navigation }: any) => {
     };
     // Now you can use these two dummy data entries in your component
     const printHTML = async () => {
-        printDescription(patientData)
+        printDescription(patientData, user)
     };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>

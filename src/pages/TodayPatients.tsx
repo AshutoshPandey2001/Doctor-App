@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
+import firestore from '@react-native-firebase/firestore';
 
 interface Patient {
     id: number;
@@ -221,22 +222,45 @@ const TodayPatients = ({ navigation }: any) => {
     ]
     const itemsPerPage = 10;
     const user: any = useSelector((state: RootState) => state.user)
-
+    const currentDate = new Date();
+    const year = currentDate.getUTCFullYear();
+    const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0'); // Add 1 to month since it is zero-based
+    const day = String(currentDate.getUTCDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}Z`;
     // const [data, setData] = useState<any>([]);
-    const [showActions, setShowActions] = useState<number | null>(null); // Track the selected card's ID
+    const [todayPatients, setTodaypatients] = useState([])
+
+    const [showActions, setShowActions] = useState<any | null>(null); // Track the selected card's ID
     const [showSmallPopup, setShowSmallPopup] = useState(false);
     const dispatch = useDispatch()
-    const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
+    const [data, setData] = useState<any>([]); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     const [isVisible, setisVisible] = useState(false);
-    // useEffect(() => {
-    //     // Calculate the range of data to display for the current page
-    //     const startIndex = (page - 1) * itemsPerPage;
-    //     const endIndex = startIndex + itemsPerPage;
-    //     // Extract the data for the current page
-    //     const pageData = dummyData.slice(startIndex, endIndex);
-    //     setData(pageData);
-    // }, [page]);
+    useEffect(() => {
+        const subscribe = firestore()
+            .collection('opdPatients')
+            .doc('m5JHl3l4zhaBCa8Vihcb')
+            .collection('opdPatient')
+            .where('hospitaluid', '==', user.user.hospitaluid)
+            .where('deleted', '==', 0)
+            .where('druid', '==', user.user.druid)
+            .where('consultingDate', '==', formattedDate)
+            .where('paymentStatus', "==", "Pending")
+            .orderBy('timestamp', 'desc')
+            .onSnapshot((snapshot) => {
+                const newData: any = [];
+                snapshot.forEach((doc) => {
+                    newData.push(doc.data());
+                });
+                setTodaypatients(newData)
+                setData(newData.slice(0, 10))
+                console.log('newData-------------------------------------', newData);
+
+            });
+        return () => {
+            subscribe();
+        };
+    }, []);
     const handleNextPage = () => {
         setPage(page + 1);
     };
@@ -249,7 +273,6 @@ const TodayPatients = ({ navigation }: any) => {
     const selectCard = (item: number) => {
         setisVisible(true)
         setShowActions(item);
-
     };
     const onClose = () => {
         setisVisible(false)
@@ -265,10 +288,10 @@ const TodayPatients = ({ navigation }: any) => {
                 <Text style={GlobalStyle.label}>Mobile No:</Text>
             </View>
             <View style={GlobalStyle.middleSide}>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.date}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.address}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.mobileNumber}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
 
             </View>
             <View style={GlobalStyle.rightSide}>
@@ -276,29 +299,17 @@ const TodayPatients = ({ navigation }: any) => {
                     <Pressable onPress={() => selectCard(item)}>
                         <Icon type="feather" name="more-vertical" color="gray" size={30} />
                     </Pressable>
-                    {/* {showActions === item.id && (
-                        <View style={GlobalStyle.actionsPopup}>
-                            <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
-                                <Icon type="feather" name="edit" color="blue" size={30} />
-                            </Pressable>
-                            <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
-                                <Icon type="feather" name="printer" color="green" size={30} />
-                            </Pressable>
-                        </View>
-                    )} */}
                 </View>
             </View>
         </View>
     );
     const loadMoreData = () => {
         dispatch(setLoading(true))
-
         const start = page * 10;
         const end = start + 10;
-        setData([...data, ...dummyData.slice(start, end)]);
+        setData([...data, ...todayPatients.slice(start, end)]);
         setPage(page + 1);
         setTimeout(() => {
-
             dispatch(setLoading(false))
         }, 2000);
 
@@ -341,7 +352,6 @@ const TodayPatients = ({ navigation }: any) => {
     };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
-
             <View style={{ flex: 1, padding: 10 }}>
                 <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
                 {data.length === 0 ? (
@@ -352,17 +362,12 @@ const TodayPatients = ({ navigation }: any) => {
                     <FlatList
                         data={data}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item.pid.toString()}
                         onEndReached={loadMoreData}
                         onEndReachedThreshold={0.1}
                     />
                 )}
             </View>
-            {/* {data.length < dummyData.length && (
-                <View style={{ padding: 10 }}>
-                    <Button title="Load More" onPress={() => loadMoreData()} />
-                </View>
-            )} */}
             <Modal visible={isVisible} animationType="slide"
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
@@ -375,15 +380,18 @@ const TodayPatients = ({ navigation }: any) => {
                         borderTopLeftRadius: 15,
                         borderTopRightRadius: 15
                     }}>
+                        {showActions?.prescription ?
+                            <TouchableOpacity onPress={() => printHTML()} style={GlobalStyle.btn}>
+                                <Icon type="feather" name="printer" color="gray" size={25} />
+                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
+                                <Icon type="feather" name="edit" color="gray" size={25} />
+                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
+                            </TouchableOpacity>
+                        }
 
-                        <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription')} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
-                            <Icon type="feather" name="edit" color="gray" size={25} />
-                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => printHTML()} style={GlobalStyle.btn}>
-                            <Icon type="feather" name="printer" color="gray" size={25} />
-                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity onPress={onClose} style={GlobalStyle.btn}>
                             <Icon type="entypo" name="cross" color="gray" size={25} />
                             <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Cancel</Text>

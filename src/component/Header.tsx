@@ -1,10 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, Text, View, Image } from 'react-native';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Image } from 'react-native';
 import Icon from 'react-native-easy-icon';
 import { Pressable } from 'react-native';
-import auth from '@react-native-firebase/auth';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/action/UserSlice';
 

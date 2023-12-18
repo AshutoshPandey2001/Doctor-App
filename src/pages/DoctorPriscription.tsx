@@ -10,6 +10,7 @@ import { printDescription } from '../component/Print';
 import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
+import firestore from '@react-native-firebase/firestore';
 
 interface State {
     paymentStatus: string;
@@ -40,72 +41,20 @@ interface State {
     drName: string;
     opdCaseNo: string;
     opduid: string;
+    timestamp: {
+        seconds: number,
+        nanoseconds: number
+    };
 }
 
-const DummyData: State = {
-    pid: '123456',
-    pName: 'John Doe',
-    page: 30,
-    pGender: 'Male',
-    pAddress: '123 Main St',
-    pMobileNo: '123-456-7890',
-    consultingDate: '2023-11-08',
-    drName: 'Dr. Smith',
-    opdCaseNo: 'OPD123',
-    opduid: 'UID456',
-    paymentStatus: 'Pending',
-    diagnosis: '',
-    followup: '',
-    generalInstruction: '',
-    advice: {
-        medicine: '',
-        frequency: {
-            M: false,
-            A: false,
-            E: false,
-            N: false,
-        },
-        days: 0,
-        total: 0,
-        advice: '',
-    },
-    prescription: [],
-    patientsHistory: [
-        {
-            diagnosis: 'Common cold',
-            followup: '2023-11-15',
-            prescription: [
-                {
-                    medicine: 'Medicine A',
-                    frequency: { M: true, A: false, E: true, N: false },
-                    days: 7,
-                    total: 28,
-                    advice: 'Take with meals',
-                },
-            ],
-        },
-        {
-            diagnosis: 'Fever',
-            followup: '2023-11-22',
-            prescription: [
-                {
-                    medicine: 'Medicine B',
-                    frequency: { M: true, A: true, E: false, N: true },
-                    days: 5,
-                    total: 15,
-                    advice: 'Drink plenty of water',
-                },
-            ],
-        },
-    ],
-};
 
-const DoctorPriscription = ({ navigation }: any) => {
-    const [state, setState] = useState<State>({ ...DummyData });
+const DoctorPriscription = ({ navigation, route }: any) => {
     const [showModal, setShowModal] = useState(false);
     const [routeName, setRouteName] = useState<any>();
     const user: any = useSelector((state: RootState) => state.user)
-
+    console.log('routes', route.params);
+    const patientData = route.params
+    const [state, setState] = useState<State>({ ...patientData });
     const [advice, setAdvice] = useState({
         id: Math.floor(1000 + Math.random() * 9000),
         medicine: '',
@@ -114,7 +63,6 @@ const DoctorPriscription = ({ navigation }: any) => {
         total: '',
         advice: '',
     });
-    const route = useRoute()
     const [checkboxValues, setCheckboxValues] = useState({
         M: false,
         A: false,
@@ -122,6 +70,7 @@ const DoctorPriscription = ({ navigation }: any) => {
         N: false,
     });
     const [prescription, setPrescription] = useState<any>([]);
+    const [history, setHistory] = useState<any>([])
     const historydummyDataArray = [
         {
             consultingDate: "2023-01-15", // Replace with your desired default consultingDate
@@ -188,38 +137,38 @@ const DoctorPriscription = ({ navigation }: any) => {
             ],
         },
     ];
-    const patientData = {
-        pid: '123456789', // Patient ID
-        pName: 'John Doe', // Patient Name
-        page: 30, // Patient Age
-        pGender: 'Male', // Patient Gender
-        pAddress: '123 Main St, City', // Patient Address
-        pMobileNo: '123-456-7890', // Patient Mobile Number
-        opdCaseNo: 'OPD123', // OPD Case Number
-        opduid: 'UID456', // OPD ID
-        consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
-        drName: 'Dr. Smith', // Consulting Doctor's Name
-        diagnosis: 'Fever', // Diagnosis
-        followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
-        prescription: [
-            {
-                medicine: 'Medicine A', // Medicine Name
-                frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
-                days: 5, // Number of Days
-                total: 20, // Total
-                advice: 'After meal', // Advice
-            },
-            {
-                medicine: 'Medicine B', // Medicine Name
-                frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
-                days: 5, // Number of Days
-                total: 20, // Total
-                advice: 'After meal', // Advice
-            },
-            // Add more prescription items as needed in the same format
-        ],
-        generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
-    };
+    // const patientData = {
+    //     pid: '123456789', // Patient ID
+    //     pName: 'John Doe', // Patient Name
+    //     page: 30, // Patient Age
+    //     pGender: 'Male', // Patient Gender
+    //     pAddress: '123 Main St, City', // Patient Address
+    //     pMobileNo: '123-456-7890', // Patient Mobile Number
+    //     opdCaseNo: 'OPD123', // OPD Case Number
+    //     opduid: 'UID456', // OPD ID
+    //     consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
+    //     drName: 'Dr. Smith', // Consulting Doctor's Name
+    //     diagnosis: 'Fever', // Diagnosis
+    //     followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
+    //     prescription: [
+    //         {
+    //             medicine: 'Medicine A', // Medicine Name
+    //             frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
+    //             days: 5, // Number of Days
+    //             total: 20, // Total
+    //             advice: 'After meal', // Advice
+    //         },
+    //         {
+    //             medicine: 'Medicine B', // Medicine Name
+    //             frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
+    //             days: 5, // Number of Days
+    //             total: 20, // Total
+    //             advice: 'After meal', // Advice
+    //         },
+    //         // Add more prescription items as needed in the same format
+    //     ],
+    //     generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
+    // };
     // Now you can use these two dummy data entries in your component
     const printHTML = async () => {
         printDescription(patientData, user)
@@ -231,10 +180,34 @@ const DoctorPriscription = ({ navigation }: any) => {
             setRouteName(true)
         }
     }, [route])
+    useEffect(() => {
+        const subscribe = firestore()
+            .collection('opdPatients')
+            .doc('m5JHl3l4zhaBCa8Vihcb')
+            .collection('opdPatient')
+            .where('hospitaluid', '==', user.user.hospitaluid)
+            .where('deleted', '==', 0)
+            .where('druid', '==', user.user.druid)
+            .where('paymentStatus', "==", "Pending")
+            .where('pid', "==", state.pid)
+            .where('paymentStatus', "==", "Completed")
+            .orderBy('timestamp', 'asc')
+            .onSnapshot((snapshot) => {
+                const newData: any = [];
+                snapshot.forEach((doc) => {
+                    newData.push(doc.data());
+                });
+                setHistory(newData)
+                console.log('newData-------------------------------------', newData);
+
+            });
+        return () => {
+            subscribe();
+        };
+    }, []);
     const openHistory = () => {
         setShowModal(true);
     };
-
     const handleClose = () => {
         setShowModal(false);
     };
@@ -243,10 +216,30 @@ const DoctorPriscription = ({ navigation }: any) => {
         // Implement your print functionality
     };
 
-    const savePrescription = () => {
-        // Implement your save functionality
-    };
+    const savePrescription = async () => {
+        const querySnapshot = await firestore()
+            .collection('opdPatients')
+            .doc('m5JHl3l4zhaBCa8Vihcb')
+            .collection('opdPatient')
+            .where('hospitaluid', '==', user.user.hospitaluid)
+            .where('opduid', '==', state.opduid)
+            .get();
 
+        querySnapshot.forEach(async (doc) => {
+            try {
+                // Update the document with new data
+                await doc.ref.update({
+                    ...state,
+                    prescription,
+                    timestamp: new Date(state.timestamp.seconds * 1000 + Math.floor(state.timestamp.nanoseconds / 1e6))
+                });
+                navigation.goBack()
+                console.log('Document successfully updated!');
+            } catch (error) {
+                console.error('Error updating document: ', error);
+            }
+        });
+    };
 
     const handleCheckboxChange = (e: keyof typeof checkboxValues) => {
         setCheckboxValues({ ...checkboxValues, [e]: !checkboxValues[e] });
@@ -319,11 +312,7 @@ const DoctorPriscription = ({ navigation }: any) => {
             }
         </View>
     );
-
     const [activeSections, setActiveSections] = useState([0]);
-
-
-
     const renderHeader = (section: any, isActive: number) => (
 
         <View style={[GlobalStyle.card, { flexDirection: 'row', justifyContent: 'space-between' }]}>
@@ -540,7 +529,7 @@ const DoctorPriscription = ({ navigation }: any) => {
                                     <Pressable onPress={() => printHTML()}>
                                         <Icon type="feather" name="printer" color="red" size={35} />
                                     </Pressable>
-                                    <Pressable>
+                                    <Pressable onPress={() => savePrescription()}>
                                         <Icon type="feather" name="save" color="green" size={35} />
                                     </Pressable>
                                 </View>
@@ -551,17 +540,18 @@ const DoctorPriscription = ({ navigation }: any) => {
                     ) : (
                         <View>
                             <ScrollView horizontal={true}>
-
-                                <Accordion
-                                    align={'center'}
-                                    sections={historydummyDataArray}
-                                    activeSections={activeSections}
-                                    renderHeader={(section, isActive) => renderHeader(section, isActive)}
-                                    renderContent={renderContent}
-                                    keyExtractor={(item, index) => index}
-                                    onChange={updateSections}
-                                    underlayColor={'transparenet'}
-                                />
+                                {history.length > 0 ?
+                                    <Accordion
+                                        align={'center'}
+                                        sections={history}
+                                        activeSections={activeSections}
+                                        renderHeader={(section, isActive) => renderHeader(section, isActive)}
+                                        renderContent={renderContent}
+                                        keyExtractor={(item, index) => index}
+                                        onChange={updateSections}
+                                        underlayColor={'transparenet'}
+                                    /> :
+                                    <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
                             </ScrollView>
                         </View>
                     )}
@@ -575,16 +565,18 @@ const DoctorPriscription = ({ navigation }: any) => {
                                     </TouchableOpacity>
                                 </View>
                                 <View style={{ marginTop: 10 }}>
-                                    <Accordion
-                                        align={'center'}
-                                        sections={historydummyDataArray}
-                                        activeSections={activeSections}
-                                        renderHeader={(section, isActive) => renderHeader(section, isActive)}
-                                        renderContent={renderContent}
-                                        keyExtractor={(item, index) => index}
-                                        onChange={updateSections}
-                                        underlayColor={'transparenet'}
-                                    />
+                                    {history.length > 0 ?
+                                        <Accordion
+                                            align={'center'}
+                                            sections={history}
+                                            activeSections={activeSections}
+                                            renderHeader={(section, isActive) => renderHeader(section, isActive)}
+                                            renderContent={renderContent}
+                                            keyExtractor={(item, index) => index}
+                                            onChange={updateSections}
+                                            underlayColor={'transparenet'}
+                                        /> :
+                                        <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
                                 </View>
                             </View>
                         </View>

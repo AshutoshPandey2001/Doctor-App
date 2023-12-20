@@ -1,6 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, FlatList, Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, Pressable, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
@@ -10,217 +9,7 @@ import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
 
-interface Patient {
-    id: number;
-    name: string;
-    address: string;
-    date: string;
-    mobileNumber: string;
-}
 const TodayPatients = ({ navigation }: any) => {
-    const dummyData: Patient[] = [
-
-        {
-            "id": 1,
-            "name": "John Doe",
-            "address": "123 Main Street",
-            "date": "2023-10-04",
-            "mobileNumber": "+1234567890"
-        },
-        {
-            "id": 2,
-            "name": "Jane Smith",
-            "address": "456 Elm Street",
-            "date": "2023-10-05",
-            "mobileNumber": "+9876543210"
-        },
-        {
-            "id": 3,
-            "name": "Peter Jones",
-            "address": "789 Oak Street",
-            "date": "2023-10-06",
-            "mobileNumber": "+5678901234"
-        },
-        {
-            "id": 4,
-            "name": "Mary Brown",
-            "address": "1011 Maple Street",
-            "date": "2023-10-07",
-            "mobileNumber": "+1011213141"
-        },
-        {
-            "id": 5,
-            "name": "David Williams",
-            "address": "1213 Pine Street",
-            "date": "2023-10-08",
-            "mobileNumber": "+1112131415"
-        },
-        {
-            "id": 6,
-            "name": "Sarah Miller",
-            "address": "1415 Walnut Street",
-            "date": "2023-10-09",
-            "mobileNumber": "+1617181920"
-        },
-        {
-            "id": 7,
-            "name": "William Davis",
-            "address": "1617 Elm Street",
-            "date": "2023-10-10",
-            "mobileNumber": "+2122232425"
-        },
-        {
-            "id": 8,
-            "name": "Elizabeth Taylor",
-            "address": "1819 Oak Street",
-            "date": "2023-10-11",
-            "mobileNumber": "+2627282930"
-        },
-        {
-            "id": 9,
-            "name": "Michael Johnson",
-            "address": "2021 Maple Street",
-            "date": "2023-10-12",
-            "mobileNumber": "+3132333435"
-        },
-        {
-            "id": 10,
-            "name": "Jennifer Wilson",
-            "address": "2223 Pine Street",
-            "date": "2023-10-13",
-            "mobileNumber": "+3637383940"
-        },
-        {
-            "id": 11,
-            "name": "Mark Anderson",
-            "address": "2425 Walnut Street",
-            "date": "2023-10-14",
-            "mobileNumber": "+4142434445"
-        },
-        {
-            "id": 12,
-            "name": "Susan Thomas",
-            "address": "2627 Elm Street",
-            "date": "2023-10-15",
-            "mobileNumber": "+4647484950"
-        },
-        {
-            "id": 13,
-            "name": "Paul Jackson",
-            "address": "2829 Oak Street",
-            "date": "2023-10-16",
-            "mobileNumber": "+5152535455"
-        },
-        {
-            "id": 14,
-            "name": "Linda Cooper",
-            "address": "3031 Maple Street",
-            "date": "2023-10-17",
-            "mobileNumber": "+5657585960"
-        },
-
-        {
-            "id": 15,
-            "name": "John Doe",
-            "address": "123 Main Street",
-            "date": "2023-10-04",
-            "mobileNumber": "+1234567890"
-        },
-        {
-            "id": 16,
-            "name": "Jane Smith",
-            "address": "456 Elm Street",
-            "date": "2023-10-05",
-            "mobileNumber": "+9876543210"
-        },
-        {
-            "id": 17,
-            "name": "Peter Jones",
-            "address": "789 Oak Street",
-            "date": "2023-10-06",
-            "mobileNumber": "+5678901234"
-        },
-        {
-            "id": 18,
-            "name": "Mary Brown",
-            "address": "1011 Maple Street",
-            "date": "2023-10-07",
-            "mobileNumber": "+1011213141"
-        },
-        {
-            "id": 19,
-            "name": "David Williams",
-            "address": "1213 Pine Street",
-            "date": "2023-10-08",
-            "mobileNumber": "+1112131415"
-        },
-        {
-            "id": 20,
-            "name": "Sarah Miller",
-            "address": "1415 Walnut Street",
-            "date": "2023-10-09",
-            "mobileNumber": "+1617181920"
-        },
-        {
-            "id": 21,
-            "name": "William Davis",
-            "address": "1617 Elm Street",
-            "date": "2023-10-10",
-            "mobileNumber": "+2122232425"
-        },
-        {
-            "id": 22,
-            "name": "Elizabeth Taylor",
-            "address": "1819 Oak Street",
-            "date": "2023-10-11",
-            "mobileNumber": "+2627282930"
-        },
-        {
-            "id": 23,
-            "name": "Michael Johnson",
-            "address": "2021 Maple Street",
-            "date": "2023-10-12",
-            "mobileNumber": "+3132333435"
-        },
-        {
-            "id": 24,
-            "name": "Jennifer Wilson",
-            "address": "2223 Pine Street",
-            "date": "2023-10-13",
-            "mobileNumber": "+3637383940"
-        },
-        {
-            "id": 25,
-            "name": "Mark Anderson",
-            "address": "2425 Walnut Street",
-            "date": "2023-10-14",
-            "mobileNumber": "+4142434445"
-        },
-        {
-            "id": 26,
-            "name": "Susan Thomas",
-            "address": "2627 Elm Street",
-            "date": "2023-10-15",
-            "mobileNumber": "+4647484950"
-        },
-        {
-            "id": 27,
-            "name": "Paul Jackson",
-            "address": "2829 Oak Street",
-            "date": "2023-10-16",
-            "mobileNumber": "+5152535455"
-        },
-        {
-            "id": 28,
-            "name": "Linda Cooper",
-            "address": "3031 Maple Street",
-            "date": "2023-10-17",
-            "mobileNumber": "+5657585960"
-        },
-
-
-    ]
-    const itemsPerPage = 10;
     const user: any = useSelector((state: RootState) => state.user)
     const currentDate = new Date();
     const year = currentDate.getUTCFullYear();
@@ -261,15 +50,7 @@ const TodayPatients = ({ navigation }: any) => {
             subscribe();
         };
     }, []);
-    const handleNextPage = () => {
-        setPage(page + 1);
-    };
 
-    const handlePreviousPage = () => {
-        if (page > 1) {
-            setPage(page - 1);
-        }
-    };
     const selectCard = (item: number) => {
         setisVisible(true)
         setShowActions(item);
@@ -314,40 +95,40 @@ const TodayPatients = ({ navigation }: any) => {
         }, 2000);
 
     };
-    const patientData = {
-        pid: '123456789', // Patient ID
-        pName: 'John Doe', // Patient Name
-        page: 30, // Patient Age
-        pGender: 'Male', // Patient Gender
-        pAddress: '123 Main St, City', // Patient Address
-        pMobileNo: '123-456-7890', // Patient Mobile Number
-        opdCaseNo: 'OPD123', // OPD Case Number
-        opduid: 'UID456', // OPD ID
-        consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
-        drName: 'Dr. Smith', // Consulting Doctor's Name
-        diagnosis: 'Fever', // Diagnosis
-        followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
-        prescription: [
-            {
-                medicine: 'Medicine A', // Medicine Name
-                frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
-                days: 5, // Number of Days
-                total: 20, // Total
-                advice: 'After meal', // Advice
-            },
-            {
-                medicine: 'Medicine B', // Medicine Name
-                frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
-                days: 5, // Number of Days
-                total: 20, // Total
-                advice: 'After meal', // Advice
-            },
-            // Add more prescription items as needed in the same format
-        ],
-        generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
-    };
+    // const patientData = {
+    //     pid: '123456789', // Patient ID
+    //     pName: 'John Doe', // Patient Name
+    //     page: 30, // Patient Age
+    //     pGender: 'Male', // Patient Gender
+    //     pAddress: '123 Main St, City', // Patient Address
+    //     pMobileNo: '123-456-7890', // Patient Mobile Number
+    //     opdCaseNo: 'OPD123', // OPD Case Number
+    //     opduid: 'UID456', // OPD ID
+    //     consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
+    //     drName: 'Dr. Smith', // Consulting Doctor's Name
+    //     diagnosis: 'Fever', // Diagnosis
+    //     followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
+    //     prescription: [
+    //         {
+    //             medicine: 'Medicine A', // Medicine Name
+    //             frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
+    //             days: 5, // Number of Days
+    //             total: 20, // Total
+    //             advice: 'After meal', // Advice
+    //         },
+    //         {
+    //             medicine: 'Medicine B', // Medicine Name
+    //             frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
+    //             days: 5, // Number of Days
+    //             total: 20, // Total
+    //             advice: 'After meal', // Advice
+    //         },
+    //         // Add more prescription items as needed in the same format
+    //     ],
+    //     generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
+    // };
     // Now you can use these two dummy data entries in your component
-    const printHTML = async () => {
+    const printHTML = async (patientData: any) => {
         printDescription(patientData, user)
     };
     return (
@@ -381,7 +162,7 @@ const TodayPatients = ({ navigation }: any) => {
                         borderTopRightRadius: 15
                     }}>
                         {showActions?.prescription ?
-                            <TouchableOpacity onPress={() => printHTML()} style={GlobalStyle.btn}>
+                            <TouchableOpacity onPress={() => printHTML(showActions)} style={GlobalStyle.btn}>
                                 <Icon type="feather" name="printer" color="gray" size={25} />
                                 <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
                             </TouchableOpacity>

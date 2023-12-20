@@ -7,15 +7,17 @@ import { FlatList, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Accordion from 'react-native-collapsible/Accordion';
 import RNPrint from 'react-native-print';
 import { printDescription } from '../component/Print';
-import { getFocusedRouteNameFromRoute, useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { getFocusedRouteNameFromRoute, useIsFocused, useRoute } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
+import DatePicker from 'react-native-date-picker';
+import { setLoading } from '../redux/action/UiSlice';
 
 interface State {
     paymentStatus: string;
     diagnosis: string;
-    followup: string;
+    followup: any;
     generalInstruction: string;
     advice: {
         medicine: string;
@@ -52,7 +54,6 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     const [showModal, setShowModal] = useState(false);
     const [routeName, setRouteName] = useState<any>();
     const user: any = useSelector((state: RootState) => state.user)
-    console.log('routes', route.params);
     const patientData = route.params
     const [state, setState] = useState<State>({ ...patientData });
     const [advice, setAdvice] = useState({
@@ -71,6 +72,11 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     });
     const [prescription, setPrescription] = useState<any>([]);
     const [history, setHistory] = useState<any>([])
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const [selectedDate, setselectedDate] = useState<any>();
+    const focus = useIsFocused();
+    const dispatch = useDispatch()
+
     const historydummyDataArray = [
         {
             consultingDate: "2023-01-15", // Replace with your desired default consultingDate
@@ -181,30 +187,34 @@ const DoctorPriscription = ({ navigation, route }: any) => {
         }
     }, [route])
     useEffect(() => {
-        const subscribe = firestore()
-            .collection('opdPatients')
-            .doc('m5JHl3l4zhaBCa8Vihcb')
-            .collection('opdPatient')
-            .where('hospitaluid', '==', user.user.hospitaluid)
-            .where('deleted', '==', 0)
-            .where('druid', '==', user.user.druid)
-            .where('paymentStatus', "==", "Pending")
-            .where('pid', "==", state.pid)
-            .where('paymentStatus', "==", "Completed")
-            .orderBy('timestamp', 'asc')
-            .onSnapshot((snapshot) => {
-                const newData: any = [];
-                snapshot.forEach((doc) => {
-                    newData.push(doc.data());
-                });
-                setHistory(newData)
-                console.log('newData-------------------------------------', newData);
+        if (focus) {
+            dispatch(setLoading(true))
+            const subscribe = firestore()
+                .collection('opdPatients')
+                .doc('m5JHl3l4zhaBCa8Vihcb')
+                .collection('opdPatient')
+                .where('hospitaluid', '==', user.user.hospitaluid)
+                .where('deleted', '==', 0)
+                .where('druid', '==', user.user.druid)
+                .where('pid', "==", state.pid)
+                .where('paymentStatus', "==", "Completed")
+                .orderBy('timestamp', 'asc')
+                .onSnapshot((snapshot) => {
+                    const newData: any = [];
+                    snapshot.forEach((doc) => {
+                        newData.push(doc.data());
+                    });
+                    setHistory(newData)
+                    console.log('newData-------------------------------------', newData);
 
-            });
-        return () => {
-            subscribe();
-        };
-    }, []);
+                });
+            dispatch(setLoading(false))
+
+            return () => {
+                subscribe();
+            };
+        }
+    }, [focus]);
     const openHistory = () => {
         setShowModal(true);
     };
@@ -217,6 +227,8 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     };
 
     const savePrescription = async () => {
+        dispatch(setLoading(true))
+
         const querySnapshot = await firestore()
             .collection('opdPatients')
             .doc('m5JHl3l4zhaBCa8Vihcb')
@@ -233,9 +245,12 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                     prescription,
                     timestamp: new Date(state.timestamp.seconds * 1000 + Math.floor(state.timestamp.nanoseconds / 1e6))
                 });
+                dispatch(setLoading(false))
                 navigation.goBack()
+
                 console.log('Document successfully updated!');
             } catch (error) {
+                dispatch(setLoading(false))
                 console.error('Error updating document: ', error);
             }
         });
@@ -363,6 +378,22 @@ const DoctorPriscription = ({ navigation, route }: any) => {
             </GestureHandlerRootView>
         )
     }
+    const openDatePicker = () => {
+        setDatePickerVisible(true);
+    };
+    const formatDate = (date: any) => {
+        const dateObject = new Date(date);
+        const day = String(dateObject.getDate()).padStart(2, '0');
+        const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+        const year = dateObject.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
+    const handleDateChange = (date: any) => {
+        setselectedDate(date)
+        setState({ ...state, followup: formatDate(date) })
+        setDatePickerVisible(false)
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20, marginTop: 15 }}>
@@ -417,12 +448,44 @@ const DoctorPriscription = ({ navigation, route }: any) => {
 
                                 <View style={styles.section}>
                                     <Text style={styles.subHeading}>Follow-up:</Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Enter follow-up Details"
-                                        value={state.followup}
-                                        onChangeText={(text) => setState({ ...state, followup: text })}
-                                        placeholderTextColor={'gray'}
+                                    <View
+                                        style={{
+                                            borderColor: 'lightgray',
+                                            paddingHorizontal: 5,
+                                            // marginLeft: 5,
+                                            flex: 1,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderWidth: 1,
+                                            height: 50
+                                        }}
+                                    >
+                                        <Text style={{ width: '100%', fontSize: 14, color: 'gray' }} onPress={() => openDatePicker()}>{state.followup ? state.followup : 'Select follow-up Date'}</Text>
+
+                                    </View>
+                                    {/* <View >
+                                        <Text onPress={() => console.log('clickked')}
+                                        ></Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Enter follow-up Details"
+                                            editable={false}
+                                            value={state.followup}
+                                            onChangeText={(text) => setState({ ...state, followup: text })}
+                                            placeholderTextColor={'gray'}
+                                        />
+                                    </View> */}
+                                    <DatePicker
+                                        modal
+                                        open={datePickerVisible}
+                                        date={selectedDate || new Date()}
+                                        mode='date'
+                                        onConfirm={(date) => {
+                                            handleDateChange(date)
+                                        }}
+                                        onCancel={() => {
+                                            setDatePickerVisible(false)
+                                        }}
                                     />
                                 </View>
 
@@ -540,18 +603,41 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                     ) : (
                         <View>
                             <ScrollView horizontal={true}>
-                                {history.length > 0 ?
-                                    <Accordion
-                                        align={'center'}
-                                        sections={history}
-                                        activeSections={activeSections}
-                                        renderHeader={(section, isActive) => renderHeader(section, isActive)}
-                                        renderContent={renderContent}
-                                        keyExtractor={(item, index) => index}
-                                        onChange={updateSections}
-                                        underlayColor={'transparenet'}
-                                    /> :
-                                    <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
+                                <View>
+
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <Text style={styles.heading}>Patient Information</Text>
+                                    </View>
+                                    <View style={GlobalStyle.card}>
+                                        <View style={GlobalStyle.leftSide}>
+                                            <Text style={GlobalStyle.label}>Name: </Text>
+                                            <Text style={GlobalStyle.label}>Age/Sex: </Text>
+                                            <Text style={GlobalStyle.label}>Address: </Text>
+                                            <Text style={GlobalStyle.label}>Mobile No: </Text>
+                                            <Text style={GlobalStyle.label}>Consulting Dr.: </Text>
+                                        </View>
+                                        <View style={GlobalStyle.middleSide}>
+                                            <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
+                                            <Text style={GlobalStyle.textcolor}>{state.page}/{state.pGender}</Text>
+                                            <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
+                                            <Text style={GlobalStyle.textcolor}> {state.pMobileNo}</Text>
+                                            <Text style={GlobalStyle.textcolor}>{state.drName}</Text>
+                                        </View>
+                                    </View>
+                                    {history.length > 0 ?
+                                        <Accordion
+                                            align={'center'}
+                                            sections={history}
+                                            activeSections={activeSections}
+                                            renderHeader={(section, isActive) => renderHeader(section, isActive)}
+                                            renderContent={renderContent}
+                                            keyExtractor={(item, index) => index}
+                                            onChange={updateSections}
+                                            underlayColor={'transparenet'}
+                                        /> :
+                                        <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
+                                </View>
+
                             </ScrollView>
                         </View>
                     )}

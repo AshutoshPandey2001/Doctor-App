@@ -3,44 +3,89 @@ import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Modal, Pre
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import firestore from '@react-native-firebase/firestore';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { setLoading } from '../redux/action/UiSlice';
 
 const Home = () => {
     const [patients, setpatients] = useState(0)
     const [day, setday] = useState<any>()
     const [isVisible, setisVisible] = useState(false);
+    const user: any = useSelector((state: RootState) => state.user)
+    const focus = useIsFocused();
+    const dispatch = useDispatch()
+    const parentDocRefpatients = firestore().collection('opdPatients').doc('m5JHl3l4zhaBCa8Vihcb');
+    const subcollectionRefpatients = parentDocRefpatients.collection('opdPatient').where('hospitaluid', '==', user.user.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user.druid);
     const onClose = () => {
         setisVisible(false)
     }
 
     useEffect(() => {
-        onChangeDays('today')
-    }, [])
+        if (focus) {
+            onChangeDays('today')
+        }
+    }, [focus])
 
-    const onChangeDays = (item: string) => {
+    const retrieveData = async (query: any) => {
+        try {
+            const querySnapshot = await query.get();
+            console.log('querySnapshot.size', querySnapshot.size);
+
+            return querySnapshot.size
+        } catch (error) {
+            console.error('Error retrieving data:', error);
+            return 0
+        }
+    };
+    const onChangeDays = async (item: string) => {
+        dispatch(setLoading(true))
+
+        let query;
+        let patientsData;
+        let dayText;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 10);
         switch (item) {
-
             case 'today':
-                setpatients(10)
-                setday('Today')
-                setisVisible(false)
+                query = subcollectionRefpatients.where('consultingDate', '==', moment().format('YYYY-MM-DD[Z]'));
+                patientsData = await retrieveData(query);
+                dayText = 'Today';
                 break;
             case '7days':
-                setpatients(70)
-                setday('Last 7 days')
-                setisVisible(false)
+                const lastSevenDays = new Date();
+                lastSevenDays.setDate(lastSevenDays.getDate() - 6);
+                query = subcollectionRefpatients
+                    .where('consultingDate', '<=', moment(formattedDate).format('YYYY-MM-DD[Z]'))
+                    .where('consultingDate', '>=', moment(lastSevenDays).format('YYYY-MM-DD[Z]'));
+                patientsData = await retrieveData(query);
+                dayText = 'Last 7 days';
                 break;
             case '30days':
-                setpatients(900)
-                setday('Last 30 days')
-                setisVisible(false)
+                const lastThirtyDays = new Date();
+                lastThirtyDays.setDate(lastThirtyDays.getDate() - 29);
+                query = subcollectionRefpatients
+                    .where('consultingDate', '<=', moment(formattedDate).format('YYYY-MM-DD[Z]'))
+                    .where('consultingDate', '>=', moment(lastThirtyDays).format('YYYY-MM-DD[Z]'));
+                patientsData = await retrieveData(query);
+                dayText = 'Last 30 days';
                 break;
             default:
-                setpatients(10)
-                setday('Today')
-                setisVisible(false)
+                query = subcollectionRefpatients.where('consultingDate', '==', moment(formattedDate).format('YYYY-MM-DD[Z]'));
+                patientsData = await retrieveData(query);
+                dayText = 'Today';
                 break;
         }
-    }
+
+        setpatients(patientsData);
+        setday(dayText);
+        dispatch(setLoading(false))
+
+        setisVisible(false);
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>

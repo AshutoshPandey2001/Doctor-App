@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
+import firestore from '@react-native-firebase/firestore';
 
 interface Patient {
     id: number;
@@ -17,236 +18,56 @@ interface Patient {
     mobileNumber: string;
 }
 const AllPatients = ({ navigation }: any) => {
-    const dummyData: Patient[] = [
-
-        {
-            "id": 1,
-            "name": "John Doe",
-            "address": "123 Main Street",
-            "date": "2023-10-04",
-            "mobileNumber": "+1234567890"
-        },
-        {
-            "id": 2,
-            "name": "Jane Smith",
-            "address": "456 Elm Street",
-            "date": "2023-10-05",
-            "mobileNumber": "+9876543210"
-        },
-        {
-            "id": 3,
-            "name": "Peter Jones",
-            "address": "789 Oak Street",
-            "date": "2023-10-06",
-            "mobileNumber": "+5678901234"
-        },
-        {
-            "id": 4,
-            "name": "Mary Brown",
-            "address": "1011 Maple Street",
-            "date": "2023-10-07",
-            "mobileNumber": "+1011213141"
-        },
-        {
-            "id": 5,
-            "name": "David Williams",
-            "address": "1213 Pine Street",
-            "date": "2023-10-08",
-            "mobileNumber": "+1112131415"
-        },
-        {
-            "id": 6,
-            "name": "Sarah Miller",
-            "address": "1415 Walnut Street",
-            "date": "2023-10-09",
-            "mobileNumber": "+1617181920"
-        },
-        {
-            "id": 7,
-            "name": "William Davis",
-            "address": "1617 Elm Street",
-            "date": "2023-10-10",
-            "mobileNumber": "+2122232425"
-        },
-        {
-            "id": 8,
-            "name": "Elizabeth Taylor",
-            "address": "1819 Oak Street",
-            "date": "2023-10-11",
-            "mobileNumber": "+2627282930"
-        },
-        {
-            "id": 9,
-            "name": "Michael Johnson",
-            "address": "2021 Maple Street",
-            "date": "2023-10-12",
-            "mobileNumber": "+3132333435"
-        },
-        {
-            "id": 10,
-            "name": "Jennifer Wilson",
-            "address": "2223 Pine Street",
-            "date": "2023-10-13",
-            "mobileNumber": "+3637383940"
-        },
-        {
-            "id": 11,
-            "name": "Mark Anderson",
-            "address": "2425 Walnut Street",
-            "date": "2023-10-14",
-            "mobileNumber": "+4142434445"
-        },
-        {
-            "id": 12,
-            "name": "Susan Thomas",
-            "address": "2627 Elm Street",
-            "date": "2023-10-15",
-            "mobileNumber": "+4647484950"
-        },
-        {
-            "id": 13,
-            "name": "Paul Jackson",
-            "address": "2829 Oak Street",
-            "date": "2023-10-16",
-            "mobileNumber": "+5152535455"
-        },
-        {
-            "id": 14,
-            "name": "Linda Cooper",
-            "address": "3031 Maple Street",
-            "date": "2023-10-17",
-            "mobileNumber": "+5657585960"
-        },
-
-        {
-            "id": 15,
-            "name": "John Doe",
-            "address": "123 Main Street",
-            "date": "2023-10-04",
-            "mobileNumber": "+1234567890"
-        },
-        {
-            "id": 16,
-            "name": "Jane Smith",
-            "address": "456 Elm Street",
-            "date": "2023-10-05",
-            "mobileNumber": "+9876543210"
-        },
-        {
-            "id": 17,
-            "name": "Peter Jones",
-            "address": "789 Oak Street",
-            "date": "2023-10-06",
-            "mobileNumber": "+5678901234"
-        },
-        {
-            "id": 18,
-            "name": "Mary Brown",
-            "address": "1011 Maple Street",
-            "date": "2023-10-07",
-            "mobileNumber": "+1011213141"
-        },
-        {
-            "id": 19,
-            "name": "David Williams",
-            "address": "1213 Pine Street",
-            "date": "2023-10-08",
-            "mobileNumber": "+1112131415"
-        },
-        {
-            "id": 20,
-            "name": "Sarah Miller",
-            "address": "1415 Walnut Street",
-            "date": "2023-10-09",
-            "mobileNumber": "+1617181920"
-        },
-        {
-            "id": 21,
-            "name": "William Davis",
-            "address": "1617 Elm Street",
-            "date": "2023-10-10",
-            "mobileNumber": "+2122232425"
-        },
-        {
-            "id": 22,
-            "name": "Elizabeth Taylor",
-            "address": "1819 Oak Street",
-            "date": "2023-10-11",
-            "mobileNumber": "+2627282930"
-        },
-        {
-            "id": 23,
-            "name": "Michael Johnson",
-            "address": "2021 Maple Street",
-            "date": "2023-10-12",
-            "mobileNumber": "+3132333435"
-        },
-        {
-            "id": 24,
-            "name": "Jennifer Wilson",
-            "address": "2223 Pine Street",
-            "date": "2023-10-13",
-            "mobileNumber": "+3637383940"
-        },
-        {
-            "id": 25,
-            "name": "Mark Anderson",
-            "address": "2425 Walnut Street",
-            "date": "2023-10-14",
-            "mobileNumber": "+4142434445"
-        },
-        {
-            "id": 26,
-            "name": "Susan Thomas",
-            "address": "2627 Elm Street",
-            "date": "2023-10-15",
-            "mobileNumber": "+4647484950"
-        },
-        {
-            "id": 27,
-            "name": "Paul Jackson",
-            "address": "2829 Oak Street",
-            "date": "2023-10-16",
-            "mobileNumber": "+5152535455"
-        },
-        {
-            "id": 28,
-            "name": "Linda Cooper",
-            "address": "3031 Maple Street",
-            "date": "2023-10-17",
-            "mobileNumber": "+5657585960"
-        },
-
-
-    ]
-    const itemsPerPage = 10;
-    // const [data, setData] = useState<any>([]);
-    const [showActions, setShowActions] = useState<number | null>(null); // Track the selected card's ID
-    const [showSmallPopup, setShowSmallPopup] = useState(false);
     const user: any = useSelector((state: RootState) => state.user)
+    const currentDate = new Date();
+    const year = currentDate.getUTCFullYear();
+    const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0'); // Add 1 to month since it is zero-based
+    const day = String(currentDate.getUTCDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}Z`;
+    // const [data, setData] = useState<any>([]);
+    const [todayPatients, setTodaypatients] = useState([])
 
-    // const navigation = useNavigation()
-    const [data, setData] = useState(dummyData.slice(0, 10)); // Initial data with first 10 items
+    const [showActions, setShowActions] = useState<any | null>(null); // Track the selected card's ID
+    const [showSmallPopup, setShowSmallPopup] = useState(false);
+    const dispatch = useDispatch()
+    const [data, setData] = useState<any>([]); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     const [isVisible, setisVisible] = useState(false);
-    const dispatch = useDispatch()
-
     useEffect(() => {
+        const subscribe = firestore()
+            .collection('opdPatients')
+            .doc('m5JHl3l4zhaBCa8Vihcb')
+            .collection('opdPatient')
+            .where('hospitaluid', '==', user.user.hospitaluid)
+            .where('deleted', '==', 0)
+            .where('druid', '==', user.user.druid)
+            .where('paymentStatus', "==", "Completed")
+            .orderBy('timestamp', 'desc')
+            .onSnapshot((snapshot) => {
+                const newData: any = [];
+                const existingPids = new Set(); // Maintain a set to track existing pids
+                snapshot.forEach((doc) => {
+                    const patientData = doc.data();
+                    const pid = patientData.pid;
+                    if (!existingPids.has(pid)) {
+                        // Check if the pid is not already present
+                        newData.push(patientData);
+                        existingPids.add(pid); // Add the pid to the set
+                    }
+                });
+                setTodaypatients(newData)
+                setData(newData.slice(0, 10))
+                console.log('newData-------------------------------------', newData);
 
+            });
+        return () => {
+            subscribe();
+        };
     }, []);
-    const handleNextPage = () => {
-        setPage(page + 1);
-    };
 
-    const handlePreviousPage = () => {
-        if (page > 1) {
-            setPage(page - 1);
-        }
-    };
     const selectCard = (item: number) => {
         setisVisible(true)
         setShowActions(item);
-
     };
     const onClose = () => {
         setisVisible(false)
@@ -262,10 +83,10 @@ const AllPatients = ({ navigation }: any) => {
                 <Text style={GlobalStyle.label}>Mobile No:</Text>
             </View>
             <View style={GlobalStyle.middleSide}>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.date}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.address}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.mobileNumber}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
 
             </View>
             <View style={GlobalStyle.rightSide}>
@@ -273,16 +94,6 @@ const AllPatients = ({ navigation }: any) => {
                     <Pressable onPress={() => selectCard(item)}>
                         <Icon type="feather" name="more-vertical" color="gray" size={30} />
                     </Pressable>
-                    {/* {showActions === item.id && (
-                        <View style={GlobalStyle.actionsPopup}>
-                            <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
-                                <Icon type="feather" name="edit" color="blue" size={30} />
-                            </Pressable>
-                            <Pressable onPress={() => navigation.navigate('DoctorPriscription')}>
-                                <Icon type="feather" name="printer" color="green" size={30} />
-                            </Pressable>
-                        </View>
-                    )} */}
                 </View>
             </View>
         </View>
@@ -291,54 +102,53 @@ const AllPatients = ({ navigation }: any) => {
         dispatch(setLoading(true))
         const start = page * 10;
         const end = start + 10;
-        setData([...data, ...dummyData.slice(start, end)]);
+        setData([...data, ...todayPatients.slice(start, end)]);
         setPage(page + 1);
         setTimeout(() => {
             dispatch(setLoading(false))
         }, 2000);
 
     };
-    const patientData = {
-        pid: '123456789', // Patient ID
-        pName: 'John Doe', // Patient Name
-        page: 30, // Patient Age
-        pGender: 'Male', // Patient Gender
-        pAddress: '123 Main St, City', // Patient Address
-        pMobileNo: '123-456-7890', // Patient Mobile Number
-        opdCaseNo: 'OPD123', // OPD Case Number
-        opduid: 'UID456', // OPD ID
-        consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
-        drName: 'Dr. Smith', // Consulting Doctor's Name
-        diagnosis: 'Fever', // Diagnosis
-        followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
-        prescription: [
-            {
-                medicine: 'Medicine A', // Medicine Name
-                frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
-                days: 5, // Number of Days
-                total: 20, // Total
-                advice: 'After meal', // Advice
-            },
-            {
-                medicine: 'Medicine B', // Medicine Name
-                frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
-                days: 5, // Number of Days
-                total: 20, // Total
-                advice: 'After meal', // Advice
-            },
-            // Add more prescription items as needed in the same format
-        ],
-        generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
-    };
+    // const patientData = {
+    //     pid: '123456789', // Patient ID
+    //     pName: 'John Doe', // Patient Name
+    //     page: 30, // Patient Age
+    //     pGender: 'Male', // Patient Gender
+    //     pAddress: '123 Main St, City', // Patient Address
+    //     pMobileNo: '123-456-7890', // Patient Mobile Number
+    //     opdCaseNo: 'OPD123', // OPD Case Number
+    //     opduid: 'UID456', // OPD ID
+    //     consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
+    //     drName: 'Dr. Smith', // Consulting Doctor's Name
+    //     diagnosis: 'Fever', // Diagnosis
+    //     followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
+    //     prescription: [
+    //         {
+    //             medicine: 'Medicine A', // Medicine Name
+    //             frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
+    //             days: 5, // Number of Days
+    //             total: 20, // Total
+    //             advice: 'After meal', // Advice
+    //         },
+    //         {
+    //             medicine: 'Medicine B', // Medicine Name
+    //             frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
+    //             days: 5, // Number of Days
+    //             total: 20, // Total
+    //             advice: 'After meal', // Advice
+    //         },
+    //         // Add more prescription items as needed in the same format
+    //     ],
+    //     generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
+    // };
     // Now you can use these two dummy data entries in your component
-    const printHTML = async () => {
+    const printHTML = async (patientData: any) => {
         printDescription(patientData, user)
     };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
-
             <View style={{ flex: 1, padding: 10 }}>
-                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>All Patients</Text>
+                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>All patients</Text>
                 {data.length === 0 ? (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Text>No content to display.</Text>
@@ -347,17 +157,12 @@ const AllPatients = ({ navigation }: any) => {
                     <FlatList
                         data={data}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item.pid.toString()}
                         onEndReached={loadMoreData}
                         onEndReachedThreshold={0.1}
                     />
                 )}
             </View>
-            {/* {data.length < dummyData.length && (
-                <View style={{ padding: 10 }}>
-                    <Button title="Load More" onPress={() => loadMoreData()} />
-                </View>
-            )} */}
             <Modal visible={isVisible} animationType="slide"
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
@@ -371,14 +176,12 @@ const AllPatients = ({ navigation }: any) => {
                         borderTopRightRadius: 15
                     }}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('History')} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
+                        <TouchableOpacity onPress={() => navigation.navigate('History', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
                             <Icon type="feather" name="edit" color="gray" size={25} />
                             <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => printHTML()} style={GlobalStyle.btn}>
-                            <Icon type="feather" name="printer" color="gray" size={25} />
-                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
-                        </TouchableOpacity>
+
+
                         <TouchableOpacity onPress={onClose} style={GlobalStyle.btn}>
                             <Icon type="entypo" name="cross" color="gray" size={25} />
                             <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Cancel</Text>

@@ -386,7 +386,6 @@ const DoctorPriscription = ({ navigation, route }: any) => {
         const day = String(dateObject.getDate()).padStart(2, '0');
         const month = String(dateObject.getMonth() + 1).padStart(2, '0');
         const year = dateObject.getFullYear();
-
         return `${day}/${month}/${year}`;
     };
     const handleDateChange = (date: any) => {
@@ -400,7 +399,6 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                 <Pressable onPress={() => navigation.goBack()}>
                     <Icon type="feather" name="arrow-left" color='#000' size={35} />
                 </Pressable>
-
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: -35 }}>
                     <Text style={{ textAlign: 'center', fontSize: 20, color: '#000', fontWeight: 'bold' }}>{routeName ? 'Prescription' : 'History'}</Text>
                 </View>
@@ -587,7 +585,6 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                         placeholderTextColor={'gray'}
                                     />
                                 </View>
-
                                 <View style={styles.buttonContainer}>
                                     <Pressable onPress={() => printHTML()}>
                                         <Icon type="feather" name="printer" color="red" size={35} />
@@ -596,8 +593,6 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                         <Icon type="feather" name="save" color="green" size={35} />
                                     </Pressable>
                                 </View>
-
-
                             </View>
                         </>
                     ) : (

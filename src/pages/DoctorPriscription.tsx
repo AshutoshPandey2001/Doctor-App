@@ -352,14 +352,42 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                 <Text style={{ color: 'black', fontSize: 14 }}>{section.followup}</Text>
             </View>
             <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
-            <GestureHandlerRootView>
+            {section.prescription?.map((item: any, i: any) => (
+                <View key={i} style={[GlobalStyle.card, { width: Dimensions.get('window').width - 50, }]}>
+                    <View style={GlobalStyle.leftSide}>
+                        <Text style={GlobalStyle.label}>Medicine:</Text>
+                        <Text style={GlobalStyle.label}>Freuency:</Text>
+                        <Text style={GlobalStyle.label}>Days:</Text>
+                        <Text style={GlobalStyle.label}>Total:</Text>
+                        <Text style={GlobalStyle.label}>Advice:</Text>
+                    </View>
+                    <View style={GlobalStyle.middleSide}>
+                        <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.medicine}</Text>
+                        <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}</Text>
+                        <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.days}</Text>
+                        <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.total}</Text>
+                        <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.advice}</Text>
+
+                    </View>
+                    {!showModal ?
+                        <View style={[GlobalStyle.rightSide, { alignItems: 'center', justifyContent: 'center' }]}>
+                            <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <Pressable onPress={() => cancelAdvice(item)}>
+                                    <Icon type="entypo" name="cross" color="gray" size={25} />
+                                </Pressable>
+                            </View>
+                        </View> : null
+                    }
+                </View>
+            ))}
+            {/* <GestureHandlerRootView>
                 <FlatList
                     data={section.prescription}
                     renderItem={renderItem}
                     keyExtractor={(item: any) => item.id}
                     onEndReachedThreshold={0.1}
                 />
-            </GestureHandlerRootView>
+            </GestureHandlerRootView> */}
         </View>
     );
 
@@ -368,14 +396,44 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     };
     const Prescription = () => {
         return (
-            <GestureHandlerRootView>
-                <FlatList
-                    data={prescription}
-                    renderItem={renderItem}
-                    keyExtractor={(item: any, i: number) => item.id}
-                    onEndReachedThreshold={0.1}
-                />
-            </GestureHandlerRootView>
+            <View>
+                {prescription?.map((item: any, i: any) => (
+                    <View key={i} style={[GlobalStyle.card, { width: Dimensions.get('window').width - 50, }]}>
+                        <View style={GlobalStyle.leftSide}>
+                            <Text style={GlobalStyle.label}>Medicine:</Text>
+                            <Text style={GlobalStyle.label}>Freuency:</Text>
+                            <Text style={GlobalStyle.label}>Days:</Text>
+                            <Text style={GlobalStyle.label}>Total:</Text>
+                            <Text style={GlobalStyle.label}>Advice:</Text>
+                        </View>
+                        <View style={GlobalStyle.middleSide}>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.medicine}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.frequency.M} - {item.frequency.A} - {item.frequency.E} - {item.frequency.N}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.days}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.total}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.advice}</Text>
+
+                        </View>
+                        {!showModal ?
+                            <View style={[GlobalStyle.rightSide, { alignItems: 'center', justifyContent: 'center' }]}>
+                                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Pressable onPress={() => cancelAdvice(item)}>
+                                        <Icon type="entypo" name="cross" color="gray" size={25} />
+                                    </Pressable>
+                                </View>
+                            </View> : null
+                        }
+                    </View>
+                ))}
+            </View>
+            // <GestureHandlerRootView>
+            //     <FlatList
+            //         data={prescription}
+            //         renderItem={renderItem}
+            //         keyExtractor={(item: any, i: number) => item.id}
+            //         onEndReachedThreshold={0.1}
+            //     />
+            // </GestureHandlerRootView>
         )
     }
     const openDatePicker = () => {
@@ -597,43 +655,43 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                         </>
                     ) : (
                         <View>
-                            <ScrollView horizontal={true}>
-                                <View>
+                            {/* <ScrollView> */}
+                            <View>
 
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={styles.heading}>Patient Information</Text>
-                                    </View>
-                                    <View style={GlobalStyle.card}>
-                                        <View style={GlobalStyle.leftSide}>
-                                            <Text style={GlobalStyle.label}>Name: </Text>
-                                            <Text style={GlobalStyle.label}>Age/Sex: </Text>
-                                            <Text style={GlobalStyle.label}>Address: </Text>
-                                            <Text style={GlobalStyle.label}>Mobile No: </Text>
-                                            <Text style={GlobalStyle.label}>Consulting Dr.: </Text>
-                                        </View>
-                                        <View style={GlobalStyle.middleSide}>
-                                            <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
-                                            <Text style={GlobalStyle.textcolor}>{state.page}/{state.pGender}</Text>
-                                            <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
-                                            <Text style={GlobalStyle.textcolor}> {state.pMobileNo}</Text>
-                                            <Text style={GlobalStyle.textcolor}>{state.drName}</Text>
-                                        </View>
-                                    </View>
-                                    {history.length > 0 ?
-                                        <Accordion
-                                            align={'center'}
-                                            sections={history}
-                                            activeSections={activeSections}
-                                            renderHeader={(section, isActive) => renderHeader(section, isActive)}
-                                            renderContent={renderContent}
-                                            keyExtractor={(item, index) => index}
-                                            onChange={updateSections}
-                                            underlayColor={'transparenet'}
-                                        /> :
-                                        <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.heading}>Patient Information</Text>
                                 </View>
+                                <View style={GlobalStyle.card}>
+                                    <View style={GlobalStyle.leftSide}>
+                                        <Text style={GlobalStyle.label}>Name: </Text>
+                                        <Text style={GlobalStyle.label}>Age/Sex: </Text>
+                                        <Text style={GlobalStyle.label}>Address: </Text>
+                                        <Text style={GlobalStyle.label}>Mobile No: </Text>
+                                        <Text style={GlobalStyle.label}>Consulting Dr.: </Text>
+                                    </View>
+                                    <View style={GlobalStyle.middleSide}>
+                                        <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.page}/{state.pGender}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
+                                        <Text style={GlobalStyle.textcolor}> {state.pMobileNo}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.drName}</Text>
+                                    </View>
+                                </View>
+                                {history.length > 0 ?
+                                    <Accordion
+                                        align={'center'}
+                                        sections={history}
+                                        activeSections={activeSections}
+                                        renderHeader={(section, isActive) => renderHeader(section, isActive)}
+                                        renderContent={renderContent}
+                                        keyExtractor={(item, index) => index}
+                                        onChange={updateSections}
+                                        underlayColor={'transparenet'}
+                                    /> :
+                                    <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
+                            </View>
 
-                            </ScrollView>
+                            {/* </ScrollView> */}
                         </View>
                     )}
                     <Modal visible={showModal} transparent={false} animationType="slide">

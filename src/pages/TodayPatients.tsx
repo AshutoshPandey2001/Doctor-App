@@ -8,6 +8,7 @@ import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
+import { formatDateDDMMYYY } from '../services/dateFormate';
 
 const TodayPatients = ({ navigation }: any) => {
     const user: any = useSelector((state: RootState) => state.user)
@@ -69,7 +70,7 @@ const TodayPatients = ({ navigation }: any) => {
                 <Text style={GlobalStyle.label}>Mobile No:</Text>
             </View>
             <View style={GlobalStyle.middleSide}>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
+                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{formatDateDDMMYYY(item.consultingDate)}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>

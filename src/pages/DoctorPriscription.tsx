@@ -13,6 +13,7 @@ import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
 import DatePicker from 'react-native-date-picker';
 import { setLoading } from '../redux/action/UiSlice';
+import { formatDateDDMMYYY } from '../services/dateFormate';
 
 interface State {
     paymentStatus: string;
@@ -331,7 +332,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     const renderHeader = (section: any, isActive: number) => (
 
         <View style={[GlobalStyle.card, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-            <Text style={{ color: '#000', fontSize: 16 }}>Consulting Date :-{section.consultingDate}</Text>
+            <Text style={{ color: '#000', fontSize: 16 }}>Consulting Date :-{formatDateDDMMYYY(section.consultingDate)}</Text>
             <View>
                 {isActive === activeSections[0] ?
                     <Icon type="feather" name="chevron-down" color="gray" size={25} />

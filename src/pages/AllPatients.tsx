@@ -77,13 +77,13 @@ const AllPatients = ({ navigation }: any) => {
     const renderItem = ({ item }: { item: any }) => (
         <View style={GlobalStyle.card}>
             <View style={GlobalStyle.leftSide}>
-                <Text style={GlobalStyle.label}>Date:</Text>
+                {/* <Text style={GlobalStyle.label}>Date:</Text> */}
                 <Text style={GlobalStyle.label}>Patient Name:</Text>
                 <Text style={GlobalStyle.label}>Address:</Text>
                 <Text style={GlobalStyle.label}>Mobile No:</Text>
             </View>
             <View style={GlobalStyle.middleSide}>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
+                {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>

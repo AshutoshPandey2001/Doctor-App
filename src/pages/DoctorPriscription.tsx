@@ -451,16 +451,20 @@ const DoctorPriscription = ({ navigation, route }: any) => {
         setState({ ...state, followup: formatDate(date) })
         setDatePickerVisible(false)
     }
+    const goBack = () => {
+        navigation.goBack()
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20, marginTop: 15 }}>
-                <Pressable onPress={() => navigation.goBack()}>
+                <Pressable style={{ flex: 1 }} onPress={() => goBack()}>
                     <Icon type="feather" name="arrow-left" color='#000' size={35} />
                 </Pressable>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: -35 }}>
+                <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center', marginLeft: -35 }}>
                     <Text style={{ textAlign: 'center', fontSize: 20, color: '#000', fontWeight: 'bold' }}>{routeName ? 'Prescription' : 'History'}</Text>
                 </View>
             </View>
+
             <ScrollView nestedScrollEnabled={true}>
                 <View style={{ margin: 20 }}>
                     <View style={{ display: 'none' }}>

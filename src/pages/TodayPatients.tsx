@@ -153,7 +153,7 @@ const TodayPatients = ({ navigation }: any) => {
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
                     <View style={{
-                        height: "20%",
+                        height: "15%",
                         width: "100%",
                         marginTop: 'auto',
                         backgroundColor: 'white',

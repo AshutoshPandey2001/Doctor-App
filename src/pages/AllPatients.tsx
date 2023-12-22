@@ -167,7 +167,7 @@ const AllPatients = ({ navigation }: any) => {
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
                     <View style={{
-                        height: "20%",
+                        height: "15%",
                         width: "100%",
                         marginTop: 'auto',
                         backgroundColor: 'white',
@@ -177,8 +177,8 @@ const AllPatients = ({ navigation }: any) => {
                     }}>
 
                         <TouchableOpacity onPress={() => navigation.navigate('History', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
-                            <Icon type="feather" name="edit" color="gray" size={25} />
-                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
+                            <Icon type="feather" name="eye" color="gray" size={25} />
+                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>View</Text>
                         </TouchableOpacity>
 
 

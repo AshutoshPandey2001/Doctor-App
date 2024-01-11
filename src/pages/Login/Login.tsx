@@ -76,11 +76,9 @@ const LoginPage = () => {
             dispatch(setUser(userData))
             console.log('User data:', userData);
         } catch (error: any) {
-            // Handle login errors
             Alert.alert('Login Error', error.message);
         }
     };
-
 
     return (
         <View style={styles.container}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, Pressable, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
@@ -9,7 +9,31 @@ import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
 import { formatDateDDMMYYY } from '../services/dateFormate';
-
+import DatePicker from 'react-native-date-picker';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import { useFormik } from 'formik'
+import * as yup from "yup"
+import SelectDropdown from 'react-native-select-dropdown';
+interface InitialFormValues {
+    pid: string,
+    pName: string,
+    page: string,
+    age: number,
+    duration: string,
+    pGender: string,
+    pAddress: string,
+    pMobileNo: string,
+    consultingDate: string,
+    drName: string,
+    druid: string,
+    consultingCharge: number,
+    opduid: number,
+    opdCaseNo: string,
+    paymentStatus: 'Pending',
+    advices: [],
+    hospitaluid: string,
+    deleted: number,
+}
 const TodayPatients = ({ navigation }: any) => {
     const user: any = useSelector((state: RootState) => state.user)
     const currentDate = new Date();
@@ -19,13 +43,43 @@ const TodayPatients = ({ navigation }: any) => {
     const formattedDate = `${year}-${month}-${day}Z`;
     // const [data, setData] = useState<any>([]);
     const [todayPatients, setTodaypatients] = useState([])
-
+    const [showModal, setShowModal] = useState(false);
     const [showActions, setShowActions] = useState<any | null>(null); // Track the selected card's ID
     const [showSmallPopup, setShowSmallPopup] = useState(false);
     const dispatch = useDispatch()
     const [data, setData] = useState<any>([]); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     const [isVisible, setisVisible] = useState(false);
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const [selectedDate, setselectedDate] = useState<any>();
+    const [state, setState] = useState<any>({});
+    const [initialFormValues, setInitialFormValues] = useState<InitialFormValues>({
+        pid: '',
+        pName: '',
+        page: '',
+        age: 0,
+        duration: 'Years',
+        pGender: '',
+        pAddress: '',
+        pMobileNo: '',
+        consultingDate: formattedDate,
+        drName: user.user?.doctorName,
+        druid: user.user?.druid,
+        consultingCharge: 0,
+        opduid: 0,
+        opdCaseNo: '',
+        paymentStatus: 'Pending',
+        advices: [],
+        hospitaluid: user.user?.hospitaluid,
+        deleted: 0
+    });
+    const patientSchema = yup.object({
+        pName: yup.string().required("Patient Name is Required"),
+        pGender: yup.string().required("Gendre is Required"),
+        age: yup.string().required("Age is Required"),
+        drName: yup.string().required("Doctor Name is Required"),
+        consultingCharge: yup.number().required("Consulting Charge is Required"),
+    })
     useEffect(() => {
         const subscribe = firestore()
             .collection('opdPatients')
@@ -35,7 +89,6 @@ const TodayPatients = ({ navigation }: any) => {
             .where('deleted', '==', 0)
             .where('druid', '==', user.user.druid)
             .where('consultingDate', '==', formattedDate)
-            .where('paymentStatus', "==", "Pending")
             .orderBy('timestamp', 'desc')
             .onSnapshot((snapshot) => {
                 const newData: any = [];
@@ -51,7 +104,6 @@ const TodayPatients = ({ navigation }: any) => {
             subscribe();
         };
     }, []);
-
     const selectCard = (item: number) => {
         setisVisible(true)
         setShowActions(item);
@@ -61,6 +113,77 @@ const TodayPatients = ({ navigation }: any) => {
         setShowActions(null);
 
     }
+    const formik = useFormik<InitialFormValues>({
+        initialValues: initialFormValues,
+        validationSchema: patientSchema,
+        onSubmit: (async (values: any) => {
+            let timestamp = new Date().getTime();
+            values.page = values.age + " " + values.duration
+            values.pid = Math.floor(Math.random() + timestamp)
+            values.opduid = Math.floor(2000 + Math.random() * 9000)
+            const patienstData = {
+                pid: values.pid,
+                pName: values.pName,
+                page: values.page,
+                age: values.age,
+                duration: values.duration,
+                pGender: values.pGender,
+                pAddress: values.pAddress,
+                pMobileNo: values.pMobileNo,
+                drName: values.drName,
+                hospitaluid: values.hospitaluid,
+                deleted: 0,
+                timestamp: new Date()
+            }
+            const opdData = {
+                pid: values.pid,
+                pName: values.pName,
+                page: values.page,
+                age: values.age,
+                pGender: values.pGender,
+                pAddress: values.pAddress,
+                pMobileNo: values.pMobileNo,
+                drName: values.drName,
+                hospitaluid: values.hospitaluid,
+                consultingDate: values.consultingDate,
+                druid: values.druid,
+                consultingCharge: Number(values.consultingCharge),
+                opduid: values.opduid,
+                opdCaseNo: values.opdCaseNo,
+                paymentStatus: values.paymentStatus,
+                advices: [],
+                deleted: 0,
+                timestamp: new Date()
+
+            }
+            const patientsRef = firestore()
+                .collection('Patients')
+                .doc(`fBoxFLrzXexT8WNBzGGh`) // sender id
+                .collection('patients')
+
+
+            const opdref = firestore()
+                .collection('opdPatients')
+                .doc(`m5JHl3l4zhaBCa8Vihcb`) // reciver id
+                .collection('opdPatient')
+            console.log('patienstData-------------------', patienstData);
+            console.log('opdData--------------', opdData);
+            const batch = firestore().batch();
+
+            batch.set(patientsRef.doc(), patienstData);
+            batch.set(opdref.doc(), opdData);
+
+            try {
+                await batch.commit();
+                setShowModal(false)
+            } catch (error: any) {
+
+                console.error('Error sending message: ', error);
+            }
+        }),
+    });
+    const { handleChange, handleBlur, handleSubmit, values, errors, isValid, touched, setFieldValue } = formik
+
     const renderItem = ({ item }: { item: any }) => (
         <View style={GlobalStyle.card}>
             <View style={GlobalStyle.leftSide}>
@@ -96,46 +219,44 @@ const TodayPatients = ({ navigation }: any) => {
         }, 2000);
 
     };
-    // const patientData = {
-    //     pid: '123456789', // Patient ID
-    //     pName: 'John Doe', // Patient Name
-    //     page: 30, // Patient Age
-    //     pGender: 'Male', // Patient Gender
-    //     pAddress: '123 Main St, City', // Patient Address
-    //     pMobileNo: '123-456-7890', // Patient Mobile Number
-    //     opdCaseNo: 'OPD123', // OPD Case Number
-    //     opduid: 'UID456', // OPD ID
-    //     consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
-    //     drName: 'Dr. Smith', // Consulting Doctor's Name
-    //     diagnosis: 'Fever', // Diagnosis
-    //     followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
-    //     prescription: [
-    //         {
-    //             medicine: 'Medicine A', // Medicine Name
-    //             frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
-    //             days: 5, // Number of Days
-    //             total: 20, // Total
-    //             advice: 'After meal', // Advice
-    //         },
-    //         {
-    //             medicine: 'Medicine B', // Medicine Name
-    //             frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
-    //             days: 5, // Number of Days
-    //             total: 20, // Total
-    //             advice: 'After meal', // Advice
-    //         },
-    //         // Add more prescription items as needed in the same format
-    //     ],
-    //     generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
-    // };
-    // Now you can use these two dummy data entries in your component
+
     const printHTML = async (patientData: any) => {
         printDescription(patientData, user)
     };
+    const handleClose = () => {
+        setShowModal(false);
+    };
+    const openHistory = () => {
+        setShowModal(true);
+    };
+    const formatDate = (date: any) => {
+        const dateObject = new Date(date);
+        const day = String(dateObject.getDate()).padStart(2, '0');
+        const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+        const year = dateObject.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
+    const handleDateChange = (date: any) => {
+        setselectedDate(date)
+        setState({ ...state, followup: formatDate(date) })
+        setDatePickerVisible(false)
+    }
+    const openDatePicker = () => {
+        setDatePickerVisible(true);
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
             <View style={{ flex: 1, padding: 10 }}>
-                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        marginBottom: 20,
+                    }}>Today's patients</Text>
+                    <Pressable style={{ backgroundColor: '#2a7fba', height: 30, padding: 6, borderRadius: 15, paddingHorizontal: 10 }} onPress={() => openHistory()}><Text style={{ color: '#fff', fontWeight: 'bold' }}>Add Patient</Text></Pressable>
+                </View>
+                {/* <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text> */}
                 {data.length === 0 ? (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Text>No content to display.</Text>
@@ -181,8 +302,231 @@ const TodayPatients = ({ navigation }: any) => {
                     </View>
                 </View>
             </Modal>
+            <Modal visible={showModal} transparent={false} animationType="slide">
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
+                    <View style={{ margin: 20, flex: 1, width: '100%' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>
+                            <TouchableOpacity onPress={() => handleClose()} >
+                                <Icon type="entypo" name="cross" color="black" size={35} />
+                            </TouchableOpacity>
+                        </View>
+                        <GestureHandlerRootView>
+                            <ScrollView>
+                                <View>
+                                    <View style={styles.section}>
+
+                                        <Text style={styles.subHeading}>Patient Name:</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Enter patient name"
+                                            value={values.pName}
+                                            onChangeText={handleChange('pName')}
+                                            placeholderTextColor={'gray'}
+                                        />
+                                        {errors.pName && touched.pName &&
+                                            <Text style={styles.errorMsg}>{errors.pName}</Text>
+                                        }
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <View style={{ width: 150 }}>
+                                            <Text style={styles.subHeading}>Age:</Text>
+                                            <TextInput
+                                                style={[styles.input, { width: 150 }]}
+                                                placeholder="Enter age"
+                                                keyboardType='numeric'
+                                                onChangeText={handleChange('age')}
+                                                placeholderTextColor={'gray'}
+                                            />
+                                            {errors.age && touched.age &&
+                                                <Text style={styles.errorMsg}>{errors.age}</Text>
+                                            }
+                                        </View>
+                                        <View>
+                                            <Text style={styles.subHeading}>Duration:</Text>
+                                            <SelectDropdown
+                                                data={['Years', 'Months', 'Days']}
+                                                onSelect={(selectedItem: any, index: number) => {
+                                                    setFieldValue('duration', selectedItem)
+                                                }}
+                                                defaultValue={values.duration}
+                                                defaultButtonText={'Select Duration'}
+                                                buttonTextAfterSelection={(selectedItem: any, index: number) => {
+                                                    return selectedItem
+                                                }}
+                                                rowTextForSelection={(item: any, index: number) => {
+                                                    return item
+                                                }}
+                                                buttonStyle={{
+                                                    backgroundColor: 'transparent', borderColor: 'lightgray',
+                                                    paddingHorizontal: 5,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderWidth: 1,
+                                                    height: 50,
+                                                    borderRadius: 6,
+                                                }}
+                                            />
+                                        </View>
+                                    </View>
+
+                                    <View style={styles.section}>
+                                        <Text style={styles.subHeading}>Address:</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Enter patient address"
+                                            value={values.pAddress}
+                                            onChangeText={handleChange('pAddress')}
+                                            placeholderTextColor={'gray'}
+                                        />
+                                        {errors.pAddress && touched.pAddress &&
+                                            <Text style={styles.errorMsg}>{errors.pAddress}</Text>
+                                        }
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <View >
+                                            <Text style={styles.subHeading}>Gender:</Text>
+                                            <SelectDropdown
+                                                data={['Male', 'Others', 'Female']}
+                                                onSelect={(selectedItem: any, index: number) => {
+                                                    setFieldValue('pGender', selectedItem)
+                                                }}
+                                                defaultButtonText={'Select Gender'}
+                                                defaultValue={values.pGender}
+                                                buttonTextAfterSelection={(selectedItem: any, index: number) => {
+                                                    return selectedItem
+                                                }}
+                                                rowTextForSelection={(item: any, index: number) => {
+                                                    return item
+                                                }}
+                                                buttonStyle={{
+                                                    backgroundColor: 'transparent', borderColor: 'lightgray',
+                                                    paddingHorizontal: 5,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderWidth: 1,
+                                                    height: 50,
+                                                    width: 150,
+                                                    borderRadius: 6,
+                                                }}
+                                            />
+                                            {errors.pGender && touched.pGender &&
+                                                <Text style={styles.errorMsg}>{errors.pGender}</Text>
+                                            }
+                                        </View>
+                                        <View >
+                                            <Text style={styles.subHeading}>Consulting Charges:</Text>
+                                            <SelectDropdown
+                                                data={[...user.user?.consultingCharges]}
+                                                onSelect={(selectedItem: any, index: number) => {
+                                                    setFieldValue('consultingCharge', selectedItem.charge)
+                                                }}
+                                                buttonTextAfterSelection={(selectedItem: any, index: number) => {
+                                                    return `${selectedItem?.visit} - ${selectedItem?.charge}`
+                                                }}
+                                                defaultValue={values.consultingCharge}
+                                                rowTextForSelection={(item: any, index: number) => {
+                                                    return `${item?.visit} - ${item?.charge}`;
+                                                }}
+                                                defaultButtonText={'Select Consulting Charges'}
+                                                buttonStyle={{
+                                                    backgroundColor: 'transparent', borderColor: 'lightgray',
+                                                    paddingHorizontal: 5,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    borderWidth: 1,
+                                                    height: 50,
+                                                    borderRadius: 6,
+                                                }}
+                                            />
+                                            {errors.consultingCharge && touched.consultingCharge &&
+                                                <Text style={styles.errorMsg}>{errors.consultingCharge}</Text>
+                                            }
+                                        </View>
+                                    </View>
+
+                                    <View style={styles.section}>
+                                        <Text style={styles.subHeading}>Mobile No:</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Enter patient mobile no"
+                                            value={values.pMobileNo}
+                                            onChangeText={handleChange('pMobileNo')}
+                                            placeholderTextColor={'gray'}
+                                        />
+                                        {errors.pMobileNo && touched.pMobileNo &&
+                                            <Text style={styles.errorMsg}>{errors.pMobileNo}</Text>
+                                        }
+                                    </View>
+
+                                    <View style={styles.section}>
+                                        <Text style={styles.subHeading}>OPD Case No:</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Enter patient mobile no"
+                                            value={values.opdCaseNo}
+                                            onChangeText={handleChange('opdCaseNo')}
+                                            placeholderTextColor={'gray'}
+                                        />
+                                    </View>
+                                    <View style={styles.buttonContainer}>
+                                        <Pressable onPress={() => handleSubmit()} style={{ backgroundColor: 'blue', padding: 10, paddingHorizontal: 20, borderRadius: 25 }}>
+                                            <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Submit</Text>
+                                        </Pressable>
+
+                                    </View>
+                                </View>
+                            </ScrollView>
+                        </GestureHandlerRootView>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     )
 }
+const styles = StyleSheet.create({
+    container: {
+        padding: 20,
+    },
+    heading: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    errorMsg: {
+        color: 'red',
+        fontSize: 14
+    },
+    section: {
+        marginVertical: 10,
+    },
+    subHeading: {
+        color: 'gray',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    input: {
+        borderWidth: 0.5,
+        borderColor: 'gray',
+        padding: 10,
+        marginBottom: 10,
+        borderRadius: 5,
 
+    },
+    checkboxContainer: {
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginVertical: 10,
+    },
+    prescriptionItem: {
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+    },
+});
 export default TodayPatients

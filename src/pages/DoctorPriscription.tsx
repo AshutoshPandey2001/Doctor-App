@@ -78,105 +78,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     const focus = useIsFocused();
     const dispatch = useDispatch()
 
-    const historydummyDataArray = [
-        {
-            consultingDate: "2023-01-15", // Replace with your desired default consultingDate
-            diagnosis: "Lorem Ipsum Diagnosis 1",
-            followup: "2023-01-20", // Replace with your desired default followup date
-            prescription: [
-                {
-                    id: 1,
-                    medicine: "Dummy Medicine 1",
-                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
-                    days: 7,
-                    total: 14,
-                    advice: "Lorem Ipsum Advice 1",
-                },
-                // Add more prescription items as needed
-            ],
-        },
-        {
-            consultingDate: "2023-02-05", // Replace with your desired default consultingDate
-            diagnosis: "Lorem Ipsum Diagnosis 2",
-            followup: "2023-02-10", // Replace with your desired default followup date
-            prescription: [
-                {
-                    id: 1,
-                    medicine: "Dummy Medicine 2",
-                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
-                    days: 10,
-                    total: 20,
-                    advice: "Lorem Ipsum Advice 2",
-                },
-                {
-                    id: 2,
-                    medicine: "Dummy Medicine 2",
-                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
-                    days: 10,
-                    total: 20,
-                    advice: "Lorem Ipsum Advice 2",
-                },
-                // Add more prescription items as needed
-            ],
-        },
-        {
-            consultingDate: "2023-07-05", // Replace with your desired default consultingDate
-            diagnosis: "Lorem Ipsum Diagnosis 2",
-            followup: "2023-02-10", // Replace with your desired default followup date
-            prescription: [
-                {
-                    id: 1,
-                    medicine: "Dummy Medicine 2",
-                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
-                    days: 10,
-                    total: 20,
-                    advice: "Lorem Ipsum Advice 2",
-                },
-                {
-                    id: 2,
-                    medicine: "Dummy Medicine 2",
-                    frequency: { M: "Morning", A: "Afternoon", E: "Evening", N: "Night" },
-                    days: 10,
-                    total: 20,
-                    advice: "Lorem Ipsum Advice 2",
-                },
-                // Add more prescription items as needed
-            ],
-        },
-    ];
-    // const patientData = {
-    //     pid: '123456789', // Patient ID
-    //     pName: 'John Doe', // Patient Name
-    //     page: 30, // Patient Age
-    //     pGender: 'Male', // Patient Gender
-    //     pAddress: '123 Main St, City', // Patient Address
-    //     pMobileNo: '123-456-7890', // Patient Mobile Number
-    //     opdCaseNo: 'OPD123', // OPD Case Number
-    //     opduid: 'UID456', // OPD ID
-    //     consultingDate: "22/11/2023", // Consulting Date (JavaScript Date object)
-    //     drName: 'Dr. Smith', // Consulting Doctor's Name
-    //     diagnosis: 'Fever', // Diagnosis
-    //     followup: "29/11/2023", // Follow-up Date (JavaScript Date object)
-    //     prescription: [
-    //         {
-    //             medicine: 'Medicine A', // Medicine Name
-    //             frequency: { M: 1, A: 1, E: 0, N: 1 }, // Frequency
-    //             days: 5, // Number of Days
-    //             total: 20, // Total
-    //             advice: 'After meal', // Advice
-    //         },
-    //         {
-    //             medicine: 'Medicine B', // Medicine Name
-    //             frequency: { M: 1, A: 0, E: 1, N: 1 }, // Frequency
-    //             days: 5, // Number of Days
-    //             total: 20, // Total
-    //             advice: 'After meal', // Advice
-    //         },
-    //         // Add more prescription items as needed in the same format
-    //     ],
-    //     generalInstruction: `Avoid exposure to cold weather.\nTake plenty of rest.`, // General Instructions
-    // };
-    // Now you can use these two dummy data entries in your component
+
     const printHTML = async () => {
         printDescription(patientData, user)
     };
@@ -427,14 +329,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                     </View>
                 ))}
             </View>
-            // <GestureHandlerRootView>
-            //     <FlatList
-            //         data={prescription}
-            //         renderItem={renderItem}
-            //         keyExtractor={(item: any, i: number) => item.id}
-            //         onEndReachedThreshold={0.1}
-            //     />
-            // </GestureHandlerRootView>
+
         )
     }
     const openDatePicker = () => {
@@ -524,18 +419,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                         <Text style={{ width: '100%', fontSize: 14, color: 'gray' }} onPress={() => openDatePicker()}>{state.followup ? state.followup : 'Select follow-up Date'}</Text>
 
                                     </View>
-                                    {/* <View >
-                                        <Text onPress={() => console.log('clickked')}
-                                        ></Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="Enter follow-up Details"
-                                            editable={false}
-                                            value={state.followup}
-                                            onChangeText={(text) => setState({ ...state, followup: text })}
-                                            placeholderTextColor={'gray'}
-                                        />
-                                    </View> */}
+
                                     <DatePicker
                                         modal
                                         open={datePickerVisible}

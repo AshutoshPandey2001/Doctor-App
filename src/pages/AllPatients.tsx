@@ -41,7 +41,6 @@ const AllPatients = ({ navigation }: any) => {
             .where('hospitaluid', '==', user.user.hospitaluid)
             .where('deleted', '==', 0)
             .where('druid', '==', user.user.druid)
-            .where('paymentStatus', "==", "Completed")
             .orderBy('timestamp', 'desc')
             .onSnapshot((snapshot) => {
                 const newData: any = [];

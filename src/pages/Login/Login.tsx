@@ -23,6 +23,8 @@ const LoginPage = () => {
                 hospitalAddress: undefined,
                 hospitalLogo: undefined,
                 hospitalContact: undefined,
+                doctorName: undefined,
+                consultingCharges: [],
             };
 
             const userDoc = await firestore().collection('UserList').doc(user.uid).get();
@@ -35,7 +37,24 @@ const LoginPage = () => {
                     hospitaluid: userDocData.hospitaluid || '',
                     druid: userDocData.druid || undefined,
                 };
+                const doctorDatasnapshot = await firestore()
+                    .collection('Doctors')
+                    .doc('d3ryEUfqA2FMa0fEyxde')
+                    .get();
 
+                if (doctorDatasnapshot.exists) {
+                    const data: any = await doctorDatasnapshot.data();
+                    console.log(data, 'data');
+
+                    const doctarData = data['doctors']?.find((item: any) => item.druid === userDocData.druid)
+                    console.log('doctarData', doctarData);
+
+                    userData = {
+                        ...userData,
+                        doctorName: doctarData.drName || '',
+                        consultingCharges: doctarData.consultingCharges || [],
+                    };
+                }
                 const hospitalQuerySnapshot = await firestore()
                     .collection('HospitalMaster')
                     .doc('S4fRJIO5ZxE5isoBIbEU')
@@ -55,9 +74,7 @@ const LoginPage = () => {
                 }
             }
             dispatch(setUser(userData))
-
             console.log('User data:', userData);
-            console.log('User logged in:', userCredential.user);
         } catch (error: any) {
             // Handle login errors
             Alert.alert('Login Error', error.message);

@@ -11,6 +11,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.List;
 import com.christopherdro.RNPrint.RNPrintPackage;
 import com.reactnativecommunity.art.ARTPackage;
+import com.wix.reactnativenotifications.RNNotificationsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 

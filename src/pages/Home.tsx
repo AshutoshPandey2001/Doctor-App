@@ -18,7 +18,7 @@ const Home = () => {
     const focus = useIsFocused();
     const dispatch = useDispatch()
     const parentDocRefpatients = firestore().collection('opdPatients').doc('m5JHl3l4zhaBCa8Vihcb');
-    const subcollectionRefpatients = parentDocRefpatients.collection('opdPatient').where('hospitaluid', '==', user.user.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user.druid);
+    const subcollectionRefpatients = parentDocRefpatients.collection('opdPatient').where('hospitaluid', '==', user.user?.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user?.druid);
     const onClose = () => {
         setisVisible(false)
     }

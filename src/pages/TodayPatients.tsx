@@ -14,6 +14,11 @@ import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler
 import { useFormik } from 'formik'
 import * as yup from "yup"
 import SelectDropdown from 'react-native-select-dropdown';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+
+
+
+const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 interface InitialFormValues {
     pid: string,
     pName: string,
@@ -42,7 +47,7 @@ const TodayPatients = ({ navigation }: any) => {
     const day = String(currentDate.getUTCDate()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}Z`;
     // const [data, setData] = useState<any>([]);
-    const [todayPatients, setTodaypatients] = useState([])
+    const [todayPatients, setTodaypatients] = useState<any>([])
     const [showModal, setShowModal] = useState(false);
     const [showActions, setShowActions] = useState<any | null>(null); // Track the selected card's ID
     const [showSmallPopup, setShowSmallPopup] = useState(false);
@@ -81,6 +86,8 @@ const TodayPatients = ({ navigation }: any) => {
         consultingCharge: yup.number().required("Consulting Charge is Required"),
     })
     useEffect(() => {
+        // let subscribe: any = undefined
+        // if (!user === null) {
         const subscribe = firestore()
             .collection('opdPatients')
             .doc('m5JHl3l4zhaBCa8Vihcb')
@@ -91,15 +98,19 @@ const TodayPatients = ({ navigation }: any) => {
             .where('consultingDate', '==', formattedDate)
             .orderBy('timestamp', 'desc')
             .onSnapshot((snapshot) => {
-                const newData: any = [];
-                snapshot.forEach((doc) => {
-                    newData.push(doc.data());
-                });
-                setTodaypatients(newData)
-                setData(newData.slice(0, 10))
-                console.log('newData-------------------------------------', newData);
-
+                if (!snapshot.empty) { // Check if the snapshot is not empty
+                    const newData: any = [];
+                    snapshot.forEach((doc) => {
+                        newData.push(doc.data());
+                    });
+                    setTodaypatients(newData);
+                    setData(newData.slice(0, 10));
+                    console.log('newData-------------------------------------', newData);
+                } else {
+                    console.log('Snapshot is empty');
+                }
             });
+
         return () => {
             subscribe();
         };
@@ -184,30 +195,68 @@ const TodayPatients = ({ navigation }: any) => {
     });
     const { handleChange, handleBlur, handleSubmit, values, errors, isValid, touched, setFieldValue } = formik
 
-    const renderItem = ({ item }: { item: any }) => (
-        <View style={GlobalStyle.card}>
-            <View style={GlobalStyle.leftSide}>
-                <Text style={GlobalStyle.label}>Date:</Text>
-                <Text style={GlobalStyle.label}>Patient Name:</Text>
-                <Text style={GlobalStyle.label}>Address:</Text>
-                <Text style={GlobalStyle.label}>Mobile No:</Text>
-            </View>
-            <View style={GlobalStyle.middleSide}>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{formatDateDDMMYYY(item.consultingDate)}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+    // const renderItem = ({ item }: { item: any }) => (
+    //     <View style={GlobalStyle.card}>
+    //         <View style={GlobalStyle.leftSide}>
+    //             <Text style={GlobalStyle.label}>Date:</Text>
+    //             <Text style={GlobalStyle.label}>Patient Name:</Text>
+    //             <Text style={GlobalStyle.label}>Address:</Text>
+    //             <Text style={GlobalStyle.label}>Mobile No:</Text>
+    //         </View>
+    //         <View style={GlobalStyle.middleSide}>
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{formatDateDDMMYYY(item.consultingDate)}</Text>
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
 
-            </View>
-            <View style={GlobalStyle.rightSide}>
-                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <Pressable onPress={() => selectCard(item)}>
-                        <Icon type="feather" name="more-vertical" color="gray" size={30} />
-                    </Pressable>
+    //         </View>
+    //         <View style={GlobalStyle.rightSide}>
+    //             <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    //                 <Pressable onPress={() => selectCard(item)}>
+    //                     <Icon type="feather" name="more-vertical" color="gray" size={30} />
+    //                 </Pressable>
+    //             </View>
+    //         </View>
+    //     </View>
+    // );
+    const renderItem = ({ item, index }: { item: any, index: number }) => {
+        if (index % 3 === 0) {
+            return (
+                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
+                    <BannerAd
+                        unitId={adUnitId}
+                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                    />
+                </View>
+            );
+
+        }
+        return (
+            <View style={GlobalStyle.card}>
+                <View style={GlobalStyle.leftSide}>
+                    <Text style={GlobalStyle.label}>Date:</Text>
+                    <Text style={GlobalStyle.label}>Patient Name:</Text>
+                    <Text style={GlobalStyle.label}>Address:</Text>
+                    <Text style={GlobalStyle.label}>Mobile No:</Text>
+                </View>
+                <View style={GlobalStyle.middleSide}>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{formatDateDDMMYYY(item.consultingDate)}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+
+                </View>
+                <View style={GlobalStyle.rightSide}>
+                    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <Pressable onPress={() => selectCard(item)}>
+                            <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                        </Pressable>
+                    </View>
                 </View>
             </View>
-        </View>
-    );
+        )
+
+    }
     const loadMoreData = () => {
         dispatch(setLoading(true))
         const start = page * 10;
@@ -257,7 +306,7 @@ const TodayPatients = ({ navigation }: any) => {
                     <Pressable style={{ backgroundColor: '#2a7fba', height: 30, padding: 6, borderRadius: 15, paddingHorizontal: 10 }} onPress={() => openHistory()}><Text style={{ color: '#fff', fontWeight: 'bold' }}>Add Patient</Text></Pressable>
                 </View>
                 {/* <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text> */}
-                {data.length === 0 ? (
+                {data?.length === 0 ? (
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         <Text>No content to display.</Text>
                     </View>

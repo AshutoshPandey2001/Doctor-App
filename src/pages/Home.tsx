@@ -18,13 +18,13 @@ const Home = () => {
     const focus = useIsFocused();
     const dispatch = useDispatch()
     const parentDocRefpatients = firestore().collection('opdPatients').doc('m5JHl3l4zhaBCa8Vihcb');
-    const subcollectionRefpatients = parentDocRefpatients.collection('opdPatient').where('hospitaluid', '==', user.user?.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user?.druid);
+    const subcollectionRefpatients = parentDocRefpatients.collection('opdPatient');
     const onClose = () => {
         setisVisible(false)
     }
 
     useEffect(() => {
-        if (focus) {
+        if (focus && user) {
             onChangeDays('today')
         }
     }, [focus])
@@ -50,14 +50,14 @@ const Home = () => {
         const formattedDate = currentDate.toISOString().slice(0, 10);
         switch (item) {
             case 'today':
-                query = subcollectionRefpatients.where('consultingDate', '==', moment().format('YYYY-MM-DD[Z]'));
+                query = subcollectionRefpatients.where('hospitaluid', '==', user.user?.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user?.druid).where('consultingDate', '==', moment().format('YYYY-MM-DD[Z]'));
                 patientsData = await retrieveData(query);
                 dayText = 'Today';
                 break;
             case '7days':
                 const lastSevenDays = new Date();
                 lastSevenDays.setDate(lastSevenDays.getDate() - 6);
-                query = subcollectionRefpatients
+                query = subcollectionRefpatients.where('hospitaluid', '==', user.user?.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user?.druid)
                     .where('consultingDate', '<=', moment(formattedDate).format('YYYY-MM-DD[Z]'))
                     .where('consultingDate', '>=', moment(lastSevenDays).format('YYYY-MM-DD[Z]'));
                 patientsData = await retrieveData(query);
@@ -66,14 +66,14 @@ const Home = () => {
             case '30days':
                 const lastThirtyDays = new Date();
                 lastThirtyDays.setDate(lastThirtyDays.getDate() - 29);
-                query = subcollectionRefpatients
+                query = subcollectionRefpatients.where('hospitaluid', '==', user.user?.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user?.druid)
                     .where('consultingDate', '<=', moment(formattedDate).format('YYYY-MM-DD[Z]'))
                     .where('consultingDate', '>=', moment(lastThirtyDays).format('YYYY-MM-DD[Z]'));
                 patientsData = await retrieveData(query);
                 dayText = 'Last 30 days';
                 break;
             default:
-                query = subcollectionRefpatients.where('consultingDate', '==', moment(formattedDate).format('YYYY-MM-DD[Z]'));
+                query = subcollectionRefpatients.where('hospitaluid', '==', user.user?.hospitaluid).where('deleted', '==', 0).where('druid', '==', user.user?.druid).where('consultingDate', '==', moment(formattedDate).format('YYYY-MM-DD[Z]'));
                 patientsData = await retrieveData(query);
                 dayText = 'Today';
                 break;

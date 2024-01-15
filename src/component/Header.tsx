@@ -11,8 +11,6 @@ function Header({ navigation }: any) {
     const handleLogout = async () => {
         try {
             dispatch(setUser(null))
-            // await auth().signOut();
-            // User has signed out
         } catch (error) {
             console.error('Sign out error:', error);
         }

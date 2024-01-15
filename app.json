@@ -1,4 +1,7 @@
 {
   "name": "DoctorApp",
-  "displayName": "DoctorApp"
+  "displayName": "DoctorApp",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-9665448244735411~2619958708"
+  }
 }

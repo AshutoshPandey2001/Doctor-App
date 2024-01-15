@@ -9,7 +9,11 @@ import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
+
+
+const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 interface Patient {
     id: number;
     name: string;
@@ -73,30 +77,68 @@ const AllPatients = ({ navigation }: any) => {
         setShowActions(null);
 
     }
-    const renderItem = ({ item }: { item: any }) => (
-        <View style={GlobalStyle.card}>
-            <View style={GlobalStyle.leftSide}>
-                {/* <Text style={GlobalStyle.label}>Date:</Text> */}
-                <Text style={GlobalStyle.label}>Patient Name:</Text>
-                <Text style={GlobalStyle.label}>Address:</Text>
-                <Text style={GlobalStyle.label}>Mobile No:</Text>
-            </View>
-            <View style={GlobalStyle.middleSide}>
-                {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
-                <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+    const renderItem = ({ item, index }: { item: any, index: number }) => {
+        if (index % 3 === 0) {
+            // Display ad banner after every 2 cards (excluding the first card)
+            return (
+                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
+                    <BannerAd
+                        unitId={adUnitId}
+                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                    />
+                </View>
+            );
+        }
 
-            </View>
-            <View style={GlobalStyle.rightSide}>
-                <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <Pressable onPress={() => selectCard(item)}>
-                        <Icon type="feather" name="more-vertical" color="gray" size={30} />
-                    </Pressable>
+        return (
+            <View style={GlobalStyle.card}>
+                <View style={GlobalStyle.leftSide}>
+                    {/* <Text style={GlobalStyle.label}>Date:</Text> */}
+                    <Text style={GlobalStyle.label}>Patient Name:</Text>
+                    <Text style={GlobalStyle.label}>Address:</Text>
+                    <Text style={GlobalStyle.label}>Mobile No:</Text>
+                </View>
+                <View style={GlobalStyle.middleSide}>
+                    {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+
+                </View>
+                <View style={GlobalStyle.rightSide}>
+                    <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <Pressable onPress={() => selectCard(item)}>
+                            <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                        </Pressable>
+                    </View>
                 </View>
             </View>
-        </View>
-    );
+        );
+    };
+    // const renderItem = ({ item }: { item: any }) => (
+    //     <View style={GlobalStyle.card}>
+    //         <View style={GlobalStyle.leftSide}>
+    //             {/* <Text style={GlobalStyle.label}>Date:</Text> */}
+    //             <Text style={GlobalStyle.label}>Patient Name:</Text>
+    //             <Text style={GlobalStyle.label}>Address:</Text>
+    //             <Text style={GlobalStyle.label}>Mobile No:</Text>
+    //         </View>
+    //         <View style={GlobalStyle.middleSide}>
+    //             {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+    //             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+
+    //         </View>
+    //         <View style={GlobalStyle.rightSide}>
+    //             <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    //                 <Pressable onPress={() => selectCard(item)}>
+    //                     <Icon type="feather" name="more-vertical" color="gray" size={30} />
+    //                 </Pressable>
+    //             </View>
+    //         </View>
+    //     </View>
+    // );
     const loadMoreData = () => {
         dispatch(setLoading(true))
         const start = page * 10;

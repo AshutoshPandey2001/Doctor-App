@@ -41,9 +41,11 @@ import Header from './src/component/Header';
 import { Notification, Notifications } from 'react-native-notifications';
 import notifee, { AndroidImportance, EventType, TimestampTrigger, TriggerType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 
 
+const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLogged] = useState(false);
@@ -117,16 +119,14 @@ function App(): JSX.Element {
   useEffect(() => {
     if (user?.user) {
       console.log('user?.user', user?.user);
-      onDisplayNotification('15', '6', 'Good Morning', 'Please chaeck Patients List')
+      requestUserPermission()
+      getToken()
       setIsLogged(true)
     } else {
       setIsLogged(false)
     }
   }, [user])
-  useEffect(() => {
-    requestUserPermission()
-    getToken()
-  }, [])
+
 
   // useEffect(() => {
   //   const handleBackgroundEvent = async () => {
@@ -200,12 +200,17 @@ function App(): JSX.Element {
   // }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
+
       {isLoading &&
         <View style={[GlobalStyle.container, GlobalStyle.horizontal]}>
           <ActivityIndicator size={'large'} />
         </View>
       }
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
+        {/* <BannerAd
+          unitId={adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        /> */}
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
             <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'

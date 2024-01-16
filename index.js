@@ -10,9 +10,12 @@ import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import persistStore from 'redux-persist/es/persistStore';
+import messaging from '@react-native-firebase/messaging';
 
 const persistedStore = persistStore(store);
-
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+});
 const ReduxApp = () => (
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistedStore}>

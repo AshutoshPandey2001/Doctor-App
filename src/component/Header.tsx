@@ -4,14 +4,20 @@ import Icon from 'react-native-easy-icon';
 import { Pressable } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/action/UserSlice';
+import { setLoading } from '../redux/action/UiSlice';
 
 function Header({ navigation }: any) {
     // const navigation = useNavigation();
     const dispatch = useDispatch()
     const handleLogout = async () => {
         try {
-            dispatch(setUser(null))
+            dispatch(setLoading(true))
+            setTimeout(() => {
+                dispatch(setUser(null))
+            }, 2000);
+
         } catch (error) {
+            dispatch(setLoading(false))
             console.error('Sign out error:', error);
         }
     };

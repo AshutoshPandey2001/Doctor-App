@@ -31,7 +31,7 @@ import Home from './src/pages/Home';
 import TodayPatients from './src/pages/TodayPatients';
 import AllPatients from './src/pages/AllPatients';
 import DoctorPriscription from './src/pages/DoctorPriscription';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './src/redux/store';
 import { GlobalStyle } from './src/globalStyle';
 import TodayPatientsStack from './src/navigator/TodayPatientsStack';
@@ -42,6 +42,7 @@ import { Notification, Notifications } from 'react-native-notifications';
 import notifee, { AndroidImportance, EventType, TimestampTrigger, TriggerType } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { setLoading } from './src/redux/action/UiSlice';
 
 
 
@@ -55,6 +56,8 @@ function App(): JSX.Element {
   const user = useSelector((state: RootState) => state.user)
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  const dispatch = useDispatch()
+
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -68,22 +71,23 @@ function App(): JSX.Element {
   const getToken = async () => {
     const token = await messaging().getToken()
   }
-  const onDisplayNotification = async (hour: any, minute: any, title: any, body: any) => {
+  const onDisplayNotification = async (notification: any) => {
     // Request permissions (required for iOS)
     await notifee.requestPermission()
+    console.log('i am running on display Notification');
 
     // Create a channel (required for Android)
     const channelId = await notifee.createChannel({
-      id: hour + minute,
-      name: hour + minute,
+      id: notification.ttl,
+      name: notification.ttl,
       sound: 'default',
       importance: AndroidImportance.HIGH
     });
 
     // Display a notification
     await notifee.displayNotification({
-      title: title,
-      body: body,
+      title: notification.notification.title,
+      body: notification.notification.body,
       android: {
         channelId,
         pressAction: {
@@ -119,14 +123,47 @@ function App(): JSX.Element {
   useEffect(() => {
     if (user?.user) {
       console.log('user?.user', user?.user);
-      requestUserPermission()
-      getToken()
+      // requestUserPermission()
+      // getToken()
       setIsLogged(true)
+      dispatch(setLoading(false))
+
     } else {
       setIsLogged(false)
+      dispatch(setLoading(false))
+
     }
   }, [user])
 
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('Notification on open app', remoteMessage.notification);
+      // remoteMessage.notification
+      // onDisplayNotification(remoteMessage.notification)
+    });
+
+    return unsubscribe;
+  }, []);
+  const notificationListener = () => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log('Notification on foreground', remoteMessage.notification);
+      // remoteMessage.notification
+      // onDisplayNotification(remoteMessage.notification)
+
+    })
+    messaging().getInitialNotification().then(remoteMessage => {
+      if (remoteMessage) {
+        console.log('Notification on quit mode', remoteMessage.notification);
+        // remoteMessage.notification
+        // onDisplayNotification(remoteMessage.notification)
+
+      }
+    })
+  }
+  useEffect(() => {
+    requestUserPermission()
+    notificationListener()
+  }, [])
 
   // useEffect(() => {
   //   const handleBackgroundEvent = async () => {
@@ -207,10 +244,6 @@ function App(): JSX.Element {
         </View>
       }
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
-        {/* <BannerAd
-          unitId={adUnitId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        /> */}
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
             <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'

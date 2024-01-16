@@ -9,7 +9,11 @@ import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { setLoading } from '../redux/action/UiSlice';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
+
+
+const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 const Home = () => {
     const [patients, setpatients] = useState(0)
     const [day, setday] = useState<any>()
@@ -87,14 +91,22 @@ const Home = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { marginBottom: 100 }]}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Patients</Text>
                 <Pressable onPress={() => setisVisible(true)}>
                     <Icon type="feather" name="filter" color="#2a7fba" size={35} />
                 </Pressable>
             </View>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+
+            {/* <ScrollView contentContainerStyle={styles.scrollContainer}> */}
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                <BannerAd
+                    unitId={adUnitId}
+                    size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                />
+            </View>
+            <View style={styles.scrollContainer}>
                 <Text style={styles.subHeaderText}>{day} Patients</Text>
                 <View style={[styles.box, { backgroundColor: "#e8e1ff" }]}>
                     <View style={styles.boxBody}>
@@ -109,7 +121,15 @@ const Home = () => {
                         </View>
                     </View>
                 </View>
-            </ScrollView>
+            </View>
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                <BannerAd
+                    unitId={adUnitId}
+                    size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                />
+            </View>
+            {/* </ScrollView> */}
+
             <Modal visible={isVisible} animationType="slide"
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>

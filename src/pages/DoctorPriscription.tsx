@@ -14,7 +14,11 @@ import firestore from '@react-native-firebase/firestore';
 import DatePicker from 'react-native-date-picker';
 import { setLoading } from '../redux/action/UiSlice';
 import { formatDateDDMMYYY } from '../services/dateFormate';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
+
+
+const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 interface State {
     paymentStatus: string;
     diagnosis: string;
@@ -360,8 +364,13 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                     <Text style={{ textAlign: 'center', fontSize: 20, color: '#000', fontWeight: 'bold' }}>{routeName ? 'Prescription' : 'History'}</Text>
                 </View>
             </View>
-
             <ScrollView nestedScrollEnabled={true}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                    <BannerAd
+                        unitId={adUnitId}
+                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                    />
+                </View>
                 <View style={{ margin: 20 }}>
                     <View style={{ display: 'none' }}>
                         {/* Render PrintButton here */}
@@ -609,6 +618,12 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                             </View>
                         </View>
                     </Modal>
+                </View>
+                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                    <BannerAd
+                        unitId={adUnitId}
+                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                    />
                 </View>
             </ScrollView>
         </SafeAreaView>

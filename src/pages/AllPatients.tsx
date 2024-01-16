@@ -78,10 +78,10 @@ const AllPatients = ({ navigation }: any) => {
 
     }
     const renderItem = ({ item, index }: { item: any, index: number }) => {
-        if (index % 3 === 0) {
+        if (index % 3 === 2 && index !== 0) {
             // Display ad banner after every 2 cards (excluding the first card)
             return (
-                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
                     <BannerAd
                         unitId={adUnitId}
                         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -191,9 +191,17 @@ const AllPatients = ({ navigation }: any) => {
             <View style={{ flex: 1, padding: 10 }}>
                 <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>All patients</Text>
                 {data.length === 0 ? (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text>No content to display.</Text>
-                    </View>
+                    <>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text>No content to display.</Text>
+                        </View>
+                        <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
+                            <BannerAd
+                                unitId={adUnitId}
+                                size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                            />
+                        </View>
+                    </>
                 ) : (
                     <FlatList
                         data={data}
@@ -204,32 +212,35 @@ const AllPatients = ({ navigation }: any) => {
                     />
                 )}
             </View>
-            <Modal visible={isVisible} animationType="slide"
-                transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
-                    <View style={{
-                        height: "15%",
-                        width: "100%",
-                        marginTop: 'auto',
-                        backgroundColor: 'white',
-                        elevation: 5,
-                        borderTopLeftRadius: 15,
-                        borderTopRightRadius: 15
-                    }}>
+            {isVisible &&
+                <Modal visible={isVisible} animationType="slide"
+                    transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
+                        <View style={{
+                            height: "15%",
+                            width: "100%",
+                            marginTop: 'auto',
+                            backgroundColor: 'white',
+                            elevation: 5,
+                            borderTopLeftRadius: 15,
+                            borderTopRightRadius: 15
+                        }}>
 
-                        <TouchableOpacity onPress={() => navigation.navigate('History', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
-                            <Icon type="feather" name="eye" color="gray" size={25} />
-                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>View</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('History', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
+                                <Icon type="feather" name="eye" color="gray" size={25} />
+                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>View</Text>
+                            </TouchableOpacity>
 
 
-                        <TouchableOpacity onPress={onClose} style={GlobalStyle.btn}>
-                            <Icon type="entypo" name="cross" color="gray" size={25} />
-                            <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Cancel</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={onClose} style={GlobalStyle.btn}>
+                                <Icon type="entypo" name="cross" color="gray" size={25} />
+                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Cancel</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            }
+
         </SafeAreaView>
     )
 }

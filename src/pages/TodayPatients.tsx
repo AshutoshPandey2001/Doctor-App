@@ -41,23 +41,23 @@ interface InitialFormValues {
 }
 const TodayPatients = ({ navigation }: any) => {
     const user: any = useSelector((state: RootState) => state.user)
+    if (!user) {
+        return
+    }
     const currentDate = new Date();
     const year = currentDate.getUTCFullYear();
     const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0'); // Add 1 to month since it is zero-based
     const day = String(currentDate.getUTCDate()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}Z`;
     // const [data, setData] = useState<any>([]);
-    const [todayPatients, setTodaypatients] = useState<any>([])
+    const [todayPatients, setTodaypatients] = useState<any>()
     const [showModal, setShowModal] = useState(false);
-    const [showActions, setShowActions] = useState<any | null>(null); // Track the selected card's ID
+    const [showActions, setShowActions] = useState<any | null>(); // Track the selected card's ID
     const [showSmallPopup, setShowSmallPopup] = useState(false);
     const dispatch = useDispatch()
     const [data, setData] = useState<any>([]); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     const [isVisible, setisVisible] = useState(false);
-    const [datePickerVisible, setDatePickerVisible] = useState(false);
-    const [selectedDate, setselectedDate] = useState<any>();
-    const [state, setState] = useState<any>({});
     const [initialFormValues, setInitialFormValues] = useState<InitialFormValues>({
         pid: '',
         pName: '',
@@ -86,8 +86,6 @@ const TodayPatients = ({ navigation }: any) => {
         consultingCharge: yup.number().required("Consulting Charge is Required"),
     })
     useEffect(() => {
-        // let subscribe: any = undefined
-        // if (!user === null) {
         const subscribe = firestore()
             .collection('opdPatients')
             .doc('m5JHl3l4zhaBCa8Vihcb')
@@ -220,27 +218,28 @@ const TodayPatients = ({ navigation }: any) => {
     //     </View>
     // );
     const renderItem = ({ item, index }: { item: any, index: number }) => {
-        if (index % 3 === 0) {
+        if (index % 3 === 2 && index !== 0) {
+            // Display ad banner after every 2 cards (excluding the first card)
             return (
-                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
                     <BannerAd
                         unitId={adUnitId}
                         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
                     />
                 </View>
             );
-
         }
+
         return (
             <View style={GlobalStyle.card}>
                 <View style={GlobalStyle.leftSide}>
-                    <Text style={GlobalStyle.label}>Date:</Text>
+                    {/* <Text style={GlobalStyle.label}>Date:</Text> */}
                     <Text style={GlobalStyle.label}>Patient Name:</Text>
                     <Text style={GlobalStyle.label}>Address:</Text>
                     <Text style={GlobalStyle.label}>Mobile No:</Text>
                 </View>
                 <View style={GlobalStyle.middleSide}>
-                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{formatDateDDMMYYY(item.consultingDate)}</Text>
+                    {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
@@ -254,9 +253,46 @@ const TodayPatients = ({ navigation }: any) => {
                     </View>
                 </View>
             </View>
-        )
+        );
+    };
+    // const renderItem = ({ item, index }: { item: any, index: number }) => {
+    //     if (index % 3 === 0) {
+    //         return (
+    //             <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
+    //                 <BannerAd
+    //                     unitId={adUnitId}
+    //                     size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+    //                 />
+    //             </View>
+    //         );
 
-    }
+    //     }
+    //     return (
+    //         <View style={GlobalStyle.card}>
+    //             <View style={GlobalStyle.leftSide}>
+    //                 <Text style={GlobalStyle.label}>Date:</Text>
+    //                 <Text style={GlobalStyle.label}>Patient Name:</Text>
+    //                 <Text style={GlobalStyle.label}>Address:</Text>
+    //                 <Text style={GlobalStyle.label}>Mobile No:</Text>
+    //             </View>
+    //             <View style={GlobalStyle.middleSide}>
+    //                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{formatDateDDMMYYY(item.consultingDate)}</Text>
+    //                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+    //                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+    //                 <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+
+    //             </View>
+    //             <View style={GlobalStyle.rightSide}>
+    //                 <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    //                     <Pressable onPress={() => selectCard(item)}>
+    //                         <Icon type="feather" name="more-vertical" color="gray" size={30} />
+    //                     </Pressable>
+    //                 </View>
+    //             </View>
+    //         </View>
+    //     )
+
+    // }
     const loadMoreData = () => {
         dispatch(setLoading(true))
         const start = page * 10;
@@ -285,14 +321,8 @@ const TodayPatients = ({ navigation }: any) => {
         const year = dateObject.getFullYear();
         return `${day}/${month}/${year}`;
     };
-    const handleDateChange = (date: any) => {
-        setselectedDate(date)
-        setState({ ...state, followup: formatDate(date) })
-        setDatePickerVisible(false)
-    }
-    const openDatePicker = () => {
-        setDatePickerVisible(true);
-    };
+
+
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
@@ -307,9 +337,18 @@ const TodayPatients = ({ navigation }: any) => {
                 </View>
                 {/* <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text> */}
                 {data?.length === 0 ? (
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text>No content to display.</Text>
-                    </View>
+                    <>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text>No content to display.</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                                <BannerAd
+                                    unitId={adUnitId}
+                                    size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                                />
+                            </View>
+                        </View>
+
+                    </>
                 ) : (
                     <FlatList
                         data={data}
@@ -320,7 +359,7 @@ const TodayPatients = ({ navigation }: any) => {
                     />
                 )}
             </View>
-            <Modal visible={isVisible} animationType="slide"
+            {isVisible && <Modal visible={isVisible} animationType="slide"
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
                     <View style={{
@@ -332,7 +371,7 @@ const TodayPatients = ({ navigation }: any) => {
                         borderTopLeftRadius: 15,
                         borderTopRightRadius: 15
                     }}>
-                        {showActions?.prescription ?
+                        {showActions && showActions?.prescription ?
                             <TouchableOpacity onPress={() => printHTML(showActions)} style={GlobalStyle.btn}>
                                 <Icon type="feather" name="printer" color="gray" size={25} />
                                 <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
@@ -350,186 +389,188 @@ const TodayPatients = ({ navigation }: any) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
-            <Modal visible={showModal} transparent={false} animationType="slide">
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
-                    <View style={{ margin: 20, flex: 1, width: '100%' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>
-                            <TouchableOpacity onPress={() => handleClose()} >
-                                <Icon type="entypo" name="cross" color="black" size={35} />
-                            </TouchableOpacity>
-                        </View>
-                        <GestureHandlerRootView>
-                            <ScrollView>
-                                <View>
-                                    <View style={styles.section}>
+            </Modal>}
+            {showModal &&
+                <Modal visible={showModal} transparent={false} animationType="slide">
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
+                        <View style={{ margin: 20, flex: 1, width: '100%' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>
+                                <TouchableOpacity onPress={() => handleClose()} >
+                                    <Icon type="entypo" name="cross" color="black" size={35} />
+                                </TouchableOpacity>
+                            </View>
+                            <GestureHandlerRootView>
+                                <ScrollView>
+                                    <View>
+                                        <View style={styles.section}>
 
-                                        <Text style={styles.subHeading}>Patient Name:</Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="Enter patient name"
-                                            value={values.pName}
-                                            onChangeText={handleChange('pName')}
-                                            placeholderTextColor={'gray'}
-                                        />
-                                        {errors.pName && touched.pName &&
-                                            <Text style={styles.errorMsg}>{errors.pName}</Text>
-                                        }
-                                    </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <View style={{ width: 150 }}>
-                                            <Text style={styles.subHeading}>Age:</Text>
+                                            <Text style={styles.subHeading}>Patient Name:</Text>
                                             <TextInput
-                                                style={[styles.input, { width: 150 }]}
-                                                placeholder="Enter age"
-                                                keyboardType='numeric'
-                                                onChangeText={handleChange('age')}
+                                                style={styles.input}
+                                                placeholder="Enter patient name"
+                                                value={values.pName}
+                                                onChangeText={handleChange('pName')}
                                                 placeholderTextColor={'gray'}
                                             />
-                                            {errors.age && touched.age &&
-                                                <Text style={styles.errorMsg}>{errors.age}</Text>
+                                            {errors.pName && touched.pName &&
+                                                <Text style={styles.errorMsg}>{errors.pName}</Text>
                                             }
                                         </View>
-                                        <View>
-                                            <Text style={styles.subHeading}>Duration:</Text>
-                                            <SelectDropdown
-                                                data={['Years', 'Months', 'Days']}
-                                                onSelect={(selectedItem: any, index: number) => {
-                                                    setFieldValue('duration', selectedItem)
-                                                }}
-                                                defaultValue={values.duration}
-                                                defaultButtonText={'Select Duration'}
-                                                buttonTextAfterSelection={(selectedItem: any, index: number) => {
-                                                    return selectedItem
-                                                }}
-                                                rowTextForSelection={(item: any, index: number) => {
-                                                    return item
-                                                }}
-                                                buttonStyle={{
-                                                    backgroundColor: 'transparent', borderColor: 'lightgray',
-                                                    paddingHorizontal: 5,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderWidth: 1,
-                                                    height: 50,
-                                                    borderRadius: 6,
-                                                }}
-                                            />
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View style={{ width: 150 }}>
+                                                <Text style={styles.subHeading}>Age:</Text>
+                                                <TextInput
+                                                    style={[styles.input, { width: 150 }]}
+                                                    placeholder="Enter age"
+                                                    keyboardType='numeric'
+                                                    onChangeText={handleChange('age')}
+                                                    placeholderTextColor={'gray'}
+                                                />
+                                                {errors.age && touched.age &&
+                                                    <Text style={styles.errorMsg}>{errors.age}</Text>
+                                                }
+                                            </View>
+                                            <View>
+                                                <Text style={styles.subHeading}>Duration:</Text>
+                                                <SelectDropdown
+                                                    data={['Years', 'Months', 'Days']}
+                                                    onSelect={(selectedItem: any, index: number) => {
+                                                        setFieldValue('duration', selectedItem)
+                                                    }}
+                                                    defaultValue={values.duration}
+                                                    defaultButtonText={'Select Duration'}
+                                                    buttonTextAfterSelection={(selectedItem: any, index: number) => {
+                                                        return selectedItem
+                                                    }}
+                                                    rowTextForSelection={(item: any, index: number) => {
+                                                        return item
+                                                    }}
+                                                    buttonStyle={{
+                                                        backgroundColor: 'transparent', borderColor: 'lightgray',
+                                                        paddingHorizontal: 5,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderWidth: 1,
+                                                        height: 50,
+                                                        borderRadius: 6,
+                                                    }}
+                                                />
+                                            </View>
                                         </View>
-                                    </View>
 
-                                    <View style={styles.section}>
-                                        <Text style={styles.subHeading}>Address:</Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="Enter patient address"
-                                            value={values.pAddress}
-                                            onChangeText={handleChange('pAddress')}
-                                            placeholderTextColor={'gray'}
-                                        />
-                                        {errors.pAddress && touched.pAddress &&
-                                            <Text style={styles.errorMsg}>{errors.pAddress}</Text>
-                                        }
-                                    </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <View >
-                                            <Text style={styles.subHeading}>Gender:</Text>
-                                            <SelectDropdown
-                                                data={['Male', 'Others', 'Female']}
-                                                onSelect={(selectedItem: any, index: number) => {
-                                                    setFieldValue('pGender', selectedItem)
-                                                }}
-                                                defaultButtonText={'Select Gender'}
-                                                defaultValue={values.pGender}
-                                                buttonTextAfterSelection={(selectedItem: any, index: number) => {
-                                                    return selectedItem
-                                                }}
-                                                rowTextForSelection={(item: any, index: number) => {
-                                                    return item
-                                                }}
-                                                buttonStyle={{
-                                                    backgroundColor: 'transparent', borderColor: 'lightgray',
-                                                    paddingHorizontal: 5,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderWidth: 1,
-                                                    height: 50,
-                                                    width: 150,
-                                                    borderRadius: 6,
-                                                }}
+                                        <View style={styles.section}>
+                                            <Text style={styles.subHeading}>Address:</Text>
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Enter patient address"
+                                                value={values.pAddress}
+                                                onChangeText={handleChange('pAddress')}
+                                                placeholderTextColor={'gray'}
                                             />
-                                            {errors.pGender && touched.pGender &&
-                                                <Text style={styles.errorMsg}>{errors.pGender}</Text>
+                                            {errors.pAddress && touched.pAddress &&
+                                                <Text style={styles.errorMsg}>{errors.pAddress}</Text>
                                             }
                                         </View>
-                                        <View >
-                                            <Text style={styles.subHeading}>Consulting Charges:</Text>
-                                            <SelectDropdown
-                                                data={[...user.user?.consultingCharges]}
-                                                onSelect={(selectedItem: any, index: number) => {
-                                                    setFieldValue('consultingCharge', selectedItem.charge)
-                                                }}
-                                                buttonTextAfterSelection={(selectedItem: any, index: number) => {
-                                                    return `${selectedItem?.visit} - ${selectedItem?.charge}`
-                                                }}
-                                                defaultValue={values.consultingCharge}
-                                                rowTextForSelection={(item: any, index: number) => {
-                                                    return `${item?.visit} - ${item?.charge}`;
-                                                }}
-                                                defaultButtonText={'Select Consulting Charges'}
-                                                buttonStyle={{
-                                                    backgroundColor: 'transparent', borderColor: 'lightgray',
-                                                    paddingHorizontal: 5,
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    borderWidth: 1,
-                                                    height: 50,
-                                                    borderRadius: 6,
-                                                }}
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View >
+                                                <Text style={styles.subHeading}>Gender:</Text>
+                                                <SelectDropdown
+                                                    data={['Male', 'Others', 'Female']}
+                                                    onSelect={(selectedItem: any, index: number) => {
+                                                        setFieldValue('pGender', selectedItem)
+                                                    }}
+                                                    defaultButtonText={'Select Gender'}
+                                                    defaultValue={values.pGender}
+                                                    buttonTextAfterSelection={(selectedItem: any, index: number) => {
+                                                        return selectedItem
+                                                    }}
+                                                    rowTextForSelection={(item: any, index: number) => {
+                                                        return item
+                                                    }}
+                                                    buttonStyle={{
+                                                        backgroundColor: 'transparent', borderColor: 'lightgray',
+                                                        paddingHorizontal: 5,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderWidth: 1,
+                                                        height: 50,
+                                                        width: 150,
+                                                        borderRadius: 6,
+                                                    }}
+                                                />
+                                                {errors.pGender && touched.pGender &&
+                                                    <Text style={styles.errorMsg}>{errors.pGender}</Text>
+                                                }
+                                            </View>
+                                            <View >
+                                                <Text style={styles.subHeading}>Consulting Charges:</Text>
+                                                <SelectDropdown
+                                                    data={[...user.user?.consultingCharges]}
+                                                    onSelect={(selectedItem: any, index: number) => {
+                                                        setFieldValue('consultingCharge', selectedItem.charge)
+                                                    }}
+                                                    buttonTextAfterSelection={(selectedItem: any, index: number) => {
+                                                        return `${selectedItem?.visit} - ${selectedItem?.charge}`
+                                                    }}
+                                                    defaultValue={values.consultingCharge}
+                                                    rowTextForSelection={(item: any, index: number) => {
+                                                        return `${item?.visit} - ${item?.charge}`;
+                                                    }}
+                                                    defaultButtonText={'Select Consulting Charges'}
+                                                    buttonStyle={{
+                                                        backgroundColor: 'transparent', borderColor: 'lightgray',
+                                                        paddingHorizontal: 5,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderWidth: 1,
+                                                        height: 50,
+                                                        borderRadius: 6,
+                                                    }}
+                                                />
+                                                {errors.consultingCharge && touched.consultingCharge &&
+                                                    <Text style={styles.errorMsg}>{errors.consultingCharge}</Text>
+                                                }
+                                            </View>
+                                        </View>
+
+                                        <View style={styles.section}>
+                                            <Text style={styles.subHeading}>Mobile No:</Text>
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Enter patient mobile no"
+                                                value={values.pMobileNo}
+                                                onChangeText={handleChange('pMobileNo')}
+                                                placeholderTextColor={'gray'}
                                             />
-                                            {errors.consultingCharge && touched.consultingCharge &&
-                                                <Text style={styles.errorMsg}>{errors.consultingCharge}</Text>
+                                            {errors.pMobileNo && touched.pMobileNo &&
+                                                <Text style={styles.errorMsg}>{errors.pMobileNo}</Text>
                                             }
                                         </View>
-                                    </View>
 
-                                    <View style={styles.section}>
-                                        <Text style={styles.subHeading}>Mobile No:</Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="Enter patient mobile no"
-                                            value={values.pMobileNo}
-                                            onChangeText={handleChange('pMobileNo')}
-                                            placeholderTextColor={'gray'}
-                                        />
-                                        {errors.pMobileNo && touched.pMobileNo &&
-                                            <Text style={styles.errorMsg}>{errors.pMobileNo}</Text>
-                                        }
-                                    </View>
+                                        <View style={styles.section}>
+                                            <Text style={styles.subHeading}>OPD Case No:</Text>
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Enter patient mobile no"
+                                                value={values.opdCaseNo}
+                                                onChangeText={handleChange('opdCaseNo')}
+                                                placeholderTextColor={'gray'}
+                                            />
+                                        </View>
+                                        <View style={styles.buttonContainer}>
+                                            <Pressable onPress={() => handleSubmit()} style={{ backgroundColor: 'blue', padding: 10, paddingHorizontal: 20, borderRadius: 25 }}>
+                                                <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Submit</Text>
+                                            </Pressable>
 
-                                    <View style={styles.section}>
-                                        <Text style={styles.subHeading}>OPD Case No:</Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="Enter patient mobile no"
-                                            value={values.opdCaseNo}
-                                            onChangeText={handleChange('opdCaseNo')}
-                                            placeholderTextColor={'gray'}
-                                        />
+                                        </View>
                                     </View>
-                                    <View style={styles.buttonContainer}>
-                                        <Pressable onPress={() => handleSubmit()} style={{ backgroundColor: 'blue', padding: 10, paddingHorizontal: 20, borderRadius: 25 }}>
-                                            <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Submit</Text>
-                                        </Pressable>
-
-                                    </View>
-                                </View>
-                            </ScrollView>
-                        </GestureHandlerRootView>
+                                </ScrollView>
+                            </GestureHandlerRootView>
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>}
+
         </SafeAreaView>
     )
 }

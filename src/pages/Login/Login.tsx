@@ -24,6 +24,7 @@ const LoginPage = () => {
                 hospitalLogo: undefined,
                 hospitalContact: undefined,
                 doctorName: undefined,
+                permissions: [],
                 consultingCharges: [],
             };
 
@@ -36,6 +37,7 @@ const LoginPage = () => {
                     userName: userDocData.userName || '',
                     hospitaluid: userDocData.hospitaluid || '',
                     druid: userDocData.druid || undefined,
+                    permissions: userDocData.permissions || [],
                 };
                 const doctorDatasnapshot = await firestore()
                     .collection('Doctors')

@@ -46,7 +46,7 @@ import { setLoading } from './src/redux/action/UiSlice';
 
 
 
-const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLogged] = useState(false);

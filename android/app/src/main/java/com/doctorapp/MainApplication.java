@@ -1,4 +1,4 @@
-package com.doctorapp;
+package com.med1.one;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

@@ -13,7 +13,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 
-const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
 const Home = () => {
     const [patients, setpatients] = useState(0)
     const [day, setday] = useState<any>()

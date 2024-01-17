@@ -9,7 +9,36 @@
       "client_info": {
         "mobilesdk_app_id": "1:648026008961:android:e960e66f01e4ff85674c80",
         "android_client_info": {
-          "package_name": "com.doctorapp"
+          "package_name": "com.MED1ONE"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648026008961-qjvgj8m82g3td4gg5j0rk5afedppq4n7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5hWiPoNCq0OckA_ww0cIO37aJtCyzeEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648026008961-qjvgj8m82g3td4gg5j0rk5afedppq4n7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648026008961:android:cb0a64a1706b7076674c80",
+        "android_client_info": {
+          "package_name": "com.med1.one"
         }
       },
       "oauth_client": [

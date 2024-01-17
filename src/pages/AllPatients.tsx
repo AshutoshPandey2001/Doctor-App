@@ -13,7 +13,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 
-const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
 interface Patient {
     id: number;
     name: string;
@@ -60,7 +60,7 @@ const AllPatients = ({ navigation }: any) => {
                 });
                 setTodaypatients(newData)
                 setData(newData.slice(0, 10))
-                console.log('newData-------------------------------------', newData);
+                // console.log('newData-------------------------------------', newData);
 
             });
         return () => {

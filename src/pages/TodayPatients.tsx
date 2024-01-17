@@ -18,7 +18,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 
-const adUnitId: any = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
 interface InitialFormValues {
     pid: string,
     pName: string,
@@ -311,7 +311,7 @@ const TodayPatients = ({ navigation }: any) => {
     const handleClose = () => {
         setShowModal(false);
     };
-    const openHistory = () => {
+    const addPatients = () => {
         setShowModal(true);
     };
     const formatDate = (date: any) => {
@@ -333,7 +333,9 @@ const TodayPatients = ({ navigation }: any) => {
                         fontWeight: 'bold',
                         marginBottom: 20,
                     }}>Today's patients</Text>
-                    <Pressable style={{ backgroundColor: '#2a7fba', height: 30, padding: 6, borderRadius: 15, paddingHorizontal: 10 }} onPress={() => openHistory()}><Text style={{ color: '#fff', fontWeight: 'bold' }}>Add Patient</Text></Pressable>
+                    {user?.user?.permissions?.find((permission: any) => permission.module === "PATIENTS") &&
+                        <Pressable style={{ backgroundColor: '#2a7fba', height: 30, padding: 6, borderRadius: 15, paddingHorizontal: 10 }} onPress={() => addPatients()}><Text style={{ color: '#fff', fontWeight: 'bold' }}>Add Patient</Text></Pressable>
+                    }
                 </View>
                 {/* <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text> */}
                 {data?.length === 0 ? (

@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.doctorapp"
+    namespace "com.med1.one"
     defaultConfig {
-        applicationId "com.doctorapp"
+        applicationId "com.med1.one"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

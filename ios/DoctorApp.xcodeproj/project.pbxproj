@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* DoctorAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* DoctorAppTests.m */; };
+		00E356F31AD99517003FC87E /* MED1ONETests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MED1ONETests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		15EE04F2B69645F085CE7CF0 /* Pods_DoctorApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 024F66C4404F61BECEA0D1A2 /* Pods_DoctorApp.framework */; };
+		15EE04F2B69645F085CE7CF0 /* Pods_MED1ONE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 024F66C4404F61BECEA0D1A2 /* Pods_MED1ONE.framework */; };
 		4D14BAEE2AFB608F00FF9BA7 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D14BAE22AFB608E00FF9BA7 /* Entypo.ttf */; };
 		4D14BAF62AFB608F00FF9BA7 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D14BAE62AFB608F00FF9BA7 /* MaterialIcons.ttf */; };
 		4D14BAFC2AFB608F00FF9BA7 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D14BAE92AFB608F00FF9BA7 /* FontAwesome.ttf */; };
@@ -21,7 +21,7 @@
 		4DE5BA292B21DAB60070F1AE /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE5BA282B21DAB60070F1AE /* Algorithms */; };
 		4DE5BA2F2B21E3280070F1AE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4DE5BA2E2B21E3280070F1AE /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		F2CB4E5AFD9E7BE1A2367501 /* Pods_DoctorApp_DoctorAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D9E9C6AA04B113DB793F010 /* Pods_DoctorApp_DoctorAppTests.framework */; };
+		F2CB4E5AFD9E7BE1A2367501 /* Pods_MED1ONE_MED1ONETests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D9E9C6AA04B113DB793F010 /* Pods_MED1ONE_MED1ONETests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,7 +30,7 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = DoctorApp;
+			remoteInfo = MED1ONE;
 		};
 		4DD885902B0F185000A02738 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -49,17 +49,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* DoctorAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DoctorAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* MED1ONETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MED1ONETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* DoctorAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DoctorAppTests.m; sourceTree = "<group>"; };
-		024F66C4404F61BECEA0D1A2 /* Pods_DoctorApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DoctorApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07F961A680F5B00A75B9A /* DoctorApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DoctorApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = DoctorApp/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = DoctorApp/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = DoctorApp/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = DoctorApp/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = DoctorApp/main.m; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-DoctorApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoctorApp.debug.xcconfig"; path = "Target Support Files/Pods-DoctorApp/Pods-DoctorApp.debug.xcconfig"; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* MED1ONETests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MED1ONETests.m; sourceTree = "<group>"; };
+		024F66C4404F61BECEA0D1A2 /* Pods_MED1ONE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MED1ONE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* MED1ONE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MED1ONE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MED1ONE/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = MED1ONE/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MED1ONE/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MED1ONE/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MED1ONE/main.m; sourceTree = "<group>"; };
+		3B4392A12AC88292D35C810B /* Pods-MED1ONE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MED1ONE.debug.xcconfig"; path = "Target Support Files/Pods-MED1ONE/Pods-MED1ONE.debug.xcconfig"; sourceTree = "<group>"; };
 		4D14BAE22AFB608E00FF9BA7 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		4D14BAE62AFB608F00FF9BA7 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		4D14BAE92AFB608F00FF9BA7 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -69,11 +69,11 @@
 		4DA64E502B33FB7100ADD57B /* libFirebaseFirestore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseFirestore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DD8858B2B0F185000A02738 /* RNPrint.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNPrint.xcodeproj; path = "../node_modules/react-native-print/ios/RNPrint.xcodeproj"; sourceTree = "<group>"; };
 		4DE5BA2E2B21E3280070F1AE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-DoctorApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoctorApp.release.xcconfig"; path = "Target Support Files/Pods-DoctorApp/Pods-DoctorApp.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-DoctorApp-DoctorAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoctorApp-DoctorAppTests.debug.xcconfig"; path = "Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		6D9E9C6AA04B113DB793F010 /* Pods_DoctorApp_DoctorAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DoctorApp_DoctorAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = DoctorApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-DoctorApp-DoctorAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DoctorApp-DoctorAppTests.release.xcconfig"; path = "Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		5709B34CF0A7D63546082F79 /* Pods-MED1ONE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MED1ONE.release.xcconfig"; path = "Target Support Files/Pods-MED1ONE/Pods-MED1ONE.release.xcconfig"; sourceTree = "<group>"; };
+		5B7EB9410499542E8C5724F5 /* Pods-MED1ONE-MED1ONETests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MED1ONE-MED1ONETests.debug.xcconfig"; path = "Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests.debug.xcconfig"; sourceTree = "<group>"; };
+		6D9E9C6AA04B113DB793F010 /* Pods_MED1ONE_MED1ONETests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MED1ONE_MED1ONETests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MED1ONE/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		89C6BE57DB24E9ADA2F236DE /* Pods-MED1ONE-MED1ONETests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MED1ONE-MED1ONETests.release.xcconfig"; path = "Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -82,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F2CB4E5AFD9E7BE1A2367501 /* Pods_DoctorApp_DoctorAppTests.framework in Frameworks */,
+				F2CB4E5AFD9E7BE1A2367501 /* Pods_MED1ONE_MED1ONETests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,20 +91,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DE5BA292B21DAB60070F1AE /* Algorithms in Frameworks */,
-				15EE04F2B69645F085CE7CF0 /* Pods_DoctorApp.framework in Frameworks */,
+				15EE04F2B69645F085CE7CF0 /* Pods_MED1ONE.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* DoctorAppTests */ = {
+		00E356EF1AD99517003FC87E /* MED1ONETests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* DoctorAppTests.m */,
+				00E356F21AD99517003FC87E /* MED1ONETests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = DoctorAppTests;
+			path = MED1ONETests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -115,7 +115,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* DoctorApp */ = {
+		13B07FAE1A68108700A75B9A /* MED1ONE */ = {
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -125,7 +125,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = DoctorApp;
+			name = MED1ONE;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -133,8 +133,8 @@
 			children = (
 				4DA64E502B33FB7100ADD57B /* libFirebaseFirestore.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				024F66C4404F61BECEA0D1A2 /* Pods_DoctorApp.framework */,
-				6D9E9C6AA04B113DB793F010 /* Pods_DoctorApp_DoctorAppTests.framework */,
+				024F66C4404F61BECEA0D1A2 /* Pods_MED1ONE.framework */,
+				6D9E9C6AA04B113DB793F010 /* Pods_MED1ONE_MED1ONETests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,9 +174,9 @@
 			children = (
 				4DE5BA2E2B21E3280070F1AE /* GoogleService-Info.plist */,
 				4D14BAE02AFB5E7900FF9BA7 /* Fonts */,
-				13B07FAE1A68108700A75B9A /* DoctorApp */,
+				13B07FAE1A68108700A75B9A /* MED1ONE */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* DoctorAppTests */,
+				00E356EF1AD99517003FC87E /* MED1ONETests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -189,8 +189,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* DoctorApp.app */,
-				00E356EE1AD99517003FC87E /* DoctorAppTests.xctest */,
+				13B07F961A680F5B00A75B9A /* MED1ONE.app */,
+				00E356EE1AD99517003FC87E /* MED1ONETests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -198,10 +198,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-DoctorApp.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-DoctorApp.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-DoctorApp-DoctorAppTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-DoctorApp-DoctorAppTests.release.xcconfig */,
+				3B4392A12AC88292D35C810B /* Pods-MED1ONE.debug.xcconfig */,
+				5709B34CF0A7D63546082F79 /* Pods-MED1ONE.release.xcconfig */,
+				5B7EB9410499542E8C5724F5 /* Pods-MED1ONE-MED1ONETests.debug.xcconfig */,
+				89C6BE57DB24E9ADA2F236DE /* Pods-MED1ONE-MED1ONETests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -209,9 +209,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* DoctorAppTests */ = {
+		00E356ED1AD99517003FC87E /* MED1ONETests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "DoctorAppTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MED1ONETests" */;
 			buildPhases = (
 				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -225,14 +225,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = DoctorAppTests;
-			productName = DoctorAppTests;
-			productReference = 00E356EE1AD99517003FC87E /* DoctorAppTests.xctest */;
+			name = MED1ONETests;
+			productName = MED1ONETests;
+			productReference = 00E356EE1AD99517003FC87E /* MED1ONETests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* DoctorApp */ = {
+		13B07F861A680F5B00A75B9A /* MED1ONE */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "DoctorApp" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MED1ONE" */;
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -248,12 +248,12 @@
 			);
 			dependencies = (
 			);
-			name = DoctorApp;
+			name = MED1ONE;
 			packageProductDependencies = (
 				4DE5BA282B21DAB60070F1AE /* Algorithms */,
 			);
-			productName = DoctorApp;
-			productReference = 13B07F961A680F5B00A75B9A /* DoctorApp.app */;
+			productName = MED1ONE;
+			productReference = 13B07F961A680F5B00A75B9A /* MED1ONE.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -273,7 +273,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "DoctorApp" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MED1ONE" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -295,8 +295,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* DoctorApp */,
-				00E356ED1AD99517003FC87E /* DoctorAppTests */,
+				13B07F861A680F5B00A75B9A /* MED1ONE */,
+				00E356ED1AD99517003FC87E /* MED1ONETests */,
 			);
 		};
 /* End PBXProject section */
@@ -367,15 +367,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp/Pods-DoctorApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE/Pods-MED1ONE-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp/Pods-DoctorApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE/Pods-MED1ONE-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DoctorApp/Pods-DoctorApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MED1ONE/Pods-MED1ONE-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
@@ -393,7 +393,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-DoctorApp-DoctorAppTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MED1ONE-MED1ONETests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -428,7 +428,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-DoctorApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MED1ONE-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -441,15 +441,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
@@ -458,15 +458,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp/Pods-DoctorApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE/Pods-MED1ONE-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp/Pods-DoctorApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE/Pods-MED1ONE-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DoctorApp/Pods-DoctorApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MED1ONE/Pods-MED1ONE-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
@@ -475,15 +475,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DoctorApp-DoctorAppTests/Pods-DoctorApp-DoctorAppTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MED1ONE-MED1ONETests/Pods-MED1ONE-MED1ONETests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -512,7 +512,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* DoctorAppTests.m in Sources */,
+				00E356F31AD99517003FC87E /* MED1ONETests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,7 +530,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* DoctorApp */;
+			target = 13B07F861A680F5B00A75B9A /* MED1ONE */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -538,14 +538,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-DoctorApp-DoctorAppTests.debug.xcconfig */;
+			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-MED1ONE-MED1ONETests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = DoctorAppTests/Info.plist;
+				INFOPLIST_FILE = MED1ONETests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -559,17 +559,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DoctorApp.app/DoctorApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MED1ONE.app/MED1ONE";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-DoctorApp-DoctorAppTests.release.xcconfig */;
+			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-MED1ONE-MED1ONETests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = DoctorAppTests/Info.plist;
+				INFOPLIST_FILE = MED1ONETests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -583,20 +583,20 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DoctorApp.app/DoctorApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MED1ONE.app/MED1ONE";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-DoctorApp.debug.xcconfig */;
+			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-MED1ONE.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				INFOPLIST_FILE = DoctorApp/Info.plist;
+				INFOPLIST_FILE = MED1ONE/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -608,7 +608,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = DoctorApp;
+				PRODUCT_NAME = MED1ONE;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -617,12 +617,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-DoctorApp.release.xcconfig */;
+			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-MED1ONE.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = DoctorApp/Info.plist;
+				INFOPLIST_FILE = MED1ONE/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -634,7 +634,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = DoctorApp;
+				PRODUCT_NAME = MED1ONE;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -813,7 +813,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "DoctorAppTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MED1ONETests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -822,7 +822,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "DoctorApp" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MED1ONE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -831,7 +831,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "DoctorApp" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MED1ONE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

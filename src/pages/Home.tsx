@@ -100,12 +100,12 @@ const Home = () => {
             </View>
 
             {/* <ScrollView contentContainerStyle={styles.scrollContainer}> */}
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+            {/* <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
                 <BannerAd
                     unitId={adUnitId}
                     size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
                 />
-            </View>
+            </View> */}
             <View style={styles.scrollContainer}>
                 <Text style={styles.subHeaderText}>{day} Patients</Text>
                 <View style={[styles.box, { backgroundColor: "#e8e1ff" }]}>
@@ -122,7 +122,7 @@ const Home = () => {
                     </View>
                 </View>
             </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+            <View style={{ alignItems: 'center', justifyContent: 'flex-end', marginHorizontal: 30 }}>
                 <BannerAd
                     unitId={adUnitId}
                     size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '90%',
-        marginTop: 20,
+        width: '100%',
+        // marginTop: 20,
         marginBottom: 10,
     },
     headerText: {

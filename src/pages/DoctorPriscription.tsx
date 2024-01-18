@@ -237,7 +237,26 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     const [activeSections, setActiveSections] = useState([0]);
     const renderHeader = (section: any, isActive: number) => (
 
-        <View style={[GlobalStyle.card, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+        <View style={[{
+            flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'white',
+            borderRadius: 10,
+            padding: 10,
+            marginBottom: isActive === activeSections[0] ? 0 : 15,
+            zIndex: 0,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
+            // elevation: 2,
+            borderBlockColor: 'gray',
+            borderTopWidth: 1,
+            borderLeftWidth: 1,
+            borderRightWidth: 1,
+            borderBottomWidth: isActive === activeSections[0] ? 0 : 1,
+            borderBottomLeftRadius: isActive === activeSections[0] ? 0 : 10,
+            borderBottomRightRadius: isActive === activeSections[0] ? 0 : 10,
+
+        }]}>
             <Text style={{ color: '#000', fontSize: 16 }}>Consulting Date :-{formatDateDDMMYYY(section.consultingDate)}</Text>
             <View>
                 {isActive === activeSections[0] ?
@@ -249,24 +268,55 @@ const DoctorPriscription = ({ navigation, route }: any) => {
     );
 
     const renderContent = (section: any) => (
-        <View style={{ padding: 10 }}>
-            <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>Diagnosis:</Text>
-                <Text style={{ color: 'black', fontSize: 14 }}>{section.diagnosis}</Text>
+        <View style={{
+            padding: 5,
+            borderRadius: 10,
+            marginBottom: 15,
+            zIndex: 0,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
+            // elevation: 2,
+            borderBlockColor: 'gray',
+            borderLeftWidth: 1,
+            borderRightWidth: 1,
+            borderBottomWidth: 1,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0
+
+        }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>Diagnosis</Text>
+                <Text style={{ color: 'gray', fontSize: 14 }}>{section.diagnosis}</Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>Followup:-</Text>
-                <Text style={{ color: 'black', fontSize: 14 }}>{section.followup}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 14 }}>Followup</Text>
+                <Text style={{ color: 'gray', fontSize: 14 }}>{section.followup}</Text>
             </View>
-            <Text style={styles.subHeading}>RX(Advice on OPD):</Text>
+            <Text style={styles.subHeading}>RX(Advice on OPD)</Text>
             {section.prescription?.map((item: any, i: any) => (
-                <View key={i} style={[GlobalStyle.card, { width: Dimensions.get('window').width - 50, }]}>
+                <View key={i} style={[{
+                    width: Dimensions.get('window').width - 25,
+                    padding: 5,
+                    flexDirection: 'row',
+                    borderRadius: 10,
+                    marginBottom: 15,
+                    zIndex: 0,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 5,
+                    borderBlockColor: 'gray',
+                    borderBottomWidth: 1,
+                    borderTopWidth: 1
+                }]}>
                     <View style={GlobalStyle.leftSide}>
-                        <Text style={GlobalStyle.label}>Medicine:</Text>
-                        <Text style={GlobalStyle.label}>Freuency:</Text>
-                        <Text style={GlobalStyle.label}>Days:</Text>
-                        <Text style={GlobalStyle.label}>Total:</Text>
-                        <Text style={GlobalStyle.label}>Advice:</Text>
+                        <Text style={GlobalStyle.label}>Medicine</Text>
+                        <Text style={GlobalStyle.label}>Freuency</Text>
+                        <Text style={GlobalStyle.label}>Days</Text>
+                        <Text style={GlobalStyle.label}>Total</Text>
+                        <Text style={GlobalStyle.label}>Advice</Text>
                     </View>
                     <View style={GlobalStyle.middleSide}>
                         <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.medicine}</Text>
@@ -276,7 +326,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                         <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.advice}</Text>
 
                     </View>
-                    {!showModal ?
+                    {/* {!showModal ?
                         <View style={[GlobalStyle.rightSide, { alignItems: 'center', justifyContent: 'center' }]}>
                             <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Pressable onPress={() => cancelAdvice(item)}>
@@ -284,7 +334,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                 </Pressable>
                             </View>
                         </View> : null
-                    }
+                    } */}
                 </View>
             ))}
             {/* <GestureHandlerRootView>
@@ -365,16 +415,13 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                 </View>
             </View>
             <ScrollView nestedScrollEnabled={true}>
-                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                {/* <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
                     <BannerAd
                         unitId={adUnitId}
                         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
                     />
-                </View>
-                <View style={{ margin: 20 }}>
-                    <View style={{ display: 'none' }}>
-                        {/* Render PrintButton here */}
-                    </View>
+                </View> */}
+                <View style={{ margin: 10 }}>
                     {routeName ? (
                         <>
                             <View >
@@ -555,17 +602,16 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                         <View>
                             {/* <ScrollView> */}
                             <View>
-
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <Text style={styles.heading}>Patient Information</Text>
                                 </View>
                                 <View style={GlobalStyle.card}>
                                     <View style={GlobalStyle.leftSide}>
-                                        <Text style={GlobalStyle.label}>Name: </Text>
-                                        <Text style={GlobalStyle.label}>Age/Sex: </Text>
-                                        <Text style={GlobalStyle.label}>Address: </Text>
-                                        <Text style={GlobalStyle.label}>Mobile No: </Text>
-                                        <Text style={GlobalStyle.label}>Consulting Dr.: </Text>
+                                        <Text style={GlobalStyle.label}>Name</Text>
+                                        <Text style={GlobalStyle.label}>Age/Sex</Text>
+                                        <Text style={GlobalStyle.label}>Address</Text>
+                                        <Text style={GlobalStyle.label}>Mobile No</Text>
+                                        <Text style={GlobalStyle.label}>Consulting Dr.</Text>
                                     </View>
                                     <View style={GlobalStyle.middleSide}>
                                         <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
@@ -619,13 +665,13 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                         </View>
                     </Modal>
                 </View>
-                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
-                    <BannerAd
-                        unitId={adUnitId}
-                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-                    />
-                </View>
             </ScrollView>
+            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                <BannerAd
+                    unitId={adUnitId}
+                    size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                />
+            </View>
         </SafeAreaView>
     );
 };
@@ -643,7 +689,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     subHeading: {
-        color: 'gray',
+        color: 'black',
         fontSize: 16,
         fontWeight: 'bold',
     },

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, FlatList, Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Button, Dimensions, FlatList, Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
@@ -81,17 +81,42 @@ const AllPatients = ({ navigation }: any) => {
         if (index % 3 === 2 && index !== 0) {
             // Display ad banner after every 2 cards (excluding the first card)
             return (
-                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
-                    <BannerAd
-                        unitId={adUnitId}
-                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-                    />
-                </View>
+                <>
+
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
+                        <BannerAd
+                            unitId={adUnitId}
+                            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                        />
+                    </View>
+                    <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
+                        <View style={GlobalStyle.leftSide}>
+                            {/* <Text style={GlobalStyle.label}>Date:</Text> */}
+                            <Text style={GlobalStyle.label}>Patient Name:</Text>
+                            <Text style={GlobalStyle.label}>Address:</Text>
+                            <Text style={GlobalStyle.label}>Mobile No:</Text>
+                        </View>
+                        <View style={GlobalStyle.middleSide}>
+                            {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+
+                        </View>
+                        <View style={GlobalStyle.rightSide}>
+                            <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <Pressable onPress={() => selectCard(item)}>
+                                    <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </>
             );
         }
 
         return (
-            <View style={GlobalStyle.card}>
+            <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
                 <View style={GlobalStyle.leftSide}>
                     {/* <Text style={GlobalStyle.label}>Date:</Text> */}
                     <Text style={GlobalStyle.label}>Patient Name:</Text>
@@ -189,11 +214,11 @@ const AllPatients = ({ navigation }: any) => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', marginBottom: 100 }}>
             <View style={{ flex: 1, padding: 10 }}>
-                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>All patients</Text>
+                <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}>All patients</Text>
                 {data.length === 0 ? (
                     <>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text>No content to display.</Text>
+                            <Text>No patient's available</Text>
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
                             <BannerAd

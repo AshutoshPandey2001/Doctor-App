@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, FlatList, Modal, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
@@ -221,17 +221,42 @@ const TodayPatients = ({ navigation }: any) => {
         if (index % 3 === 2 && index !== 0) {
             // Display ad banner after every 2 cards (excluding the first card)
             return (
-                <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
-                    <BannerAd
-                        unitId={adUnitId}
-                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-                    />
-                </View>
+                <>
+
+                    <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
+                        <BannerAd
+                            unitId={adUnitId}
+                            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                        />
+                    </View>
+                    <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
+                        <View style={GlobalStyle.leftSide}>
+                            {/* <Text style={GlobalStyle.label}>Date:</Text> */}
+                            <Text style={GlobalStyle.label}>Patient Name:</Text>
+                            <Text style={GlobalStyle.label}>Address:</Text>
+                            <Text style={GlobalStyle.label}>Mobile No:</Text>
+                        </View>
+                        <View style={GlobalStyle.middleSide}>
+                            {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+
+                        </View>
+                        <View style={GlobalStyle.rightSide}>
+                            <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                <Pressable onPress={() => selectCard(item)}>
+                                    <Icon type="feather" name="more-vertical" color="gray" size={30} />
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                </>
             );
         }
 
         return (
-            <View style={GlobalStyle.card}>
+            <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
                 <View style={GlobalStyle.leftSide}>
                     {/* <Text style={GlobalStyle.label}>Date:</Text> */}
                     <Text style={GlobalStyle.label}>Patient Name:</Text>
@@ -332,17 +357,18 @@ const TodayPatients = ({ navigation }: any) => {
                         fontSize: 18,
                         fontWeight: 'bold',
                         marginBottom: 20,
+                        color: '#000'
                     }}>Today's patients</Text>
                     {user?.user?.permissions?.find((permission: any) => permission.module === "PATIENTS") &&
-                        <Pressable style={{ backgroundColor: '#2a7fba', height: 30, padding: 6, borderRadius: 15, paddingHorizontal: 10 }} onPress={() => addPatients()}><Text style={{ color: '#fff', fontWeight: 'bold' }}>Add Patient</Text></Pressable>
+                        <Pressable style={{ height: 'auto' }} onPress={() => addPatients()}><Icon type="feather" name="plus" color="#2a7fba" size={35} /></Pressable>
                     }
                 </View>
                 {/* <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text> */}
                 {data?.length === 0 ? (
                     <>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text>No content to display.</Text>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
+                            <Text>No patient's available</Text>
+                            <View style={{ alignItems: 'center', justifyContent: 'flex-end', marginVertical: 10, marginHorizontal: 30 }}>
                                 <BannerAd
                                     unitId={adUnitId}
                                     size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}

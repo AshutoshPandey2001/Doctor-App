@@ -64,7 +64,7 @@ export const GlobalStyle = StyleSheet.create({
     },
     label: {
         fontSize: 14,
-        color: 'gray',
+        color: 'black',
         fontWeight: 'bold',
     },
     actionsPopup: {

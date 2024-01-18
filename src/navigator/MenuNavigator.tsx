@@ -33,7 +33,7 @@ const Tabs = ({ navigation }: any) => {
       tabBarContainerBackground='#e5e5e5'
       tabBarBackground='#fff'
       activeTabBackground='#e5e5e5'
-      containerBottomSpace={30}
+      // containerBottomSpace={5}
       containerWidth={Dimensions.get('window').width - 20}
       containerTopLeftRadius={10}
       containerBottomLeftRadius={30}

@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { setUser } from '../../redux/action/UserSlice';
 import { useDispatch } from 'react-redux';
+import { setLoading } from '../../redux/action/UiSlice';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const LoginPage = () => {
     const dispatch = useDispatch()
     const handleLogin = async () => {
         try {
+            dispatch(setLoading(true))
             const userCredential = await auth().signInWithEmailAndPassword(email, password);
             const user = userCredential.user;
 
@@ -78,6 +80,8 @@ const LoginPage = () => {
             dispatch(setUser(userData))
             console.log('User data:', userData);
         } catch (error: any) {
+            dispatch(setLoading(false))
+
             Alert.alert('Login Error', error.message);
         }
     };

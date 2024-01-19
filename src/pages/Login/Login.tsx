@@ -100,6 +100,8 @@ const LoginPage = () => {
                     placeholder="Email"
                     value={email}
                     onChangeText={setEmail}
+                    placeholderTextColor={'gray'}
+
                 />
 
                 <TextInput
@@ -108,6 +110,7 @@ const LoginPage = () => {
                     secureTextEntry={true}
                     value={password}
                     onChangeText={setPassword}
+                    placeholderTextColor={'gray'}
                 />
                 <Pressable style={styles.btn} onPress={() => handleLogin()}>
                     <Text style={styles.btntext}>Login</Text>
@@ -151,6 +154,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 10,
         padding: 10,
+        color: '#000'
     },
     btntext: {
         fontSize: 20,

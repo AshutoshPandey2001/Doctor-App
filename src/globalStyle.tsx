@@ -67,6 +67,9 @@ export const GlobalStyle = StyleSheet.create({
         color: 'black',
         fontWeight: 'bold',
     },
+    placeholder: {
+        color: 'gray',
+    },
     actionsPopup: {
         position: 'absolute',
         top: 80,

@@ -93,35 +93,114 @@ const DoctorPriscription = ({ navigation, route }: any) => {
             setRouteName(true)
         }
     }, [route])
+    // useEffect(() => {
+    //     if (focus) {
+    //         dispatch(setLoading(true));
+
+    //         const subscribe = firestore()
+    //             .collection('opdPatients')
+    //             .doc('m5JHl3l4zhaBCa8Vihcb')
+    //             .collection('opdPatient')
+    //             .where('hospitaluid', '==', user.user.hospitaluid)
+    //             .where('deleted', '==', 0)
+    //             .where('druid', '==', user.user.druid)
+    //             .where('pid', "==", state.pid)
+    //             .orderBy('timestamp', 'asc')
+    //             .onSnapshot(async (snapshot) => {
+    //                 console.log(snapshot, 'snapshot');
+
+    //                 if (snapshot) {
+    //                     const newData: any = [];
+    //                     snapshot.forEach((doc) => {
+    //                         newData.push(doc.data());
+    //                     });
+    //                     setHistory(newData);
+    //                     console.log('newData-------------------------------------', newData);
+    //                 } else {
+    //                     // Handle the case when there is no data
+    //                     setHistory([]);
+    //                     console.log('No data available');
+    //                 }
+
+    //                 dispatch(setLoading(false));
+    //             });
+
+    //         return () => {
+    //             subscribe();
+    //         };
+    //     }
+    // }, [focus]);
+    // useEffect(() => {
+    //     let isMounted = true;
+
+    //     if (focus) {
+    //         dispatch(setLoading(true));
+
+    //         const subscribe = firestore()
+    //             .collection('opdPatients')
+    //             .doc('m5JHl3l4zhaBCa8Vihcb')
+    //             .collection('opdPatient')
+    //             .where('hospitaluid', '==', user.user.hospitaluid)
+    //             .where('deleted', '==', 0)
+    //             .where('druid', '==', user.user.druid)
+    //             .where('pid', "==", state.pid)
+    //             .orderBy('timestamp', 'asc')
+    //             .onSnapshot(async (snapshot) => {
+    //                 if (isMounted) {
+    //                     if (snapshot && !snapshot.empty) {
+    //                         const newData: any = [];
+    //                         snapshot.forEach((doc) => {
+    //                             newData.push(doc.data());
+    //                         });
+    //                         setHistory(newData);
+    //                         console.log('newData-------------------------------------', newData);
+    //                     } else {
+    //                         // Handle the case when there is no data
+    //                         setHistory([]);
+    //                         console.log('No data available');
+    //                     }
+
+    //                     dispatch(setLoading(false));
+    //                 }
+    //             });
+
+    //         return () => {
+    //             isMounted = false;
+    //             subscribe();
+    //         };
+    //     }
+    // }, [focus]);
     useEffect(() => {
         if (focus) {
-            dispatch(setLoading(true))
-            const subscribe = firestore()
-                .collection('opdPatients')
-                .doc('m5JHl3l4zhaBCa8Vihcb')
-                .collection('opdPatient')
-                .where('hospitaluid', '==', user.user.hospitaluid)
-                .where('deleted', '==', 0)
-                .where('druid', '==', user.user.druid)
-                .where('pid', "==", state.pid)
-                .where('paymentStatus', "==", "Completed")
-                .orderBy('timestamp', 'asc')
-                .onSnapshot((snapshot) => {
-                    const newData: any = [];
-                    snapshot.forEach((doc) => {
-                        newData.push(doc.data());
-                    });
-                    setHistory(newData)
-                    console.log('newData-------------------------------------', newData);
-
+            const getAllPatients = async () => {
+                dispatch(setLoading(true));
+                const subscribe = await firestore()
+                    .collection('opdPatients')
+                    .doc('m5JHl3l4zhaBCa8Vihcb')
+                    .collection('opdPatient')
+                    .where('hospitaluid', '==', user.user.hospitaluid)
+                    .where('deleted', '==', 0)
+                    .where('druid', '==', user.user.druid)
+                    .where('pid', "==", state.pid)
+                    .orderBy('timestamp', 'asc')
+                    .get();
+                const temp_data: any = [];
+                subscribe.forEach((doc) => {
+                    if (doc.data() && doc.data().prescription) {
+                        temp_data.push(doc.data());
+                    }
                 });
-            dispatch(setLoading(false))
+                console.log('all patients Clinicla history', temp_data);
 
-            return () => {
-                subscribe();
-            };
+                setHistory([...temp_data])
+                dispatch(setLoading(false));
+
+            }
+            getAllPatients()
         }
-    }, [focus]);
+
+    }, [focus])
+
     const openHistory = () => {
         setShowModal(true);
     };
@@ -411,7 +490,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                     <Icon type="feather" name="arrow-left" color='#000' size={35} />
                 </Pressable>
                 <View style={{ flex: 5, justifyContent: 'center', alignItems: 'center', marginLeft: -35 }}>
-                    <Text style={{ textAlign: 'center', fontSize: 20, color: '#000', fontWeight: 'bold' }}>{routeName ? 'Prescription' : 'History'}</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 20, color: '#000', fontWeight: 'bold' }}>{routeName ? 'Prescription' : 'Clinical History'}</Text>
                 </View>
             </View>
             <ScrollView nestedScrollEnabled={true}>
@@ -433,16 +512,16 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                     <View style={GlobalStyle.leftSide}>
                                         <Text style={GlobalStyle.label}>Name: </Text>
                                         <Text style={GlobalStyle.label}>Age/Sex: </Text>
-                                        <Text style={GlobalStyle.label}>Address: </Text>
                                         <Text style={GlobalStyle.label}>Mobile No: </Text>
-                                        <Text style={GlobalStyle.label}>Consulting Dr.: </Text>
+                                        <Text style={GlobalStyle.label}>Address: </Text>
+                                        {/* <Text style={GlobalStyle.label}>Consulting Dr.: </Text> */}
                                     </View>
                                     <View style={GlobalStyle.middleSide}>
                                         <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
                                         <Text style={GlobalStyle.textcolor}>{state.page}/{state.pGender}</Text>
-                                        <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
                                         <Text style={GlobalStyle.textcolor}> {state.pMobileNo}</Text>
-                                        <Text style={GlobalStyle.textcolor}>{state.drName}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
+                                        {/* <Text style={GlobalStyle.textcolor}>{state.drName}</Text> */}
                                     </View>
                                 </View>
 
@@ -609,16 +688,16 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                     <View style={GlobalStyle.leftSide}>
                                         <Text style={GlobalStyle.label}>Name</Text>
                                         <Text style={GlobalStyle.label}>Age/Sex</Text>
-                                        <Text style={GlobalStyle.label}>Address</Text>
                                         <Text style={GlobalStyle.label}>Mobile No</Text>
-                                        <Text style={GlobalStyle.label}>Consulting Dr.</Text>
+                                        <Text style={GlobalStyle.label}>Address</Text>
+                                        {/* <Text style={GlobalStyle.label}>Consulting Dr.</Text> */}
                                     </View>
                                     <View style={GlobalStyle.middleSide}>
                                         <Text style={GlobalStyle.textcolor}>{state.pName}</Text>
                                         <Text style={GlobalStyle.textcolor}>{state.page}/{state.pGender}</Text>
-                                        <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
                                         <Text style={GlobalStyle.textcolor}> {state.pMobileNo}</Text>
-                                        <Text style={GlobalStyle.textcolor}>{state.drName}</Text>
+                                        <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
+                                        {/* <Text style={GlobalStyle.textcolor}>{state.drName}</Text> */}
                                     </View>
                                 </View>
                                 {history.length > 0 ?
@@ -632,7 +711,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                         onChange={updateSections}
                                         underlayColor={'transparenet'}
                                     /> :
-                                    <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
+                                    <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no clinical history to display</Text>}
                             </View>
 
                             {/* </ScrollView> */}
@@ -642,7 +721,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
                             <View style={{ margin: 20, flex: 1, width: '100%' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>
+                                    <Text style={{ color: 'black', fontSize: 20 }}>clinical History</Text>
                                     <TouchableOpacity onPress={() => handleClose()} >
                                         <Icon type="entypo" name="cross" color="black" size={35} />
                                     </TouchableOpacity>

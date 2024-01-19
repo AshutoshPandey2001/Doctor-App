@@ -8,13 +8,13 @@ import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
 import firestore from '@react-native-firebase/firestore';
-import { formatDateDDMMYYY } from '../services/dateFormate';
-import DatePicker from 'react-native-date-picker';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik'
 import * as yup from "yup"
 import SelectDropdown from 'react-native-select-dropdown';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
+import CustomSearchAutocomplete from '../component/CustomSearchAutocomplete';
 
 
 
@@ -58,6 +58,7 @@ const TodayPatients = ({ navigation }: any) => {
     const [data, setData] = useState<any>([]); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     const [isVisible, setisVisible] = useState(false);
+    const [allPatients, setallPatients] = useState<any[]>([])
     const [initialFormValues, setInitialFormValues] = useState<InitialFormValues>({
         pid: '',
         pName: '',
@@ -113,6 +114,28 @@ const TodayPatients = ({ navigation }: any) => {
             subscribe();
         };
     }, []);
+    useEffect(() => {
+
+        const getAllPatients = async () => {
+            const subscribe = await firestore()
+                .collection('Patients')
+                .doc('fBoxFLrzXexT8WNBzGGh')
+                .collection('patients')
+                .where('hospitaluid', '==', user.user.hospitaluid)
+                .where('deleted', '==', 0)
+                .get();
+            let temp_data: any = [];
+            subscribe.forEach((doc) => {
+                temp_data.push(doc.data());
+            });
+            console.log('all patients List', temp_data);
+
+            setallPatients([...temp_data])
+        }
+        getAllPatients()
+
+    }, [])
+
     const selectCard = (item: number) => {
         setisVisible(true)
         setShowActions(item);
@@ -191,7 +214,7 @@ const TodayPatients = ({ navigation }: any) => {
             }
         }),
     });
-    const { handleChange, handleBlur, handleSubmit, values, errors, isValid, touched, setFieldValue } = formik
+    const { handleChange, handleBlur, handleSubmit, values, errors, isValid, touched, setFieldValue, resetForm } = formik
 
     // const renderItem = ({ item }: { item: any }) => (
     //     <View style={GlobalStyle.card}>
@@ -231,16 +254,16 @@ const TodayPatients = ({ navigation }: any) => {
                     </View>
                     <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
                         <View style={GlobalStyle.leftSide}>
-                            {/* <Text style={GlobalStyle.label}>Date:</Text> */}
-                            <Text style={GlobalStyle.label}>Patient Name:</Text>
-                            <Text style={GlobalStyle.label}>Address:</Text>
+                            <Text style={GlobalStyle.label}>Date:</Text>
+                            <Text style={GlobalStyle.label}>Name:</Text>
                             <Text style={GlobalStyle.label}>Mobile No:</Text>
+                            <Text style={GlobalStyle.label}>Address:</Text>
                         </View>
                         <View style={GlobalStyle.middleSide}>
-                            {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
                             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
-                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                             <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+                            <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
 
                         </View>
                         <View style={GlobalStyle.rightSide}>
@@ -258,13 +281,13 @@ const TodayPatients = ({ navigation }: any) => {
         return (
             <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
                 <View style={GlobalStyle.leftSide}>
-                    {/* <Text style={GlobalStyle.label}>Date:</Text> */}
-                    <Text style={GlobalStyle.label}>Patient Name:</Text>
+                    <Text style={GlobalStyle.label}>Date:</Text>
+                    <Text style={GlobalStyle.label}>Name:</Text>
                     <Text style={GlobalStyle.label}>Address:</Text>
                     <Text style={GlobalStyle.label}>Mobile No:</Text>
                 </View>
                 <View style={GlobalStyle.middleSide}>
-                    {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
@@ -335,6 +358,7 @@ const TodayPatients = ({ navigation }: any) => {
     };
     const handleClose = () => {
         setShowModal(false);
+        resetForm()
     };
     const addPatients = () => {
         setShowModal(true);
@@ -346,7 +370,10 @@ const TodayPatients = ({ navigation }: any) => {
         const year = dateObject.getFullYear();
         return `${day}/${month}/${year}`;
     };
-
+    const handleItemSelect = (item: any) => {
+        console.log('Selected item:', item);
+        // Do something with the selected item
+    };
 
 
     return (
@@ -367,7 +394,7 @@ const TodayPatients = ({ navigation }: any) => {
                 {data?.length === 0 ? (
                     <>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text>No patient's available</Text>
+                            <Text style={{ color: 'gray' }}>No patient's available</Text>
                             <View style={{ alignItems: 'center', justifyContent: 'flex-end', marginVertical: 10, marginHorizontal: 30 }}>
                                 <BannerAd
                                     unitId={adUnitId}
@@ -386,6 +413,7 @@ const TodayPatients = ({ navigation }: any) => {
                         onEndReachedThreshold={0.1}
                     />
                 )}
+
             </View>
             {isVisible && <Modal visible={isVisible} animationType="slide"
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
@@ -420,10 +448,10 @@ const TodayPatients = ({ navigation }: any) => {
             </Modal>}
             {showModal &&
                 <Modal visible={showModal} transparent={false} animationType="slide">
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0, zIndex: 0 }}>
                         <View style={{ margin: 20, flex: 1, width: '100%' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={{ color: 'black', fontSize: 20 }}>Patient History</Text>
+                                <Text style={{ color: 'black', fontSize: 20 }}>Add Patient</Text>
                                 <TouchableOpacity onPress={() => handleClose()} >
                                     <Icon type="entypo" name="cross" color="black" size={35} />
                                 </TouchableOpacity>
@@ -431,25 +459,51 @@ const TodayPatients = ({ navigation }: any) => {
                             <GestureHandlerRootView>
                                 <ScrollView>
                                     <View>
+
+                                        <View style={styles.section}>
+                                            <Text style={styles.subHeading}>OPD Case No:</Text>
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Enter patient mobile no"
+                                                value={values.opdCaseNo}
+                                                onChangeText={handleChange('opdCaseNo')}
+                                                placeholderTextColor={'gray'}
+
+                                            />
+                                        </View>
                                         <View style={styles.section}>
 
                                             <Text style={styles.subHeading}>Patient Name:</Text>
-                                            <TextInput
-                                                style={styles.input}
-                                                placeholder="Enter patient name"
-                                                value={values.pName}
-                                                onChangeText={handleChange('pName')}
-                                                placeholderTextColor={'gray'}
-                                            />
+
+
+                                            <View style={[
+                                                { flex: 1, flexDirection: 'row', alignItems: 'center' },
+
+                                            ]}>
+                                                <CustomSearchAutocomplete data={allPatients} searchKey="pName" onSelect={handleItemSelect} placeHolder={'Enter Patient Name'} />
+                                            </View>
+
                                             {errors.pName && touched.pName &&
                                                 <Text style={styles.errorMsg}>{errors.pName}</Text>
                                             }
                                         </View>
-                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <View style={{ width: 150 }}>
+                                        <View style={styles.section}>
+                                            <Text style={styles.subHeading}>Mobile No:</Text>
+                                            <View style={[
+                                                { flex: 1, flexDirection: 'row', alignItems: 'center' },
+                                                Platform.select({ ios: { zIndex: 1 } }),
+                                            ]}>
+                                                <CustomSearchAutocomplete data={allPatients} searchKey="pMobileNo" onSelect={handleItemSelect} placeHolder={'Enter Mobile Number'} />
+                                            </View>
+                                            {errors.pMobileNo && touched.pMobileNo &&
+                                                <Text style={styles.errorMsg}>{errors.pMobileNo}</Text>
+                                            }
+                                        </View>
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                                            <View style={{ width: "55%" }}>
                                                 <Text style={styles.subHeading}>Age:</Text>
                                                 <TextInput
-                                                    style={[styles.input, { width: 150 }]}
+                                                    style={[styles.input]}
                                                     placeholder="Enter age"
                                                     keyboardType='numeric'
                                                     onChangeText={handleChange('age')}
@@ -459,7 +513,7 @@ const TodayPatients = ({ navigation }: any) => {
                                                     <Text style={styles.errorMsg}>{errors.age}</Text>
                                                 }
                                             </View>
-                                            <View>
+                                            <View style={{ width: "40%" }}>
                                                 <Text style={styles.subHeading}>Duration:</Text>
                                                 <SelectDropdown
                                                     data={['Years', 'Months', 'Days']}
@@ -477,8 +531,7 @@ const TodayPatients = ({ navigation }: any) => {
                                                     buttonStyle={{
                                                         backgroundColor: 'transparent', borderColor: 'lightgray',
                                                         paddingHorizontal: 5,
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
+                                                        width: 'auto',
                                                         borderWidth: 1,
                                                         height: 50,
                                                         borderRadius: 6,
@@ -486,7 +539,6 @@ const TodayPatients = ({ navigation }: any) => {
                                                 />
                                             </View>
                                         </View>
-
                                         <View style={styles.section}>
                                             <Text style={styles.subHeading}>Address:</Text>
                                             <TextInput
@@ -562,30 +614,7 @@ const TodayPatients = ({ navigation }: any) => {
                                             </View>
                                         </View>
 
-                                        <View style={styles.section}>
-                                            <Text style={styles.subHeading}>Mobile No:</Text>
-                                            <TextInput
-                                                style={styles.input}
-                                                placeholder="Enter patient mobile no"
-                                                value={values.pMobileNo}
-                                                onChangeText={handleChange('pMobileNo')}
-                                                placeholderTextColor={'gray'}
-                                            />
-                                            {errors.pMobileNo && touched.pMobileNo &&
-                                                <Text style={styles.errorMsg}>{errors.pMobileNo}</Text>
-                                            }
-                                        </View>
 
-                                        <View style={styles.section}>
-                                            <Text style={styles.subHeading}>OPD Case No:</Text>
-                                            <TextInput
-                                                style={styles.input}
-                                                placeholder="Enter patient mobile no"
-                                                value={values.opdCaseNo}
-                                                onChangeText={handleChange('opdCaseNo')}
-                                                placeholderTextColor={'gray'}
-                                            />
-                                        </View>
                                         <View style={styles.buttonContainer}>
                                             <Pressable onPress={() => handleSubmit()} style={{ backgroundColor: 'blue', padding: 10, paddingHorizontal: 20, borderRadius: 25 }}>
                                                 <Text style={{ color: 'white', fontSize: 15, fontWeight: 'bold' }}>Submit</Text>
@@ -617,6 +646,7 @@ const styles = StyleSheet.create({
     },
     section: {
         marginVertical: 10,
+
     },
     subHeading: {
         color: 'gray',
@@ -629,7 +659,9 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         borderRadius: 5,
-
+        color: '#000',
+        zIndex: -1,
+        elevation: -1
     },
     checkboxContainer: {
         flexDirection: 'row',

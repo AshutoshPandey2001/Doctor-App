@@ -62,7 +62,7 @@ export const printDescription = async (patientData: any, user: any) => {
             </div>
             <div style="flex: 1 0 33.333333%; max-width: 33.333333%; display: flex; justify-content: flex-end;">
                 <div>
-                    <div>Name: ${patientData.name}</div>
+                    <div>Name: ${patientData.pName}</div>
                     <div>Age/Sex: ${patientData.page}/${patientData.pGender}</div>
                     <div>Address: ${patientData.pAddress}</div>
                     <div>Mobile No: ${patientData.pMobileNo}</div>
@@ -125,7 +125,7 @@ export const printDescription = async (patientData: any, user: any) => {
 <div style="padding: 20px; width: 95%;">
 <div><b>General instructions:</b></div>
 <div style="border: 2px solid black; border-radius: 0.25rem; padding: 10px;">
-    <b>${patientData.generalInstruction}</b><br>
+    <b>${patientData.generalInstruction ? patientData.generalInstruction : ''}</b><br>
 </div>
 </div>
               </div>

@@ -92,7 +92,7 @@ const AllPatients = ({ navigation }: any) => {
                     <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
                         <View style={GlobalStyle.leftSide}>
                             {/* <Text style={GlobalStyle.label}>Date:</Text> */}
-                            <Text style={GlobalStyle.label}>Patient Name:</Text>
+                            <Text style={GlobalStyle.label}>Name:</Text>
                             <Text style={GlobalStyle.label}>Address:</Text>
                             <Text style={GlobalStyle.label}>Mobile No:</Text>
                         </View>
@@ -119,15 +119,15 @@ const AllPatients = ({ navigation }: any) => {
             <View style={[GlobalStyle.card, { width: Dimensions.get('window').width - 25, marginLeft: 3 }]}>
                 <View style={GlobalStyle.leftSide}>
                     {/* <Text style={GlobalStyle.label}>Date:</Text> */}
-                    <Text style={GlobalStyle.label}>Patient Name:</Text>
-                    <Text style={GlobalStyle.label}>Address:</Text>
+                    <Text style={GlobalStyle.label}>Name:</Text>
                     <Text style={GlobalStyle.label}>Mobile No:</Text>
+                    <Text style={GlobalStyle.label}>Address:</Text>
                 </View>
                 <View style={GlobalStyle.middleSide}>
                     {/* <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text> */}
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
-                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
 
                 </View>
                 <View style={GlobalStyle.rightSide}>
@@ -218,7 +218,7 @@ const AllPatients = ({ navigation }: any) => {
                 {data.length === 0 ? (
                     <>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text>No patient's available</Text>
+                            <Text style={{ color: 'gray' }}>No patient's available</Text>
                         </View>
                         <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 10 }}>
                             <BannerAd

@@ -3,17 +3,19 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer } from 'redux-persist';
 import uiReducer from './action/UiSlice';
 import userReducer from './action/UserSlice';
+import patientsReducer from './action/PatientsSlice';
 
 
 const rootReducer = combineReducers({
     ui: uiReducer,
-    user: userReducer
+    user: userReducer,
+    patients: patientsReducer
 });
 
 const persistConfig = {
     key: 'root', // key for AsyncStorage
     storage: AsyncStorage,
-    whitelist: ['user'],
+    whitelist: ['user', 'patients'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

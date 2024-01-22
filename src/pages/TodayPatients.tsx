@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../redux/action/UiSlice';
 import { printDescription } from '../component/Print';
 import { RootState } from '../redux/store';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { firebase } from '@react-native-firebase/firestore';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik'
 import * as yup from "yup"
@@ -15,6 +15,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { AutocompleteDropdown } from 'react-native-autocomplete-dropdown';
 import CustomSearchAutocomplete from '../component/CustomSearchAutocomplete';
+import { setLastPatient, setPatients } from '../redux/action/PatientsSlice';
 
 
 
@@ -58,7 +59,10 @@ const TodayPatients = ({ navigation }: any) => {
     const [data, setData] = useState<any>([]); // Initial data with first 10 items
     const [page, setPage] = useState(1);
     const [isVisible, setisVisible] = useState(false);
-    const [allPatients, setallPatients] = useState<any[]>([])
+    // const [allPatients, setallPatients] = useState<any[]>([])
+    const allPatients: any = useSelector((state: RootState) => state.patients)
+
+
     const [initialFormValues, setInitialFormValues] = useState<InitialFormValues>({
         pid: '',
         pName: '',
@@ -114,28 +118,77 @@ const TodayPatients = ({ navigation }: any) => {
             subscribe();
         };
     }, []);
-    useEffect(() => {
+    // useEffect(() => {
 
-        const getAllPatients = async () => {
-            const subscribe = await firestore()
+    //     const getAllPatients = async () => {
+    //         let subscribe = await firestore()
+    //             .collection('Patients')
+    //             .doc('fBoxFLrzXexT8WNBzGGh')
+    //             .collection('patients')
+    //             .where('hospitaluid', '==', user.user.hospitaluid)
+    //             .where('deleted', '==', 0)
+    //         if (allPatients.lastPatients) {
+    //             const timestamp = new firebase.firestore.Timestamp(allPatients.lastPatients.timestamp.seconds, allPatients.lastPatients.timestamp.nanoseconds);
+    //             console.log('i am inside this', timestamp);
+    //             subscribe = subscribe.where('timestamp', '>', timestamp);
+    //         }
+
+    //         const querySnapshot = await subscribe.get();
+    //         let temp_data: any = [];
+    //         querySnapshot.forEach((doc) => {
+    //             temp_data.push(doc.data());
+    //         });
+    //         console.log('all patients List', temp_data);
+    //         dispatch(setPatients(temp_data))
+    //         // Get the last visible document for pagination
+    //         let lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+    //         dispatch(setLastPatient(lastVisibleDoc ? lastVisibleDoc.data() : allPatients.lastPatients))
+    //         //             .get();
+    //         // let temp_data: any = [];
+    //         // subscribe.forEach((doc) => {
+    //         //     temp_data.push(doc.data());
+    //         // });
+    //         // console.log('all patients List', temp_data);
+
+    //         // setallPatients([...temp_data])
+    //     }
+    //     getAllPatients()
+
+    // }, [])
+    const getAllPatients = async () => {
+        try {
+            let query = await firestore()
                 .collection('Patients')
                 .doc('fBoxFLrzXexT8WNBzGGh')
                 .collection('patients')
-                .where('hospitaluid', '==', user.user.hospitaluid)
-                .where('deleted', '==', 0)
-                .get();
-            let temp_data: any = [];
-            subscribe.forEach((doc) => {
-                temp_data.push(doc.data());
-            });
-            console.log('all patients List', temp_data);
+                .where('hospitaluid', '==', user?.user?.hospitaluid || '')
+                .where('deleted', '==', 0);
 
-            setallPatients([...temp_data])
+            if (allPatients?.lastPatients?.timestamp) {
+                console.log('allPatients?.lastPatients?.timestamp', JSON.parse(allPatients?.lastPatients?.timestamp));
+
+                const { seconds, nanoseconds } = JSON.parse(allPatients?.lastPatients?.timestamp);
+                const timestamp = new firestore.Timestamp(seconds, nanoseconds);
+                console.log('Timestamp:', timestamp);
+                query = query.where('timestamp', '>', timestamp);
+            }
+
+            const querySnapshot = await query.get();
+            const tempData = querySnapshot.docs.map((doc) => doc.data());
+            console.log('All patients list:', tempData);
+
+            // Get the last visible document for pagination
+            const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+            const lastPatientData = lastVisibleDoc ? lastVisibleDoc.data() : allPatients?.lastPatients;
+
+            // Dispatch both patients and last patient in one action
+            dispatch(setPatients(tempData));
+            dispatch(setLastPatient(lastPatientData));
+        } catch (error) {
+            console.error('Error fetching patients:', error);
+            // Handle the error as needed
         }
-        getAllPatients()
-
-    }, [])
-
+    };
     const selectCard = (item: number) => {
         setisVisible(true)
         setShowActions(item);
@@ -145,32 +198,129 @@ const TodayPatients = ({ navigation }: any) => {
         setShowActions(null);
 
     }
+    // const formik = useFormik<InitialFormValues>({
+    //     initialValues: initialFormValues,
+    //     validationSchema: patientSchema,
+    //     onSubmit: (async (values: any) => {
+    //         if (values.pid) {
+    //             values.page = values.age + " " + values.duration
+    //             values.opduid = Math.floor(2000 + Math.random() * 9000)
+    //             const opdData = {
+    //                 pid: values.pid,
+    //                 pName: values.pName,
+    //                 page: values.page,
+    //                 age: values.age,
+    //                 pGender: values.pGender,
+    //                 pAddress: values.pAddress,
+    //                 pMobileNo: values.pMobileNo,
+    //                 drName: values.drName,
+    //                 hospitaluid: values.hospitaluid,
+    //                 consultingDate: values.consultingDate,
+    //                 druid: values.druid,
+    //                 consultingCharge: Number(values.consultingCharge),
+    //                 opduid: values.opduid,
+    //                 opdCaseNo: values.opdCaseNo,
+    //                 paymentStatus: values.paymentStatus,
+    //                 advices: [],
+    //                 deleted: 0,
+    //                 timestamp: new Date()
+    //             }
+
+    //             const opdref = firestore()
+    //                 .collection('opdPatients')
+    //                 .doc(`m5JHl3l4zhaBCa8Vihcb`) // reciver id
+    //                 .collection('opdPatient')
+    //             console.log('opdData--------------', opdData);
+    //             const batch = firestore().batch();
+
+    //             batch.set(opdref.doc(), opdData);
+
+    //             try {
+    //                 await batch.commit();
+    //                 setShowModal(false)
+    //             } catch (error: any) {
+
+    //                 console.error('Error sending message: ', error);
+    //             }
+    //         } else {
+    //             let timestamp = new Date().getTime();
+    //             values.page = values.age + " " + values.duration
+    //             values.pid = Math.floor(Math.random() + timestamp)
+    //             values.opduid = Math.floor(2000 + Math.random() * 9000)
+    //             const patienstData = {
+    //                 pid: values.pid,
+    //                 pName: values.pName,
+    //                 page: values.page,
+    //                 age: values.age,
+    //                 duration: values.duration,
+    //                 pGender: values.pGender,
+    //                 pAddress: values.pAddress,
+    //                 pMobileNo: values.pMobileNo,
+    //                 drName: values.drName,
+    //                 hospitaluid: values.hospitaluid,
+    //                 deleted: 0,
+    //                 timestamp: new Date()
+    //             }
+    //             const opdData = {
+    //                 pid: values.pid,
+    //                 pName: values.pName,
+    //                 page: values.page,
+    //                 age: values.age,
+    //                 pGender: values.pGender,
+    //                 pAddress: values.pAddress,
+    //                 pMobileNo: values.pMobileNo,
+    //                 drName: values.drName,
+    //                 hospitaluid: values.hospitaluid,
+    //                 consultingDate: values.consultingDate,
+    //                 druid: values.druid,
+    //                 consultingCharge: Number(values.consultingCharge),
+    //                 opduid: values.opduid,
+    //                 opdCaseNo: values.opdCaseNo,
+    //                 paymentStatus: values.paymentStatus,
+    //                 advices: [],
+    //                 deleted: 0,
+    //                 timestamp: new Date()
+
+    //             }
+    //             const patientsRef = firestore()
+    //                 .collection('Patients')
+    //                 .doc(`fBoxFLrzXexT8WNBzGGh`) // sender id
+    //                 .collection('patients')
+
+
+    //             const opdref = firestore()
+    //                 .collection('opdPatients')
+    //                 .doc(`m5JHl3l4zhaBCa8Vihcb`) // reciver id
+    //                 .collection('opdPatient')
+    //             console.log('patienstData-------------------', patienstData);
+    //             console.log('opdData--------------', opdData);
+    //             const batch = firestore().batch();
+
+    //             batch.set(patientsRef.doc(), patienstData);
+    //             batch.set(opdref.doc(), opdData);
+
+    //             try {
+    //                 await batch.commit();
+    //                 setShowModal(false)
+    //             } catch (error: any) {
+
+    //                 console.error('Error sending message: ', error);
+    //             }
+    //         }
+
+    //     }),
+    // });
     const formik = useFormik<InitialFormValues>({
         initialValues: initialFormValues,
         validationSchema: patientSchema,
-        onSubmit: (async (values: any) => {
-            let timestamp = new Date().getTime();
-            values.page = values.age + " " + values.duration
-            values.pid = Math.floor(Math.random() + timestamp)
-            values.opduid = Math.floor(2000 + Math.random() * 9000)
-            const patienstData = {
-                pid: values.pid,
-                pName: values.pName,
-                page: values.page,
-                age: values.age,
-                duration: values.duration,
-                pGender: values.pGender,
-                pAddress: values.pAddress,
-                pMobileNo: values.pMobileNo,
-                drName: values.drName,
-                hospitaluid: values.hospitaluid,
-                deleted: 0,
-                timestamp: new Date()
-            }
+        onSubmit: async (values: any) => {
+            const opduid = Math.floor(2000 + Math.random() * 9000);
+            const timestamp = new Date();
+
             const opdData = {
                 pid: values.pid,
                 pName: values.pName,
-                page: values.page,
+                page: `${values.age} ${values.duration}`,
                 age: values.age,
                 pGender: values.pGender,
                 pAddress: values.pAddress,
@@ -180,40 +330,43 @@ const TodayPatients = ({ navigation }: any) => {
                 consultingDate: values.consultingDate,
                 druid: values.druid,
                 consultingCharge: Number(values.consultingCharge),
-                opduid: values.opduid,
+                opduid,
                 opdCaseNo: values.opdCaseNo,
                 paymentStatus: values.paymentStatus,
                 advices: [],
                 deleted: 0,
-                timestamp: new Date()
+                timestamp,
+            };
 
-            }
-            const patientsRef = firestore()
-                .collection('Patients')
-                .doc(`fBoxFLrzXexT8WNBzGGh`) // sender id
-                .collection('patients')
-
-
-            const opdref = firestore()
-                .collection('opdPatients')
-                .doc(`m5JHl3l4zhaBCa8Vihcb`) // reciver id
-                .collection('opdPatient')
-            console.log('patienstData-------------------', patienstData);
-            console.log('opdData--------------', opdData);
             const batch = firestore().batch();
 
-            batch.set(patientsRef.doc(), patienstData);
-            batch.set(opdref.doc(), opdData);
+            if (values.pid) {
+                const opdRef = firestore()
+                    .collection('opdPatients')
+                    .doc('m5JHl3l4zhaBCa8Vihcb')
+                    .collection('opdPatient');
+                batch.set(opdRef.doc(), opdData);
+            } else {
+                const patientsRef = firestore()
+                    .collection('Patients')
+                    .doc('fBoxFLrzXexT8WNBzGGh')
+                    .collection('patients');
+                batch.set(patientsRef.doc(), {
+                    ...opdData,
+                    pid: Math.floor(Math.random() + timestamp.getTime()),
+                    duration: values.duration,
+                });
+            }
 
             try {
                 await batch.commit();
-                setShowModal(false)
+                setShowModal(false);
             } catch (error: any) {
-
-                console.error('Error sending message: ', error);
+                console.error('Error committing batch: ', error);
             }
-        }),
+        },
     });
+
     const { handleChange, handleBlur, handleSubmit, values, errors, isValid, touched, setFieldValue, resetForm } = formik
 
     // const renderItem = ({ item }: { item: any }) => (
@@ -361,7 +514,9 @@ const TodayPatients = ({ navigation }: any) => {
         resetForm()
     };
     const addPatients = () => {
+        getAllPatients()
         setShowModal(true);
+
     };
     const formatDate = (date: any) => {
         const dateObject = new Date(date);
@@ -480,7 +635,7 @@ const TodayPatients = ({ navigation }: any) => {
                                                 { flex: 1, flexDirection: 'row', alignItems: 'center' },
 
                                             ]}>
-                                                <CustomSearchAutocomplete data={allPatients} searchKey="pName" onSelect={handleItemSelect} placeHolder={'Enter Patient Name'} />
+                                                <CustomSearchAutocomplete data={allPatients.patients} searchKey="pName" onSelect={handleItemSelect} placeHolder={'Enter Patient Name'} />
                                             </View>
 
                                             {errors.pName && touched.pName &&
@@ -493,7 +648,7 @@ const TodayPatients = ({ navigation }: any) => {
                                                 { flex: 1, flexDirection: 'row', alignItems: 'center' },
                                                 Platform.select({ ios: { zIndex: 1 } }),
                                             ]}>
-                                                <CustomSearchAutocomplete data={allPatients} searchKey="pMobileNo" onSelect={handleItemSelect} placeHolder={'Enter Mobile Number'} />
+                                                <CustomSearchAutocomplete data={allPatients.patients} searchKey="pMobileNo" onSelect={handleItemSelect} placeHolder={'Enter Mobile Number'} />
                                             </View>
                                             {errors.pMobileNo && touched.pMobileNo &&
                                                 <Text style={styles.errorMsg}>{errors.pMobileNo}</Text>

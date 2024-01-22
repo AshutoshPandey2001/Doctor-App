@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, TextInput, FlatList, Text, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
-const CustomSearchAutocomplete = ({ data, searchKey, onSelect, placeHolder }: any) => {
+const CustomSearchAutocomplete = ({ data, searchKey, onSelect, placeHolder, value, setValue }: any) => {
     const [query, setQuery] = useState('');
     const [filteredData, setFilteredData] = useState([]);
 
     const handleInputChange = (text: any) => {
         setQuery(text);
-
+        setValue(text, searchKey)
         // Check if the length of the input text is zero
         if (text.length === 0) {
             // If text length is zero, set filteredData to an empty array
@@ -47,21 +47,32 @@ const CustomSearchAutocomplete = ({ data, searchKey, onSelect, placeHolder }: an
                         zIndex: 1, // Ensures TextInput is above other components
                     }}
                     placeholder={placeHolder}
-                    value={query}
+                    defaultValue={value ? value : query}
                     placeholderTextColor={'gray'}
                     onChangeText={handleInputChange}
                 />
             </View>
 
             {filteredData.length > 0 && (
-                <View style={{ position: 'absolute', top: 50, left: 0, right: 0, zIndex: 2 }}>
-                    <ScrollView>
+                <View style={{
+                    position: 'absolute', top: 50, left: 0, right: 0, zIndex: 99999, elevation: 5, height: 'auto', maxHeight: 200, backgroundColor: 'white', shadowColor: '#000', // Shadow color
+                    shadowOffset: { width: 0, height: 3 }, // Offset of the shadow
+                    shadowOpacity: 0.1, // Opacity of the shadow
+                    shadowRadius: 5,
+                }}>
+                    <ScrollView style={{ zIndex: 100 }}>
                         {filteredData.map((item: any) =>
                             <>
                                 <TouchableOpacity onPress={() => handleItemSelect(item)} key={item.pid}>
-                                    <Text style={{ padding: 10, borderWidth: 0.5, borderColor: 'gray', color: '#000' }}>
-                                        {item.pName} - {item.pMobileNo}
-                                    </Text>
+                                    <View style={{ padding: 10, borderWidth: 0.5, borderColor: 'gray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <Text style={{ color: '#000' }}>
+                                            {item.pName}
+                                        </Text>
+                                        <Text style={{ color: '#000' }}>
+                                            {item.pMobileNo}
+                                        </Text>
+                                    </View>
+
                                 </TouchableOpacity>
                             </>
                         )}

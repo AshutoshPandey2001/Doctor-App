@@ -10,10 +10,10 @@ const patientsSlice = createSlice({
     reducers: {
         setPatients: (state: any, action) => {
             // Serialize the timestamp before setting it in state
-            state.patients = action.payload.map((patient: any) => ({
+            state.patients = [...state.patients, ...action.payload.map((patient: any) => ({
                 ...patient,
                 timestamp: JSON.stringify(patient.timestamp),
-            }));
+            }))];
         },
         setLastPatient: (state: any, action) => {
             // Serialize the timestamp before setting it in state

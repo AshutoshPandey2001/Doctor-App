@@ -166,8 +166,10 @@ const TodayPatients = ({ navigation }: any) => {
 
             if (allPatients?.lastPatients?.timestamp) {
                 console.log('allPatients?.lastPatients?.timestamp', JSON.parse(allPatients?.lastPatients?.timestamp));
-
                 const { seconds, nanoseconds } = JSON.parse(allPatients?.lastPatients?.timestamp);
+                console.log('seconds, nanoseconds', seconds, nanoseconds);
+
+                // const { seconds, nanoseconds } = JSON.parse(allPatients?.lastPatients?.timestamp);
                 const timestamp = new firestore.Timestamp(seconds, nanoseconds);
                 console.log('Timestamp:', timestamp);
                 query = query.where('timestamp', '>', timestamp);
@@ -179,7 +181,7 @@ const TodayPatients = ({ navigation }: any) => {
 
             // Get the last visible document for pagination
             const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-            const lastPatientData = lastVisibleDoc ? lastVisibleDoc.data() : allPatients?.lastPatients;
+            const lastPatientData = lastVisibleDoc ? lastVisibleDoc.data() : { ...allPatients?.lastPatients, timestamp: JSON.parse(allPatients?.lastPatients.timestamp) };
 
             // Dispatch both patients and last patient in one action
             dispatch(setPatients(tempData));
@@ -314,58 +316,96 @@ const TodayPatients = ({ navigation }: any) => {
         initialValues: initialFormValues,
         validationSchema: patientSchema,
         onSubmit: async (values: any) => {
-            const opduid = Math.floor(2000 + Math.random() * 9000);
             const timestamp = new Date();
+            const opduid = Math.floor(2000 + Math.random() * 9000);
 
-            const opdData = {
-                pid: values.pid,
+            const commonData = {
                 pName: values.pName,
-                page: `${values.age} ${values.duration}`,
                 age: values.age,
                 pGender: values.pGender,
                 pAddress: values.pAddress,
                 pMobileNo: values.pMobileNo,
                 drName: values.drName,
                 hospitaluid: values.hospitaluid,
-                consultingDate: values.consultingDate,
-                druid: values.druid,
-                consultingCharge: Number(values.consultingCharge),
-                opduid,
-                opdCaseNo: values.opdCaseNo,
-                paymentStatus: values.paymentStatus,
-                advices: [],
                 deleted: 0,
                 timestamp,
             };
 
-            const batch = firestore().batch();
-
             if (values.pid) {
+                const opdData = {
+                    pid: values.pid,
+                    page: `${values.age} ${values.duration}`,
+                    consultingDate: values.consultingDate,
+                    druid: values.druid,
+                    consultingCharge: Number(values.consultingCharge),
+                    opduid,
+                    opdCaseNo: values.opdCaseNo,
+                    paymentStatus: values.paymentStatus,
+                    advices: [],
+                    ...commonData,
+                };
+
                 const opdRef = firestore()
                     .collection('opdPatients')
                     .doc('m5JHl3l4zhaBCa8Vihcb')
                     .collection('opdPatient');
-                batch.set(opdRef.doc(), opdData);
+
+                const batch = firestore().batch();
+                const opdDocRef = opdRef.doc();
+                batch.set(opdDocRef, opdData);
+
+                try {
+                    await batch.commit();
+                    setShowModal(false);
+                } catch (error: any) {
+                    console.error('Error sending message: ', error);
+                }
             } else {
+                const pid = Math.floor(Math.random() + timestamp.getTime());
+                const patienstData = {
+                    pid,
+                    page: `${values.age} ${values.duration}`,
+                    ...commonData,
+                };
+
+                const opdData = {
+                    pid,
+                    page: `${values.age} ${values.duration}`,
+                    consultingDate: values.consultingDate,
+                    druid: values.druid,
+                    consultingCharge: Number(values.consultingCharge),
+                    opduid,
+                    opdCaseNo: values.opdCaseNo,
+                    paymentStatus: values.paymentStatus,
+                    advices: [],
+                    ...commonData,
+                };
+
                 const patientsRef = firestore()
                     .collection('Patients')
                     .doc('fBoxFLrzXexT8WNBzGGh')
                     .collection('patients');
-                batch.set(patientsRef.doc(), {
-                    ...opdData,
-                    pid: Math.floor(Math.random() + timestamp.getTime()),
-                    duration: values.duration,
-                });
-            }
 
-            try {
-                await batch.commit();
-                setShowModal(false);
-            } catch (error: any) {
-                console.error('Error committing batch: ', error);
+                const opdRef = firestore()
+                    .collection('opdPatients')
+                    .doc('m5JHl3l4zhaBCa8Vihcb')
+                    .collection('opdPatient');
+
+                const batch = firestore().batch();
+                const patientsDocRef = patientsRef.doc(); // Get reference to the new patient document
+                const opdDocRef = opdRef.doc(); // Get reference to the new opd document
+                batch.set(patientsDocRef, patienstData);
+                batch.set(opdDocRef, opdData);
+                try {
+                    await batch.commit();
+                    setShowModal(false);
+                } catch (error: any) {
+                    console.error('Error sending message: ', error);
+                }
             }
         },
     });
+
 
     const { handleChange, handleBlur, handleSubmit, values, errors, isValid, touched, setFieldValue, resetForm } = formik
 
@@ -541,9 +581,9 @@ const TodayPatients = ({ navigation }: any) => {
                         marginBottom: 20,
                         color: '#000'
                     }}>Today's patients</Text>
-                    {user?.user?.permissions?.find((permission: any) => permission.module === "PATIENTS") &&
+                    {/* {user?.user?.permissions?.find((permission: any) => permission.module === "PATIENTS") &&
                         <Pressable style={{ height: 'auto' }} onPress={() => addPatients()}><Icon type="feather" name="plus" color="#2a7fba" size={35} /></Pressable>
-                    }
+                    } */}
                 </View>
                 {/* <Text style={{ color: '#000', fontWeight: 'bold', fontSize: 20, textAlign: 'center', padding: 20 }}>Today patients</Text> */}
                 {data?.length === 0 ? (
@@ -590,7 +630,7 @@ const TodayPatients = ({ navigation }: any) => {
                             :
                             <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
                                 <Icon type="feather" name="edit" color="gray" size={25} />
-                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Edit</Text>
+                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Add Priscription</Text>
                             </TouchableOpacity>
                         }
 
@@ -601,7 +641,7 @@ const TodayPatients = ({ navigation }: any) => {
                     </View>
                 </View>
             </Modal>}
-            {showModal &&
+            {/* {showModal &&
                 <Modal visible={showModal} transparent={false} animationType="slide">
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0, zIndex: 0 }}>
                         <View style={{ margin: 20, flex: 1, width: '100%' }}>
@@ -781,7 +821,7 @@ const TodayPatients = ({ navigation }: any) => {
                             </GestureHandlerRootView>
                         </View>
                     </View>
-                </Modal>}
+                </Modal>} */}
 
         </SafeAreaView>
     )

@@ -5,44 +5,35 @@
  * @format
  */
 
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import type { PropsWithChildren } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  AppState,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
-import LoginPage from './src/pages/Login/Login';
-import { DefaultTheme, NavigationContainer, useFocusEffect, useRoute } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthNavigator from './src/navigator/AuthNavigator';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
 import Tabs from './src/navigator/MenuNavigator';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/pages/Home';
-import TodayPatients from './src/pages/TodayPatients';
-import AllPatients from './src/pages/AllPatients';
-import DoctorPriscription from './src/pages/DoctorPriscription';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './src/redux/store';
 import { GlobalStyle } from './src/globalStyle';
 import TodayPatientsStack from './src/navigator/TodayPatientsStack';
 import AllPatientsStack from './src/navigator/AllPatientsStack';
-import auth from '@react-native-firebase/auth';
 import Header from './src/component/Header';
-import { Notification, Notifications } from 'react-native-notifications';
-import notifee, { AndroidImportance, EventType, TimestampTrigger, TriggerType } from '@notifee/react-native';
+import notifee, { AndroidImportance } from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 import { setLoading } from './src/redux/action/UiSlice';
+import Icon from 'react-native-easy-icon';
+import FloatingButton from './src/component/FloatingButton';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 
@@ -53,7 +44,7 @@ function App(): JSX.Element {
   const navTheme = DefaultTheme;
   navTheme.colors.background = '#fff';
   const { isLoading, tabBar } = useSelector((state: RootState) => state.ui)
-  const user = useSelector((state: RootState) => state.user)
+  const user: any = useSelector((state: RootState) => state.user)
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const dispatch = useDispatch()
@@ -246,22 +237,34 @@ function App(): JSX.Element {
       <View style={{ height: '100%', backgroundColor: '#fff' }}>
         <NavigationContainer theme={navTheme}>
           {isLoggedIn ?
-            <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'
-              screenOptions={() => ({
-                tabBarShowLabel: false,
-                tabBarStyle: GlobalStyle.tabBar,
-                headerShown: tabBar, // Show header for all screens
-                header: () => (
-                  // Customize your header here
-                  <Header />
-                ),
-              })}
-            >
-              <Tab.Screen name="Home" component={Home} options={{ headerShown: tabBar }} />
-              <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: tabBar }} />
-              <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: tabBar }} />
+            <>
+              <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'
+                screenOptions={() => ({
+                  tabBarShowLabel: false,
+                  tabBarStyle: GlobalStyle.tabBar,
+                  headerShown: tabBar, // Show header for all screens
+                  header: () => (
+                    // Customize your header here
+                    <Header />
+                  ),
+                })}
+              >
+                <Tab.Screen name="Home" component={Home} options={{ headerShown: tabBar }} />
+                <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: tabBar }} />
+                <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: tabBar }} />
 
-            </Tab.Navigator>
+              </Tab.Navigator>
+              {
+                user?.user?.permissions && user?.user?.permissions.find((permission: any) => permission.module === "PATIENTS") &&
+                <View style={{ display: tabBar ? 'flex' : 'none' }}>
+                  <GestureHandlerRootView>
+                    <FloatingButton />
+                  </GestureHandlerRootView>
+                </View>
+              }
+
+
+            </>
             :
             (<Stack.Navigator initialRouteName="Login">
               <Stack.Screen name="Auth" options={{ headerShown: false }}

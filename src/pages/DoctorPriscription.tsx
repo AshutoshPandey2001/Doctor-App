@@ -586,25 +586,25 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             value={checkboxValues.M}
                                             onValueChange={() => handleCheckboxChange('M')}
                                         />
-                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>M</Text>
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>M</Text>
 
                                         <CheckBox
                                             value={checkboxValues.A}
                                             onValueChange={() => handleCheckboxChange('A')}
                                         />
-                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>A</Text>
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>A</Text>
 
                                         <CheckBox
                                             value={checkboxValues.E}
                                             onValueChange={() => handleCheckboxChange('E')}
                                         />
-                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>E</Text>
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>E</Text>
 
                                         <CheckBox
                                             value={checkboxValues.N}
                                             onValueChange={() => handleCheckboxChange('N')}
                                         />
-                                        <Text style={{ color: 'gray', fontSize: 20, margin: 5, marginHorizontal: 5 }}>N</Text>
+                                        <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>N</Text>
 
                                     </View>
 
@@ -721,7 +721,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10, marginVertical: Platform.OS === "ios" ? 30 : 0 }}>
                             <View style={{ margin: 20, flex: 1, width: '100%' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ color: 'black', fontSize: 20 }}>clinical History</Text>
+                                    <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>Clinical History</Text>
                                     <TouchableOpacity onPress={() => handleClose()} >
                                         <Icon type="entypo" name="cross" color="black" size={35} />
                                     </TouchableOpacity>
@@ -738,7 +738,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             onChange={updateSections}
                                             underlayColor={'transparenet'}
                                         /> :
-                                        <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no history to display</Text>}
+                                        <Text style={{ textAlign: 'center', fontSize: 18, color: '#000', fontWeight: 'bold' }}>There are no clinical history to display</Text>}
                                 </View>
                             </View>
                         </View>

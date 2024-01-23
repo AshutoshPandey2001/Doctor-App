@@ -32,7 +32,7 @@ interface InitialFormValues {
     hospitaluid: string,
     deleted: number,
 }
-const FloatingButton = () => {
+const FloatingButton = ({ navigation }: any) => {
     const user: any = useSelector((state: RootState) => state.user)
 
     const [showModal, setShowModal] = useState(false);
@@ -119,7 +119,7 @@ const FloatingButton = () => {
                     await batch.commit();
                     const newPatients = await opdDocRef.get()
                     console.log('newPatients----------------', newPatients.data());
-
+                    // navigation.navigate('DoctorPriscription', newPatients.data())
                     setShowModal(false);
                     dispatch(setLoading(true))
 
@@ -168,6 +168,7 @@ const FloatingButton = () => {
                     await batch.commit();
                     const newPatients = await opdDocRef.get()
                     console.log('newPatients----------------', newPatients.data());
+                    // navigation.navigate('DoctorPriscription', newPatients.data())
                     setShowModal(false);
                     dispatch(setLoading(true))
 
@@ -191,8 +192,8 @@ const FloatingButton = () => {
                 .where('deleted', '==', 0);
 
             if (allPatients?.lastPatients?.timestamp) {
-                console.log('allPatients?.lastPatients?.timestamp', JSON.parse(allPatients?.lastPatients?.timestamp));
-                const { seconds, nanoseconds } = JSON.parse(allPatients?.lastPatients?.timestamp);
+                // console.log('allPatients?.lastPatients?.timestamp', JSON.parse(allPatients?.lastPatients?.timestamp));
+                const { seconds, nanoseconds } = allPatients?.lastPatients?.timestamp;
                 console.log('seconds, nanoseconds', seconds, nanoseconds);
 
                 // const { seconds, nanoseconds } = JSON.parse(allPatients?.lastPatients?.timestamp);
@@ -207,7 +208,7 @@ const FloatingButton = () => {
 
             // Get the last visible document for pagination
             const lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-            const lastPatientData = lastVisibleDoc ? lastVisibleDoc.data() : { ...allPatients?.lastPatients, timestamp: JSON.parse(allPatients?.lastPatients.timestamp) };
+            const lastPatientData = lastVisibleDoc ? lastVisibleDoc.data() : { ...allPatients?.lastPatients, timestamp: allPatients?.lastPatients.timestamp };
 
             // Dispatch both patients and last patient in one action
             dispatch(setPatients(tempData));
@@ -307,6 +308,7 @@ const FloatingButton = () => {
                                                     keyboardType='numeric'
                                                     onChangeText={handleChange('age')}
                                                     placeholderTextColor={'gray'}
+                                                    defaultValue={values.age ? values.age.toString() : values.page.toString()}
                                                 />
                                                 {errors.age && touched.age &&
                                                     <Text style={styles.errorMsg}>{errors.age}</Text>

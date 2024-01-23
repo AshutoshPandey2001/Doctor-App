@@ -62,8 +62,9 @@ const CustomSearchAutocomplete = ({ data, searchKey, onSelect, placeHolder, valu
                 }}>
                     <ScrollView style={{ zIndex: 100 }}>
                         {filteredData.map((item: any) =>
-                            <>
-                                <TouchableOpacity onPress={() => handleItemSelect(item)} key={item.pid}>
+                            // <>
+                            <View key={item.pid}>
+                                <TouchableOpacity onPress={() => handleItemSelect(item)} >
                                     <View style={{ padding: 10, borderWidth: 0.5, borderColor: 'gray', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <Text style={{ color: '#000' }}>
                                             {item.pName}
@@ -74,7 +75,9 @@ const CustomSearchAutocomplete = ({ data, searchKey, onSelect, placeHolder, valu
                                     </View>
 
                                 </TouchableOpacity>
-                            </>
+                            </View>
+
+                            // </>
                         )}
                     </ScrollView>
                 </View>

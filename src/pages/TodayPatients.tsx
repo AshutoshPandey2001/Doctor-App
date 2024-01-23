@@ -603,7 +603,7 @@ const TodayPatients = ({ navigation }: any) => {
                     <FlatList
                         data={data}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item.pid.toString()}
+                        keyExtractor={(item) => item.opduid.toString()}
                         onEndReached={loadMoreData}
                         onEndReachedThreshold={0.1}
                     />

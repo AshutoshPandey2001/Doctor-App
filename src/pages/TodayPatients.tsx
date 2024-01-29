@@ -614,7 +614,7 @@ const TodayPatients = ({ navigation }: any) => {
                 transparent={true} onRequestClose={onClose} onPointerDown={onClose}>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }} onTouchEnd={onClose}>
                     <View style={{
-                        height: "15%",
+                        height: showActions && showActions?.prescription ? '18%' : "15%",
                         width: "100%",
                         marginTop: 'auto',
                         backgroundColor: 'white',
@@ -622,11 +622,16 @@ const TodayPatients = ({ navigation }: any) => {
                         borderTopLeftRadius: 15,
                         borderTopRightRadius: 15
                     }}>
-                        {showActions && showActions?.prescription ?
+                        {showActions && showActions?.prescription ? <>
                             <TouchableOpacity onPress={() => printHTML(showActions)} style={GlobalStyle.btn}>
                                 <Icon type="feather" name="printer" color="gray" size={25} />
                                 <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>Print</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('History', showActions)} style={GlobalStyle.btn}>
+                                <Icon type="feather" name="eye" color="gray" size={25} />
+                                <Text style={{ color: 'gray', marginLeft: 10, fontWeight: 'bold', fontSize: 18 }}>View</Text>
+                            </TouchableOpacity>
+                        </>
                             :
                             <TouchableOpacity onPress={() => navigation.navigate('DoctorPriscription', showActions)} style={[GlobalStyle.btn, { borderRadius: 15 }]}>
                                 <Icon type="feather" name="edit" color="gray" size={25} />

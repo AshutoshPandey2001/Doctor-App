@@ -583,24 +583,28 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                     <Text style={styles.subHeading}>Frequency:</Text>
                                     <View style={styles.checkboxContainer}>
                                         <CheckBox
+                                            style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.M}
                                             onValueChange={() => handleCheckboxChange('M')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>M</Text>
 
                                         <CheckBox
+                                            style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.A}
                                             onValueChange={() => handleCheckboxChange('A')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>A</Text>
 
                                         <CheckBox
+                                            style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.E}
                                             onValueChange={() => handleCheckboxChange('E')}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>E</Text>
 
                                         <CheckBox
+                                            style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.N}
                                             onValueChange={() => handleCheckboxChange('N')}
                                         />
@@ -763,6 +767,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 20,
+        color: 'gray'
     },
     section: {
         marginVertical: 10,
@@ -778,6 +783,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         borderRadius: 5,
+        color: '#000'
 
     },
     checkboxContainer: {

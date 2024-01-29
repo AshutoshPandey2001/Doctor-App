@@ -14,7 +14,7 @@ const TodayPatientsStack = ({ navigation, route }: any) => {
     const dispatch = useDispatch()
     useLayoutEffect(() => {
         const routeName = getFocusedRouteNameFromRoute(route);
-        if (routeName === "DoctorPriscription") {
+        if (routeName === "DoctorPriscription" || routeName === "History") {
             dispatch(setTabBar(false))
             navigation.setOptions({ tabBarStyle: GlobalStyle.noTabBar });
         } else {
@@ -30,6 +30,7 @@ const TodayPatientsStack = ({ navigation, route }: any) => {
         }}>
             <Patientstack.Screen options={{ headerShown: false }} name="TodayPatients" component={TodayPatients} />
             <Patientstack.Screen options={{ headerShown: false }} name="DoctorPriscription" component={DoctorPriscription} />
+            <Patientstack.Screen options={{ headerShown: false }} name="History" component={DoctorPriscription} />
 
         </Patientstack.Navigator>
     )

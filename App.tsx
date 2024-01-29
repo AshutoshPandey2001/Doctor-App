@@ -34,9 +34,7 @@ import { setLoading } from './src/redux/action/UiSlice';
 import Icon from 'react-native-easy-icon';
 import FloatingButton from './src/component/FloatingButton';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
-
-
+import AddPatientsStack from './src/navigator/AddPatientsStack';
 const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
 
 function App(): JSX.Element {
@@ -48,7 +46,6 @@ function App(): JSX.Element {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const dispatch = useDispatch()
-
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -57,8 +54,22 @@ function App(): JSX.Element {
 
     if (enabled) {
       console.log('Authorization status:', authStatus);
+    } else {
+      // If not authorized or provisional, request permission
+      const newAuthStatus = await messaging().requestPermission();
+      const newEnabled =
+        newAuthStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        newAuthStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (newEnabled) {
+        console.log('Authorization status:', newAuthStatus);
+      } else {
+        console.log('User denied permission.');
+        // Handle the case where the user denies permission.
+      }
     }
   }
+
   const getToken = async () => {
     const token = await messaging().getToken()
   }
@@ -252,6 +263,19 @@ function App(): JSX.Element {
                 <Tab.Screen name="Home" component={Home} options={{ headerShown: tabBar }} />
                 <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: tabBar }} />
                 <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: tabBar }} />
+                {/* <Tab.Screen
+                  name="Addpatients"
+                  component={AddPatientsStack}
+                  options={{
+                    tabBarStyle: { display: "none" },
+                    headerTitle: 'Addpatients',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: { fontSize: 20, fontWeight: 'bold' },
+                    headerShadowVisible: false,
+                    tabBarButton: () => null
+                  }}
+
+                /> */}
 
               </Tab.Navigator>
               {

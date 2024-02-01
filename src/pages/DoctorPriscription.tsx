@@ -586,6 +586,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.M}
                                             onValueChange={() => handleCheckboxChange('M')}
+                                            tintColors={{ true: 'green', false: 'gray' }}
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>M</Text>
 
@@ -593,6 +594,8 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.A}
                                             onValueChange={() => handleCheckboxChange('A')}
+                                            tintColors={{ true: 'green', false: 'gray' }}
+
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>A</Text>
 
@@ -600,6 +603,8 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.E}
                                             onValueChange={() => handleCheckboxChange('E')}
+                                            tintColors={{ true: 'green', false: 'gray' }}
+
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>E</Text>
 
@@ -607,6 +612,8 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             style={{ borderColor: 'gray', borderWidth: 1 }}
                                             value={checkboxValues.N}
                                             onValueChange={() => handleCheckboxChange('N')}
+                                            tintColors={{ true: 'green', false: 'gray' }}
+
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>N</Text>
 

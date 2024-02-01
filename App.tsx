@@ -35,6 +35,7 @@ import Icon from 'react-native-easy-icon';
 import FloatingButton from './src/component/FloatingButton';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AddPatientsStack from './src/navigator/AddPatientsStack';
+import DoctorPriscription from './src/pages/DoctorPriscription';
 const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
 
 function App(): JSX.Element {
@@ -237,6 +238,24 @@ function App(): JSX.Element {
   //     BackgroundTimer.clearInterval(intervalId);
   //   };
   // }, []);
+  const Main = () => {
+    return (
+      <Tab.Navigator tabBar={(props: any) => <View style={{ display: tabBar ? 'flex' : 'none' }}><Tabs {...props} /></View>} backBehavior='history'
+        screenOptions={() => ({
+          tabBarShowLabel: false,
+          tabBarStyle: GlobalStyle.tabBar,
+          headerShown: tabBar, // Show header for all screens
+          header: () => (
+            <Header />
+          ),
+        })}
+      >
+        <Tab.Screen name="Home" component={Home} options={{ headerShown: tabBar }} />
+        <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: tabBar }} />
+        <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: tabBar }} />
+
+      </Tab.Navigator>)
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
 
@@ -255,7 +274,6 @@ function App(): JSX.Element {
                   tabBarStyle: GlobalStyle.tabBar,
                   headerShown: tabBar, // Show header for all screens
                   header: () => (
-                    // Customize your header here
                     <Header />
                   ),
                 })}
@@ -263,21 +281,17 @@ function App(): JSX.Element {
                 <Tab.Screen name="Home" component={Home} options={{ headerShown: tabBar }} />
                 <Tab.Screen name="Today" component={TodayPatientsStack} options={{ headerShown: tabBar }} />
                 <Tab.Screen name="All" component={AllPatientsStack} options={{ headerShown: tabBar }} />
-                {/* <Tab.Screen
-                  name="Addpatients"
-                  component={AddPatientsStack}
-                  options={{
-                    tabBarStyle: { display: "none" },
-                    headerTitle: 'Addpatients',
-                    headerTitleAlign: 'center',
-                    headerTitleStyle: { fontSize: 20, fontWeight: 'bold' },
-                    headerShadowVisible: false,
-                    tabBarButton: () => null
-                  }}
-
-                /> */}
 
               </Tab.Navigator>
+              {/* <Stack.Navigator initialRouteName="Main">
+                <Stack.Screen name="Main" options={{ headerShown: false }}
+                  component={Main}
+                />
+                <Stack.Screen name="History" options={{ headerShown: false }}
+                  component={DoctorPriscription} />
+                <Stack.Screen options={{ headerShown: false }} name="DoctorPriscription" component={DoctorPriscription} />
+
+              </Stack.Navigator> */}
               {
                 user?.user?.permissions && user?.user?.permissions.find((permission: any) => permission.module === "PATIENTS") &&
                 <View style={{ display: tabBar ? 'flex' : 'none' }}>

@@ -55,13 +55,10 @@ const CustomSearchAutocomplete = ({ data, searchKey, onSelect, placeHolder, valu
 
             {filteredData.length > 0 && (
                 <View style={{
-                    position: 'absolute', top: 50, left: 0, right: 0, zIndex: 9999, height: 'auto', maxHeight: 200, shadowColor: '#000', // Shadow color
+                    position: 'absolute', top: 50, left: 0, right: 0, zIndex: 99999, elevation: 5, height: 'auto', maxHeight: 200, backgroundColor: 'white', shadowColor: '#000', // Shadow color
                     shadowOffset: { width: 0, height: 3 }, // Offset of the shadow
                     shadowOpacity: 0.1, // Opacity of the shadow
                     shadowRadius: 5,
-                    borderWidth: 2,
-                    backgroundColor: 'white',
-                    elevation: 15,
                 }}>
                     <ScrollView style={{ zIndex: 100 }}>
                         {filteredData.map((item: any) =>

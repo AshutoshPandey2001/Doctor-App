@@ -13,7 +13,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 
-const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
+const adUnitId: any = Platform.OS === "ios" ? 'ca-app-pub-9665448244735411/5347441233' : 'ca-app-pub-8691082301379909/8658058910';
 interface Patient {
     id: number;
     name: string;

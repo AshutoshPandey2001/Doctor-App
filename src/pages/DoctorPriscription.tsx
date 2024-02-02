@@ -18,7 +18,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 
-const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
+const adUnitId: any = Platform.OS === "ios" ? 'ca-app-pub-9665448244735411/5347441233' : 'ca-app-pub-8691082301379909/8658058910';
 interface State {
     paymentStatus: string;
     diagnosis: string;
@@ -587,6 +587,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             value={checkboxValues.M}
                                             onValueChange={() => handleCheckboxChange('M')}
                                             tintColors={{ true: 'green', false: 'gray' }}
+                                            boxType='square'
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>M</Text>
 
@@ -595,6 +596,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             value={checkboxValues.A}
                                             onValueChange={() => handleCheckboxChange('A')}
                                             tintColors={{ true: 'green', false: 'gray' }}
+                                            boxType='square'
 
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>A</Text>
@@ -604,6 +606,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             value={checkboxValues.E}
                                             onValueChange={() => handleCheckboxChange('E')}
                                             tintColors={{ true: 'green', false: 'gray' }}
+                                            boxType='square'
 
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>E</Text>
@@ -613,6 +616,7 @@ const DoctorPriscription = ({ navigation, route }: any) => {
                                             value={checkboxValues.N}
                                             onValueChange={() => handleCheckboxChange('N')}
                                             tintColors={{ true: 'green', false: 'gray' }}
+                                            boxType='square'
 
                                         />
                                         <Text style={{ color: 'gray', fontSize: 20, margin: 2, marginHorizontal: 5 }}>N</Text>

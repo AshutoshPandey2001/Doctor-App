@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { ScrollView, Text, View, StyleSheet, Image, TouchableOpacity, Modal, Pressable, Platform } from 'react-native';
 import Icon from 'react-native-easy-icon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobalStyle } from '../globalStyle';
@@ -13,7 +13,7 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 
 
 
-const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
+const adUnitId: any = Platform.OS === "ios" ? 'ca-app-pub-9665448244735411/5347441233' : 'ca-app-pub-8691082301379909/8658058910';
 const Home = () => {
     const [patients, setpatients] = useState(0)
     const [day, setday] = useState<any>()

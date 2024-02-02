@@ -434,6 +434,7 @@ const FloatingButton = ({ navigation }: any) => {
 const styles = StyleSheet.create({
     container: {
         padding: 20,
+        zIndex: -1
     },
     heading: {
         fontSize: 18,
@@ -446,12 +447,16 @@ const styles = StyleSheet.create({
     },
     section: {
         marginVertical: 10,
+        zIndex: -2,
+        elevation: -1
 
     },
     subHeading: {
         color: 'gray',
         fontSize: 16,
         fontWeight: 'bold',
+        zIndex: -1,
+        elevation: -1
     },
     input: {
         borderWidth: 0.5,

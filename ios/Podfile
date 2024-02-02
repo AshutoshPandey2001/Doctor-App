@@ -27,7 +27,7 @@ end
 
 target 'MED1ONE' do
   use_frameworks! :linkage => :static
-
+  $RNFirebaseAsStaticFramework = true
   config = use_native_modules!
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCoreInternal', :modular_headers => true

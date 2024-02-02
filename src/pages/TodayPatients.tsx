@@ -19,7 +19,7 @@ import { setLastPatient, setPatients } from '../redux/action/PatientsSlice';
 
 
 
-const adUnitId: any = 'ca-app-pub-8691082301379909/8658058910';
+const adUnitId: any = Platform.OS === "ios" ? 'ca-app-pub-9665448244735411/5347441233' : 'ca-app-pub-8691082301379909/8658058910';
 interface InitialFormValues {
     pid: string,
     pName: string,
@@ -476,14 +476,14 @@ const TodayPatients = ({ navigation }: any) => {
                 <View style={GlobalStyle.leftSide}>
                     <Text style={GlobalStyle.label}>Date:</Text>
                     <Text style={GlobalStyle.label}>Name:</Text>
-                    <Text style={GlobalStyle.label}>Address:</Text>
                     <Text style={GlobalStyle.label}>Mobile No:</Text>
+                    <Text style={GlobalStyle.label}>Address:</Text>
                 </View>
                 <View style={GlobalStyle.middleSide}>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.consultingDate}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pName}</Text>
-                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
                     <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pMobileNo}</Text>
+                    <Text style={GlobalStyle.textcolor} numberOfLines={1} ellipsizeMode="tail">{item.pAddress}</Text>
 
                 </View>
                 <View style={GlobalStyle.rightSide}>

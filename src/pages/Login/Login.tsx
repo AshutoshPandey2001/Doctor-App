@@ -56,6 +56,12 @@ const LoginPage = () => {
           druid: userDocData.druid || undefined,
           permissions: userDocData.permissions || [],
         };
+        // Check if userType is not doctor
+        if (userData.usertype !== 'Doctor') {
+          dispatch(setLoading(false));
+          Alert.alert('Login Error', 'You have no access to login');
+          return;
+        }
         const doctorDatasnapshot = await firestore()
           .collection('Doctors')
           .doc('d3ryEUfqA2FMa0fEyxde')

@@ -111,83 +111,7 @@ const DoctorPriscription = ({navigation, route}: any) => {
       setRouteName(true);
     }
   }, [route]);
-  // useEffect(() => {
-  //     if (focus) {
-  //         dispatch(setLoading(true));
 
-  //         const subscribe = firestore()
-  //             .collection('opdPatients')
-  //             .doc('m5JHl3l4zhaBCa8Vihcb')
-  //             .collection('opdPatient')
-  //             .where('hospitaluid', '==', user.user.hospitaluid)
-  //             .where('deleted', '==', 0)
-  //             .where('druid', '==', user.user.druid)
-  //             .where('pid', "==", state.pid)
-  //             .orderBy('timestamp', 'asc')
-  //             .onSnapshot(async (snapshot) => {
-  //                 console.log(snapshot, 'snapshot');
-
-  //                 if (snapshot) {
-  //                     const newData: any = [];
-  //                     snapshot.forEach((doc) => {
-  //                         newData.push(doc.data());
-  //                     });
-  //                     setHistory(newData);
-  //                     console.log('newData-------------------------------------', newData);
-  //                 } else {
-  //                     // Handle the case when there is no data
-  //                     setHistory([]);
-  //                     console.log('No data available');
-  //                 }
-
-  //                 dispatch(setLoading(false));
-  //             });
-
-  //         return () => {
-  //             subscribe();
-  //         };
-  //     }
-  // }, [focus]);
-  // useEffect(() => {
-  //     let isMounted = true;
-
-  //     if (focus) {
-  //         dispatch(setLoading(true));
-
-  //         const subscribe = firestore()
-  //             .collection('opdPatients')
-  //             .doc('m5JHl3l4zhaBCa8Vihcb')
-  //             .collection('opdPatient')
-  //             .where('hospitaluid', '==', user.user.hospitaluid)
-  //             .where('deleted', '==', 0)
-  //             .where('druid', '==', user.user.druid)
-  //             .where('pid', "==", state.pid)
-  //             .orderBy('timestamp', 'asc')
-  //             .onSnapshot(async (snapshot) => {
-  //                 if (isMounted) {
-  //                     if (snapshot && !snapshot.empty) {
-  //                         const newData: any = [];
-  //                         snapshot.forEach((doc) => {
-  //                             newData.push(doc.data());
-  //                         });
-  //                         setHistory(newData);
-  //                         console.log('newData-------------------------------------', newData);
-  //                     } else {
-  //                         // Handle the case when there is no data
-  //                         setHistory([]);
-  //                         console.log('No data available');
-  //                     }
-
-  //                     dispatch(setLoading(false));
-  //                 }
-  //             });
-
-  //         return () => {
-  //             isMounted = false;
-  //             subscribe();
-  //         };
-  //     }
-  // }, [focus]);
   useEffect(() => {
     if (focus) {
       const getAllPatients = async () => {
@@ -667,12 +591,6 @@ const DoctorPriscription = ({navigation, route}: any) => {
         </View>
       </View>
       <ScrollView nestedScrollEnabled={true}>
-        {/* <View style={{ alignItems: 'center', justifyContent: 'center', marginVertical: 10, marginHorizontal: 30 }}>
-                    <BannerAd
-                        unitId={adUnitId}
-                        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-                    />
-                </View> */}
         <View style={{margin: 10}}>
           {routeName ? (
             <>
@@ -710,12 +628,8 @@ const DoctorPriscription = ({navigation, route}: any) => {
                     <Text style={GlobalStyle.textcolor}>
                       {state.page}/{state.pGender}
                     </Text>
-                    <Text style={GlobalStyle.textcolor}>
-                      {' '}
-                      {state.pMobileNo}
-                    </Text>
+                    <Text style={GlobalStyle.textcolor}>{state.pMobileNo}</Text>
                     <Text style={GlobalStyle.textcolor}>{state.pAddress}</Text>
-                    {/* <Text style={GlobalStyle.textcolor}>{state.drName}</Text> */}
                   </View>
                 </View>
 

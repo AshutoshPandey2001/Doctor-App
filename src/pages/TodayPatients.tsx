@@ -80,6 +80,8 @@ const TodayPatients = ({navigation}: any) => {
                 newData,
               );
             } else {
+              setTodaypatients([]);
+              setData([]);
               console.log('Snapshot is empty');
             }
           } catch (error: any) {
@@ -271,7 +273,44 @@ const TodayPatients = ({navigation}: any) => {
     console.log('Selected item:', item);
     // Do something with the selected item
   };
+  const deleteOpdPatients = async (item: any) => {
+    try {
+      dispatch(setLoading(true));
+      // Execute the query to get document references
+      const querySnapshot = await firestore()
+        .collection('opdPatients')
+        .doc('m5JHl3l4zhaBCa8Vihcb')
+        .collection('opdPatient')
+        .where('hospitaluid', '==', item.hospitaluid)
+        .where('deleted', '==', 0)
+        .where('druid', '==', item.druid)
+        .where('opduid', '==', item.opduid)
+        .get();
 
+      // Update data for each document in the query results
+      querySnapshot.forEach(async doc => {
+        try {
+          // Update specific fields in the document
+          await doc.ref.update({
+            ...item,
+            deleted: 1,
+          });
+          console.log(`Document with ID ${doc.id} successfully updated.`);
+          dispatch(setLoading(false));
+        } catch (error) {
+          dispatch(setLoading(false));
+
+          console.error(`Error updating document with ID ${doc.id}:`, error);
+        }
+      });
+
+      console.log('All documents updated successfully.');
+    } catch (error) {
+      dispatch(setLoading(false));
+
+      console.error('Error querying documents:', error);
+    }
+  };
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: 'white', marginBottom: 100}}>
@@ -338,7 +377,7 @@ const TodayPatients = ({navigation}: any) => {
             <View
               style={{
                 height:
-                  showActions && showActions?.prescription ? '18%' : '15%',
+                  showActions && showActions?.prescription ? '25%' : '18%',
                 width: '100%',
                 marginTop: 'auto',
                 backgroundColor: 'white',
@@ -400,7 +439,20 @@ const TodayPatients = ({navigation}: any) => {
                   </Text>
                 </TouchableOpacity>
               )}
-
+              <TouchableOpacity
+                onPress={() => deleteOpdPatients(showActions)}
+                style={[GlobalStyle.btn, {borderRadius: 15}]}>
+                <Icon type="antdesign" name="delete" color="gray" size={25} />
+                <Text
+                  style={{
+                    color: 'gray',
+                    marginLeft: 10,
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                  }}>
+                  Delete
+                </Text>
+              </TouchableOpacity>
               <TouchableOpacity onPress={onClose} style={GlobalStyle.btn}>
                 <Icon type="entypo" name="cross" color="gray" size={25} />
                 <Text

@@ -252,7 +252,7 @@ const FloatingButton = ({navigation}: any) => {
         ? lastVisibleDoc.data()
         : {
             ...allPatients?.lastPatients,
-            timestamp: allPatients?.lastPatients.timestamp,
+            timestamp: allPatients?.lastPatients?.timestamp,
           };
 
       // Dispatch both patients and last patient in one action

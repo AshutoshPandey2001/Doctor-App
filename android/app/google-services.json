@@ -1,67 +1,39 @@
 {
   "project_info": {
-    "project_number": "648026008961",
-    "project_id": "hospital-erp-5a15e",
-    "storage_bucket": "hospital-erp-5a15e.appspot.com"
+    "project_number": "284851097698",
+    "project_id": "hospital-erp-prod-95573",
+    "storage_bucket": "hospital-erp-prod-95573.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:648026008961:android:e960e66f01e4ff85674c80",
-        "android_client_info": {
-          "package_name": "com.MED1ONE"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "648026008961-qjvgj8m82g3td4gg5j0rk5afedppq4n7.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD5hWiPoNCq0OckA_ww0cIO37aJtCyzeEI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "648026008961-qjvgj8m82g3td4gg5j0rk5afedppq4n7.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:648026008961:android:cb0a64a1706b7076674c80",
+        "mobilesdk_app_id": "1:284851097698:android:c9c40b444430b693e7413b",
         "android_client_info": {
           "package_name": "com.med1.one"
         }
       },
       "oauth_client": [
         {
-          "client_id": "648026008961-qjvgj8m82g3td4gg5j0rk5afedppq4n7.apps.googleusercontent.com",
+          "client_id": "284851097698-4evsif6p9qvgtg0ee8md8gefpqei8vh6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD5hWiPoNCq0OckA_ww0cIO37aJtCyzeEI"
+          "current_key": "AIzaSyBXwia1zTDPE9ohxp49We-WycnEkAfiGuA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "648026008961-qjvgj8m82g3td4gg5j0rk5afedppq4n7.apps.googleusercontent.com",
+              "client_id": "284851097698-4evsif6p9qvgtg0ee8md8gefpqei8vh6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-8691082301379909~2288091683"
     }
   ],
   "configuration_version": "1"

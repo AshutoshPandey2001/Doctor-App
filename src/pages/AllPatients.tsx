@@ -62,23 +62,27 @@ const AllPatients = ({navigation}: any) => {
       .orderBy('timestamp', 'desc')
       .onSnapshot(snapshot => {
         try {
-          const newData: any = [];
-          const existingPids = new Set(); // Maintain a set to track existing pids
-          snapshot.forEach(doc => {
-            const patientData = doc.data();
-            const pid = patientData.pid;
-            if (!existingPids.has(pid)) {
-              // Check if the pid is not already present
-              newData.push(patientData);
-              existingPids.add(pid); // Add the pid to the set
-            }
-          });
-          setTodaypatients(newData);
-          setData(newData.slice(0, 10));
-          // console.log('newData-------------------------------------', newData);
+          if (snapshot) {
+            // Check if snapshot is not null
+            const newData: any = [];
+            const existingPids = new Set(); // Maintain a set to track existing pids
+            snapshot.forEach(doc => {
+              const patientData = doc.data();
+              const pid = patientData.pid;
+              if (!existingPids.has(pid)) {
+                // Check if the pid is not already present
+                newData.push(patientData);
+                existingPids.add(pid); // Add the pid to the set
+              }
+            });
+            setTodaypatients(newData);
+            setData(newData.slice(0, 10));
+            // console.log('newData-------------------------------------', newData);
+          } else {
+            console.log('Snapshot is null.');
+          }
         } catch (error: any) {
           Alert.alert('Error', error.message);
-
           console.error('Error in onSnapshot:', error);
           // Handle the error here
         }
